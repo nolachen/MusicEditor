@@ -9,85 +9,62 @@ import java.util.TreeMap;
  * This class represents a music editor model.
  */
 public class MusicEditorModel implements IMusicEditorModel {
-  //private Music music;
+  /**
+   * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
+   */
   private TreeMap<Integer, List<Note>> music;
-  //private Note lowestNote;
-  //private Note highestNote;
 
+  /**
+   * Constructor for MusicEditorModel.
+   * @param music the mapping of music
+   */
   private MusicEditorModel(TreeMap<Integer, List<Note>> music) {
     this.music = music;
-    //this.lowestNote = lowestNote;
-    //this.highestNote = highestNote;
   }
 
+  /**
+   * Default constructor for MusicEditorModel, creates an empty music to start.
+   */
   public MusicEditorModel() {
-    //this(new Music());
     this(new TreeMap<>());
-            //new Note(Pitch.B, Integer.MAX_VALUE, 0, 0),
-            //new Note(Pitch.C, Integer.MIN_VALUE, 0, 0));
   }
 
   @Override
   public void add(Note note) {
-    //this.music.add(note, beat);
-    /*List<Note> curNotes = this.music.get(beat);
-    if (curNotes == null) {
-      curNotes = new ArrayList<>();
-    }
-    curNotes.add(note);*/
-
     note.addTo(this.music);
-
-
-    // update min and max notes
-    /*if (note.compareTo(this.highestNote) > 0) {
-      this.highestNote = note;
-    }
-    if (note.compareTo(this.lowestNote) < 0) {
-      this.lowestNote = note;
-    }*/
-
-    //this.music.put(beat, curNotes); TODO is this even necessary
-  }
-
-  @Override
-  // TODO maybe just delete edit from interface entirely
-  public void edit(int beat, Note oldNote, Note newNote) {
-    List<Note> curNotes = this.music.get(beat);
-    if ((curNotes == null) || !curNotes.contains(oldNote)) {
-      throw new IllegalArgumentException("Old note doesn't exist");
-    }
-
-    //this.music.put(beat)
   }
 
   @Override
   public void remove(Note note) {
     note.removeFrom(this.music);
+  }
 
-    /*
-    List<Note> curNotes = this.music.get(beat);
-    if ((curNotes == null) || !curNotes.contains(note)) {
-      throw new IllegalArgumentException("Note doesn't exist");
+  @Override
+  public void playSimultaneously(IMusicEditorModel other) {
+    List<Note> otherNotes = other.getAllNotes();
+    for (Note n : otherNotes) {
+      this.add(n);
     }
-    this.music.get(beat).remove(note);*/
   }
 
   @Override
-  public IMusicEditorModel playSimultaneously(IMusicEditorModel other) {
-    return null;
-  }
+  public void playConsecutively(IMusicEditorModel other) {
+    List<Note> otherNotes = other.getAllNotes();
+    int lastBeat = this.music.lastKey();
 
-  @Override
-  public IMusicEditorModel playConsecutively(IMusicEditorModel other) {
-    return null;
+    for (Note n : otherNotes) {
+      n.setStartBeat(lastBeat + n.getStartBeat());
+      this.add(n);
+    }
   }
 
   @Override
   public String getTextRendering() {
     String output = "";
 
-    if (this.music.isEmpty()) { return output; }
+    if (this.music.isEmpty()) {
+      return output;
+    }
 
     List<Note> allNotes = this.getAllNotes();
 
@@ -130,11 +107,8 @@ public class MusicEditorModel implements IMusicEditorModel {
     return output;
   }
 
-  /**
-   * A list of all Notes that are currently in this music editor, in chromatic order.
-   * @return the list of all notes
-   */
-  private List<Note> getAllNotes() {
+  @Override
+  public List<Note> getAllNotes() {
     List<Note> allNotes = new ArrayList<>();
 
     for (List<Note> list : this.music.values()) {
@@ -151,28 +125,10 @@ public class MusicEditorModel implements IMusicEditorModel {
   }
 
   /**
-   * inclusive
-   * @param low
-   * @param high
-   * @return
-   */
-  /*private String noterange(Note low, Note high) {
-    String output = "";
-    Note current = low;
-
-    while (current.compareTo(high) <= 0) {
-      output += this.centerString(current.toString(), 5);
-      current = current.nextNote();
-    }
-
-    return output;
-  }*/
-
-  /**
-   * inclusive
-   * @param low
-   * @param high
-   * @return
+   * The inclusive list of all notes from the given low note to the high note.
+   * @param low lowest note of range
+   * @param high highest note of range
+   * @return the list of notes between the given ones
    */
   private List<Note> getNoteRange(Note low, Note high) {
     List<Note> notes = new ArrayList<>();
