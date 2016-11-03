@@ -21,3 +21,5 @@ out
 gen
 .DS_Store
 .gitignore
+
+.zip
