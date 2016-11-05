@@ -12,6 +12,7 @@ import java.util.TreeMap;
  * TODO: how test for users shouldnt be able to mutate model
  */
 public class MusicEditorModel implements IMusicEditorModel {
+  //HELLO
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    */
