@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * A skeleton Frame (i.e., a window) in Swing
  */
-public class GuiViewFrame extends javax.swing.JFrame implements YourViewInterfaceHere {
+public class GuiViewFrame extends javax.swing.JFrame implements IMusicEditorView {
 
   private final JPanel displayPanel; // You may want to refine this to a subtype of JPanel
 
@@ -23,7 +23,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements YourViewInterfac
   }
 
   @Override
-  public void initialize(){
+  public void makeVisible(){
     this.setVisible(true);
   }
 
@@ -32,4 +32,8 @@ public class GuiViewFrame extends javax.swing.JFrame implements YourViewInterfac
     return new Dimension(100, 100);
   }
 
+  @Override
+  public void refresh() {
+
+  }
 }

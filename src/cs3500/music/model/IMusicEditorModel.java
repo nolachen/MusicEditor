@@ -38,11 +38,24 @@ public interface IMusicEditorModel {
    * note-sustains are represented as |.
    * @return String representation of the music model
    */
-  String getTextRendering();
+  //String getTextRendering();
 
   /**
    * A list of all Notes that are currently in this music editor, in chromatic order.
    * @return the list of all notes
    */
-  List<Note> getAllNotes();
+  List<ImmutableNote> getAllNotes();
+
+  /**
+   * Returns the list of notes that begin at the given beat.
+   * @param beat
+   * @return
+   */
+  List<ImmutableNote> getNotesAtBeat(int beat);
+
+  /**
+   * Number of beats that are currently in this model.
+   * @return
+   */
+  int length();
 }

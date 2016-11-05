@@ -5,18 +5,19 @@ import javax.sound.midi.*;
 /**
  * A skeleton for MIDI playback
  */
-public class MidiViewImpl implements YourViewInterfaceHere {
+public class MidiViewImpl implements IMusicEditorView {
+  //TODO these used to be final but it didnt work
   private final Synthesizer synth;
   private final Receiver receiver;
 
-  public MidiViewImpl() {
-    try {
+  public MidiViewImpl() throws MidiUnavailableException {
+    //try {
       this.synth = MidiSystem.getSynthesizer();
       this.receiver = synth.getReceiver();
       this.synth.open();
-    } catch (MidiUnavailableException e) {
-      e.printStackTrace();
-    }
+   // } catch (MidiUnavailableException e) {
+     // e.printStackTrace();
+    //}
   }
   /**
    * Relevant classes and methods from the javax.sound.midi library:
@@ -55,5 +56,15 @@ public class MidiViewImpl implements YourViewInterfaceHere {
     this.receiver.send(start, -1);
     this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
     this.receiver.close(); // Only call this once you're done playing *all* notes
+  }
+
+  @Override
+  public void makeVisible() {
+
+  }
+
+  @Override
+  public void refresh() {
+
   }
 }

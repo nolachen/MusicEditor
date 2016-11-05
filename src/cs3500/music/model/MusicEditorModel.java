@@ -2,11 +2,14 @@ package cs3500.music.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
 /**
  * This class represents a music editor model.
+ * TODO : ask TA if we should be storing notes at every beat lol
+ * TODO: how test for users shouldnt be able to mutate model
  */
 public class MusicEditorModel implements IMusicEditorModel {
   /**
@@ -31,97 +34,84 @@ public class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public void add(Note note) {
-    note.addTo(this.music);
+    int beat = note.getStartBeat();
+    List<Note> currentNotes = this.music.get(beat);
+    if (currentNotes == null) {
+      currentNotes = new ArrayList<>();
+      music.put(beat, currentNotes);
+    }
+    currentNotes.add(note);
   }
 
   @Override
   public void remove(Note note) {
-    note.removeFrom(this.music);
+    int beat = note.getStartBeat();
+    List<Note> currentNotes = music.get(beat);
+    if ((currentNotes == null) || !currentNotes.contains(note)) {
+      throw new IllegalArgumentException("The note to remove doesn't exist.");
+    }
+    currentNotes.remove(note);
   }
 
   @Override
   public void playSimultaneously(IMusicEditorModel other) {
-    List<Note> otherNotes = other.getAllNotes();
-    for (Note n : otherNotes) {
-      this.add(n);
+    for (int i = 0; i < other.length(); i += 1) {
+      for (ImmutableNote n : other.getNotesAtBeat(i)) {
+        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration());
+        this.add(newNote);
+      }
     }
   }
 
   @Override
   public void playConsecutively(IMusicEditorModel other) {
-    List<Note> otherNotes = other.getAllNotes();
-    int lastBeat = this.music.lastKey();
-
-    for (Note n : otherNotes) {
-      n.setStartBeat(lastBeat + n.getStartBeat());
-      this.add(n);
-    }
-  }
-
-  @Override
-  public String getTextRendering() {
-    String output = "";
-
-    if (this.music.isEmpty()) {
-      return output;
-    }
-
-    List<Note> allNotes = this.getAllNotes();
-
-    int maxBeat = this.music.lastKey();
-    int padding = ((int) Math.log10(maxBeat)) + 1;
-
-
-    List<Note> noteRange = this.getNoteRange(allNotes.get(0), allNotes.get(allNotes.size() - 1));
-    String noteRangeString = "";
-    for (Note n : noteRange) {
-      noteRangeString += this.centerString(n.toString(), 5);
-    }
-    noteRangeString += "\n";
-
-    output += String.format("%" + (padding + noteRangeString.length()) + "s", noteRangeString);
-
-    for (int i = 0; i <= maxBeat; i += 1) {
-      output += (String.format("%" + padding + "d", i));
-      List<Note> currentNotes = this.music.get(i);
-
-      for (Note n : noteRange) {
-        if ((currentNotes == null) || !currentNotes.contains(n)) {
-          output += "     ";
-        }
-        else {
-          int index = currentNotes.indexOf(n);
-          for (int j = 0; j < currentNotes.size(); j += 1) {
-            Note curNote = currentNotes.get(j);
-            if (curNote.equals(n)
-                    && (curNote.getStartBeat() > currentNotes.get(index).getStartBeat())) {
-              index = j;
-            }
-          }
-          output += currentNotes.get(index).render(i);
-        }
+    int currentLastBeat = this.length();
+    for (int i = 0; i < other.length(); i += 1) {
+      for (ImmutableNote n : other.getNotesAtBeat(i)) {
+        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
+                n.getDuration());
+        this.add(newNote);
       }
-      output += "\n";
     }
-
-    return output;
   }
 
   @Override
-  public List<Note> getAllNotes() {
-    List<Note> allNotes = new ArrayList<>();
+  public List<ImmutableNote> getAllNotes() {
+    List<ImmutableNote> allNotes = new ArrayList<>();
 
     for (List<Note> list : this.music.values()) {
       for (Note n : list) {
-        if (!allNotes.contains(n)) {
-          allNotes.add(n);
-        }
+        allNotes.add(new ImmutableNote(n));
       }
     }
 
-    Collections.sort(allNotes);
+    return Collections.unmodifiableList(allNotes);
+  }
 
-    return allNotes;
+  @Override
+  public List<ImmutableNote> getNotesAtBeat(int beat) {
+    List<Note> notes = this.music.get(beat);
+    List<ImmutableNote> notesCopy = new ArrayList<>();
+    if (notes == null) {
+      return new ArrayList<>();
+    }
+    for (Note n : notes) {
+      notesCopy.add(new ImmutableNote(n));
+    }
+    return Collections.unmodifiableList(notesCopy);
+  }
+
+  @Override
+  public int length() {
+    int lastBeat = this.music.lastKey();
+    for (List<Note> list : this.music.values()) {
+      for (Note n : list) {
+        if (n.getEndBeat() > lastBeat) {
+          lastBeat = n.getEndBeat();
+        }
+      }
+    }
+    return lastBeat;
   }
 
   /**
@@ -142,23 +132,6 @@ public class MusicEditorModel implements IMusicEditorModel {
     return notes;
   }
 
-
-  /**
-   * Pads the given String with spaces so that it is centered in the given width.
-   * @param s the string to center
-   * @param width the total width in chars
-   * @return the centered string
-   */
-  private String centerString(String s, int width) {
-
-    int totalPad = width - s.length();
-    int leftPad = s.length() + ((totalPad + 1) / 2);
-
-    String output = String.format("%" + leftPad + "s", s);
-    output = String.format("%-" + width + "s", output);
-
-    return output;
-  }
 
 
 }

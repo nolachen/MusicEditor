@@ -1,6 +1,7 @@
 package cs3500.music.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -12,12 +13,12 @@ public class Note implements Comparable<Note> {
   /**
    * The pitch of this Note.
    */
-  private Pitch pitch;
+  private final Pitch pitch;
 
   /**
    * The octave of this Note.
    */
-  private int octave;
+  private final int octave;
 
   /**
    * The starting beat of this Note.
@@ -28,6 +29,7 @@ public class Note implements Comparable<Note> {
   /**
    * The duration of this note in beats, with only integral durations allowed.
    * INVARIANT: duration > 0.
+   * TODO: might have to let note of duration 0's exist
    */
   private int duration;
 
@@ -65,7 +67,7 @@ public class Note implements Comparable<Note> {
 
   /**
    * Determines whether this {@link Note} is equal to the given object.
-   * Two Notes are equal if they have the same pitch and octave.
+   * Two Notes are equal if they have the same pitch, octave, duration, and start beat.
    * @param obj the object to check equality with
    * @return true if obj is equal to this note, false otherwise
    */
@@ -76,7 +78,8 @@ public class Note implements Comparable<Note> {
     }
     Note that = (Note) obj;
 
-    return (this.pitch == that.pitch) && (this.octave == that.octave);
+    return (this.pitch == that.pitch) && (this.octave == that.octave) &&
+            (this.startBeat == that.startBeat) && (this.duration == that.duration);
   }
 
   /**
@@ -126,6 +129,10 @@ public class Note implements Comparable<Note> {
     }
   }
 
+  public Pitch getPitch() { return this.pitch; }
+
+  public int getOctave() { return this.octave; }
+
   /**
    * Getter for {@code startBeat}.
    * @return the start beat
@@ -133,6 +140,10 @@ public class Note implements Comparable<Note> {
   public int getStartBeat() {
     return this.startBeat;
   }
+
+  public int getDuration() { return this.duration; }
+
+  public int getEndBeat() { return this.startBeat + this.duration; }
 
   /**
    * Setter for {@code startBeat}. Ensures that the invariant is held (startBeat >= 0).
@@ -158,34 +169,17 @@ public class Note implements Comparable<Note> {
     return new Note(this.pitch.nextPitch(), octave, this.startBeat, this.duration);
   }
 
-  /**
-   * Adds this note to the given TreeMap.
-   * Makes sure to map all beats that play this note to this note.
-   * @param music the mapping to add this note to
-   */
-  void addTo(TreeMap<Integer, List<Note>> music) {
-    for (int i = this.startBeat; i < (this.startBeat + this.duration); i += 1) {
-      List<Note> currentNotes = music.get(i);
-      if (currentNotes == null) {
-        currentNotes = new ArrayList<>();
-        music.put(i, currentNotes);
+  public class PitchComparator implements Comparator<Note> {
+
+    @Override
+    public int compare(Note n1, Note n2) {
+      if (n1.octave == n2.octave) {
+        return n1.pitch.compareTo(n2.pitch);
       }
-      currentNotes.add(this);
+      else {
+        return n1.octave - n2.octave;
+      }
     }
   }
 
-  /**
-   * Removes this note from the given TreeMap. Throws an exception if this note is not found.
-   * Makes sure to remove this note from all beats where it is played.
-   * @param music the mapping to remove from
-   */
-  void removeFrom(TreeMap<Integer, List<Note>> music) {
-    for (int i = this.startBeat; i < (this.startBeat + this.duration); i += 1) {
-      List<Note> currentNotes = music.get(i);
-      if ((currentNotes == null) || !currentNotes.contains(this)) {
-        throw new IllegalArgumentException("The note to remove doesn't exist.");
-      }
-      currentNotes.remove(this);
-    }
-  }
 }
