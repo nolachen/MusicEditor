@@ -13,6 +13,7 @@ import java.util.TreeMap;
  */
 public class MusicEditorModel implements IMusicEditorModel {
   //HELLO
+  //hi
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    */
