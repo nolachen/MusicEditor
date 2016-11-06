@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.swing.*;
 
+import cs3500.music.MusicEditor;
 import cs3500.music.model.ImmutableNote;
 import cs3500.music.model.ViewModel;
 
@@ -16,6 +17,7 @@ import cs3500.music.model.ViewModel;
  * A dummy view that simply draws a string 
  */
 public class MusicEditorPanel extends JPanel {
+  private static final int NOTE_SIZE = 100;
   private final ViewModel viewModel;
   //private final int beat;
   //private final List<ImmutableNote> notes;
@@ -23,7 +25,7 @@ public class MusicEditorPanel extends JPanel {
   public MusicEditorPanel(ViewModel viewModel) {
     super(); //TODO ???
     //this.setBackground(Color.WHITE);
-    //this.viewModel = viewModel;
+    this.viewModel = viewModel;
     //this.beat = beat;
     //this.notes = notes;
 
@@ -63,6 +65,17 @@ public class MusicEditorPanel extends JPanel {
     //each y will first be scaled, and then translated
     g2d.translate(0, this.getPreferredSize().getHeight());
     g2d.scale(1, -1);
+
+    int length = this.viewModel.length();
+    for (int i = 0; i < length; i += 1) {
+      if ((i % 16) == 0) {
+        g2d.drawString("" + i, i * MusicEditorPanel.NOTE_SIZE, 0);
+      }
+      List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
+      for (ImmutableNote n : currentNotes) {
+
+      }
+    }
 
     /*int length = this.viewModel.length();
 
