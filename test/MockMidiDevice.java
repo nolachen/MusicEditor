@@ -1,8 +1,10 @@
 import cs3500.music.model.IMusicEditorModel;
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
+import cs3500.music.model.ViewModel;
 import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.MusicReader;
+import cs3500.music.view.MidiViewImpl;
 import org.junit.Test;
 
 import javax.sound.midi.MidiDevice;
@@ -17,6 +19,7 @@ import java.util.TreeMap;
 public class MockMidiDevice {
   IMusicEditorModel model;
   MusicReader reader;
+  ViewModel vm;
 
   public void initCond() {
     this.model = new MusicEditorModel();
@@ -61,7 +64,9 @@ public class MockMidiDevice {
             "note 54 56 1 62 70\n" +
             "note 56 64 1 52 72\n" +
             "note 56 64 1 60 73\n");
-    reader.parseFile(in, new MusicEditorModel.Builder());
+    this.model = reader.parseFile(in, new MusicEditorModel.Builder());
+    this.vm = new ViewModel(this.model);
+    //new MidiViewImpl(60, this.vm, )
   }
 
 

@@ -33,7 +33,10 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   // constructor using the builder pattern
   private MusicEditorModel(Builder builder) {
-    this.music = builder.music;
+    this.music = new TreeMap<>();
+    for (Note n : builder.music) {
+      this.add(n);
+    }
     this.tempo = builder.tempo;
   }
   /**
@@ -150,14 +153,14 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   //TODO this is complete shit
   public static final class Builder implements CompositionBuilder<IMusicEditorModel> {
-    private TreeMap<Integer, List<Note>> music;
+    private ArrayList<Note> music;
     private int tempo;
 
     // constructor of builder
     public Builder(/*TreeMap<Integer, List<Note>> music, int tempo*/) {
       // arbitrary tempo
       this.tempo = 200000;
-      this.music = new TreeMap<>();
+      this.music = new ArrayList<>();
     }
 
     @Override
@@ -176,6 +179,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     public CompositionBuilder<IMusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
       Note note = new Note(start, end, instrument, pitch, volume);
       music.add(note);
+      return this;
     }
   }
 
