@@ -41,7 +41,7 @@ public class ViewModel {
   }
 
   /**
-   * R
+   * Returns
    * @return
    */
   public List<String> getNoteRange() {
@@ -120,7 +120,6 @@ public class ViewModel {
       current = current.nextNote();
     }*/
 
-    System.out.println(noteRange);
     return noteRange;
   }
 }

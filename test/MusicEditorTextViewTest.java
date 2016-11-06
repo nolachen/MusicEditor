@@ -7,6 +7,7 @@ import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
 import cs3500.music.model.ViewModel;
 import cs3500.music.view.IMusicEditorView;
+import cs3500.music.view.MusicEditorGuiView;
 import cs3500.music.view.MusicEditorTextView;
 
 import static org.junit.Assert.*;
@@ -27,7 +28,7 @@ public class MusicEditorTextViewTest {
   public void setup() {
     this.model = new MusicEditorModel();
     this.viewModel = new ViewModel(model);
-    this.view = new MusicEditorTextView(viewModel);
+    this.view = new MusicEditorGuiView(viewModel);
   }
 
   @Test

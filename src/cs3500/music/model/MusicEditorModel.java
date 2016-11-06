@@ -175,7 +175,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     @Override
     public CompositionBuilder<IMusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
       Note note = new Note(start, end, instrument, pitch, volume);
-      music.add(note);
+      this.music.add(note);
     }
   }
 
