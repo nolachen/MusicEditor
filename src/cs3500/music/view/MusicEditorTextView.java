@@ -12,7 +12,7 @@ import cs3500.music.model.ViewModel;
  * Created by nolachen on 11/3/16.
  */
 public class MusicEditorTextView implements IMusicEditorView {
-  private ViewModel viewModel;
+  private final ViewModel viewModel;
   private String rendering;
   private ArrayList<ImmutableNote> notes;
   private Note min;
@@ -34,9 +34,6 @@ public class MusicEditorTextView implements IMusicEditorView {
     //this.makeString();
     // instead of printing, append onto appendable
     int length = this.viewModel.length();
-    if (length == 0) {
-      return;
-    }
 
     List<String> noteRange = this.viewModel.getNoteRange();
     int width = noteRange.size();
@@ -62,6 +59,7 @@ public class MusicEditorTextView implements IMusicEditorView {
       notesGrid.add(temp);
     }
 
+    // set values in notesGrid
     for (int i = 0; i <= length; i += 1) {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
 
@@ -74,6 +72,7 @@ public class MusicEditorTextView implements IMusicEditorView {
       }
     }
 
+    // append strings in notesGrid to this rendering
     for (int i = 0; i < notesGrid.size(); i += 1) {
       this.rendering += (String.format("%" + padding + "d", i));
       for (String s : notesGrid.get(i)) {
