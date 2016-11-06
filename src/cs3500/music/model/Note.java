@@ -21,6 +21,11 @@ public class Note implements Comparable<Note> {
   private final int octave;
 
   /**
+   * Integer representation of the pitch and octave
+   */
+  private final int pitchOctave;
+
+  /**
    * The starting beat of this Note.
    * INVARIANT: startBeat >= 0.
    */
@@ -28,30 +33,74 @@ public class Note implements Comparable<Note> {
 
   /**
    * The duration of this note in beats, with only integral durations allowed.
-   * INVARIANT: duration > 0.
+   * INVARIANT: duration >= 0.
    * TODO: might have to let note of duration 0's exist
    */
   private int duration;
 
   /**
-   * Constructs a Note, while ensuring both class invariants.
+   * the integer representation of the instrument.
+   */
+  private int instrument;
+
+  /**
+   * that integer representation of the volume.
+   */
+  private int volume;
+
+  /**
+   * Constructs a Note, while ensuring both class invariants in MIDI form.
+   * @param startBeat the start beat
+   * @param endBeat the end of the beat
+   * @param instrument the instrument playing this note
+   * @param pitchOctave the pitch combined with the octave
+   * @param volume the volume of the note
+   */
+  public Note(int startBeat, int endBeat, int instrument, int pitchOctave, int volume) {
+    if (startBeat < 0) {
+      throw new IllegalArgumentException("Start beat must be at least 0.");
+    }
+    if (startBeat < endBeat) {
+      throw new IllegalArgumentException("End beat must be after the start beat.");
+    }
+    this.duration = endBeat - startBeat;
+    if (duration < 0) {
+      throw new IllegalArgumentException("Duration must be greater than 0.");
+    }
+    this.pitchOctave = pitchOctave;
+    this.pitch = this.getPitchEnumValue(this.pitchOctave % 12);
+    this.octave = this.pitchOctave / 12;
+    this.startBeat = startBeat;
+    //tODO should i store the end beat
+  }
+
+  /**
    * @param pitch the pitch
    * @param octave the octave
-   * @param startBeat the start beat
-   * @param duration the duration in beats
+   * @param startBeat the startbeat
+   * @param duration the duration of the note
    */
+  // Constructor with a given Pitch and Octave
   public Note(Pitch pitch, int octave, int startBeat, int duration) {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
-    if (duration <= 0) {
+    if (duration < 0) {
       throw new IllegalArgumentException("Duration must be greater than 0.");
     }
-
     this.pitch = pitch;
     this.octave = octave;
+    this.pitchOctave = this.pitch.ordinal() + 12 * this.octave;
     this.startBeat = startBeat;
     this.duration = duration;
+  }
+
+  private Pitch getPitchEnumValue(int pitch) {
+    Pitch p = Pitch.C;
+    while(p.ordinal() != pitch) {
+      p = p.nextPitch();
+    }
+    return p;
   }
 
   /**
@@ -156,18 +205,18 @@ public class Note implements Comparable<Note> {
     this.startBeat = startBeat;
   }
 
-  /**
+/*  *//**
    * The next note that comes after this note in the chromatic scale, with the same duration and
    * start beat as this note.
    * @return the next Note
-   */
+   *//*
   Note nextNote() {
     int octave = this.octave;
     if (this.pitch == Pitch.B) {
       octave += 1;
     }
     return new Note(this.pitch.nextPitch(), octave, this.startBeat, this.duration);
-  }
+  }*/
 
   public class PitchComparator implements Comparator<Note> {
 

@@ -23,12 +23,17 @@ public class MidiViewImpl implements IMusicEditorView {
   private Sequence seq;
   // represents tick, number of pulses per quarter note
   // TODO do i need this
+  // used to set a tempo for the sequence
+  // PPQ, ticks per quarter note
+  // each duration unit is one quarter note, 1 duration = tick PPQ
   private final int tick;
+  private final float tempoBPM;
   private ViewModel viewModel;
   private List<Track> tracks;
+  private final int timingResolution;
 
   // Cosntructor
-  public MidiViewImpl(int tick, ViewModel viewModel) throws MidiUnavailableException {
+  public MidiViewImpl(int tick, ViewModel viewModel, int timingResolution, float tempoBPM) throws MidiUnavailableException {
     // tries to initialize everything.
     Synthesizer tempSynth;
     Sequencer tempSeqr;
@@ -61,6 +66,9 @@ public class MidiViewImpl implements IMusicEditorView {
     this.tick = tick;
     this.viewModel = viewModel;
     this.tracks = new ArrayList<>();
+    this.timingResolution = timingResolution;
+    this.tempoBPM = tempoBPM;
+    this.seqr.setTempoInBPM(this.tempoBPM);
   }
 
 
@@ -95,28 +103,29 @@ public class MidiViewImpl implements IMusicEditorView {
    *   </a>
    */
 
-/*  //PLAYING A SEQUENCE IS DONE BY VOID START AND VOID STOP
-
-  public void oldPlayNote() throws InvalidMidiDataException {
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 64);
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 64);
-    this.receiver.send(start, -1);
-    this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
-    //this.receiver.close(); // Only call this once you're done playing *all* notes
-  }*/
-
   // makes the message to play the given note
   //tODO fix the 64
   public void writeNote(ImmutableNote note, Track track) throws InvalidMidiDataException {
     int octave = note.getOctave();
+    //TODO GET PITCH OCTAVE
     int pitch = note.getPitch().ordinal();
     int noteRepresentation = pitch + octave*12;
+    // number of quarter notes this note is
     int duration = note.getDuration();
+    // TODO check if this casting is wrong
+    long ticksPerSecond = (long)(this.timingResolution * (this.tempoBPM / 60.0));
+    // a single tick in second representation
+    long tickSize = 1 / ticksPerSecond;
+    // TODO check if this is right
+    // quarter note size in milliseconds
+    long quarterNoteSize = tickSize * tick * 1000;
+    // TODO check what the 64 is
     MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, noteRepresentation, 64);
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, noteRepresentation, 64);
     track.add(new MidiEvent(start, -1));
     //TODO IMPORTANT fix the timing cause who knows what the fuck that is
-    track.add(new MidiEvent(stop, this.synth.getMicrosecondPosition() + 200000));
+    // 200000 represents the duration time
+    track.add(new MidiEvent(stop, this.synth.getMicrosecondPosition() + (quarterNoteSize * duration)));
     //todo this.receiver.close(); // Only call this once you're done playing *all* notes
   }
 
@@ -139,8 +148,9 @@ public class MidiViewImpl implements IMusicEditorView {
     }
   }
 
+  //TODO probably wrong
   @Override
   public void refresh() {
-
+    seqr.setTickPosition(0);
   }
 }

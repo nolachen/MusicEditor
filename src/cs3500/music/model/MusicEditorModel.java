@@ -1,5 +1,8 @@
 package cs3500.music.model;
 
+import cs3500.music.util.CompositionBuilder;
+import sun.reflect.generics.tree.Tree;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,27 +14,34 @@ import java.util.TreeMap;
  * TODO : ask TA if we should be storing notes at every beat lol
  * TODO: how test for users shouldnt be able to mutate model
  */
-public class MusicEditorModel implements IMusicEditorModel {
-  //HELLO
-  //hi
+public final class MusicEditorModel implements IMusicEditorModel {
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    */
   private TreeMap<Integer, List<Note>> music;
+  //represented in Beats per Millisecond
+  private int tempo;
 
   /**
    * Constructor for MusicEditorModel.
    * @param music the mapping of music
    */
-  private MusicEditorModel(TreeMap<Integer, List<Note>> music) {
+  private MusicEditorModel(TreeMap<Integer, List<Note>> music, int tempo) {
     this.music = music;
+    this.tempo = tempo;
   }
 
+  // constructor using the builder pattern
+  private MusicEditorModel(Builder builder) {
+    this.music = builder.music;
+    this.tempo = builder.tempo;
+  }
   /**
    * Default constructor for MusicEditorModel, creates an empty music to start.
    */
+  //tODO check default tempo -> i just picked a random average tempo
   public MusicEditorModel() {
-    this(new TreeMap<>());
+    this(new TreeMap<>(), 200000);
   }
 
   @Override
@@ -105,6 +115,9 @@ public class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public int length() {
+    if (this.music.isEmpty()) {
+      return 0;
+    }
     int lastBeat = this.music.lastKey();
     for (List<Note> list : this.music.values()) {
       for (Note n : list) {
@@ -116,12 +129,12 @@ public class MusicEditorModel implements IMusicEditorModel {
     return lastBeat;
   }
 
-  /**
+/*  *//**
    * The inclusive list of all notes from the given low note to the high note.
-   * @param low lowest note of range
-   * @param high highest note of range
+   * @param //low lowest note of range
+   * @param //high highest note of range
    * @return the list of notes between the given ones
-   */
+   *//*
   private List<Note> getNoteRange(Note low, Note high) {
     List<Note> notes = new ArrayList<>();
     Note current = low;
@@ -132,8 +145,39 @@ public class MusicEditorModel implements IMusicEditorModel {
     }
 
     return notes;
-  }
+  }*/
 
+
+  //TODO this is complete shit
+  public static final class Builder implements CompositionBuilder<IMusicEditorModel> {
+    private TreeMap<Integer, List<Note>> music;
+    private int tempo;
+
+    // constructor of builder
+    public Builder(/*TreeMap<Integer, List<Note>> music, int tempo*/) {
+      // arbitrary tempo
+      this.tempo = 200000;
+      this.music = new TreeMap<>();
+    }
+
+    @Override
+    public IMusicEditorModel build() {
+      return new MusicEditorModel(this);
+    }
+
+    @Override
+    public CompositionBuilder<IMusicEditorModel> setTempo(int tempo) {
+      this.tempo = tempo;
+      return this;
+    }
+
+    //TODO
+    @Override
+    public CompositionBuilder<IMusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
+      //Note note = new Note(pitch, ) -> constructs the new note
+      return null;
+    }
+  }
 
 
 }
