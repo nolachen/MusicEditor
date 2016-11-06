@@ -71,6 +71,8 @@ public class Note implements Comparable<Note> {
     this.pitch = this.getPitchEnumValue(this.pitchOctave % 12);
     this.octave = this.pitchOctave / 12;
     this.startBeat = startBeat;
+    this.instrument = instrument;
+    this.volume = volume;
     //tODO should i store the end beat
   }
 
