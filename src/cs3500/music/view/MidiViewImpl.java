@@ -27,13 +27,14 @@ public class MidiViewImpl implements IMusicEditorView {
   // PPQ, ticks per quarter note
   // each duration unit is one quarter note, 1 duration = tick PPQ
   private final int tick;
+  // tempo in beats per millisecond
   private final float tempoBPM;
   private ViewModel viewModel;
   private List<Track> tracks;
-  private final int timingResolution;
+  //private final int timingResolution;
 
   // Cosntructor
-  public MidiViewImpl(int tick, ViewModel viewModel, int timingResolution, float tempoBPM) throws MidiUnavailableException {
+  public MidiViewImpl(int tick, ViewModel viewModel/*, int timingResolution, float tempoBPM*/) {
     // tries to initialize everything.
     Synthesizer tempSynth;
     Sequencer tempSeqr;
@@ -62,46 +63,20 @@ public class MidiViewImpl implements IMusicEditorView {
     this.receiver = tempReceiver;
     this.seqrReceiver = tempSeqrReceiver;
     this.seqrTrans.setReceiver(receiver);
-    this.synth.open();
     this.tick = tick;
     this.viewModel = viewModel;
     this.tracks = new ArrayList<>();
-    this.timingResolution = timingResolution;
-    this.tempoBPM = tempoBPM;
+    //this.timingResolution = timingResolution;
+    this.tempoBPM = viewModel.getTempo();
     this.seqr.setTempoInBPM(this.tempoBPM);
+    try {
+      this.synth.open();
+    }
+    catch (Exception me) {
+      throw new IllegalStateException("Midi Unavailable.");
+    }
+
   }
-
-
-  /**
-   * Relevant classes and methods from the javax.sound.midi library:
-   * <ul>
-   *  <li>{@link MidiSystem#getSynthesizer()}</li>
-   *  <li>{@link Synthesizer}
-   *    <ul>
-   *      <li>{@link Synthesizer#open()}</li>
-   *      <li>{@link Synthesizer#getReceiver()}</li>
-   *      <li>{@link Synthesizer#getChannels()}</li>
-   *    </ul>
-   *  </li>
-   *  <li>{@link Receiver}
-   *    <ul>
-   *      <li>{@link Receiver#send(MidiMessage, long)}</li>
-   *      <li>{@link Receiver#close()}</li>
-   *    </ul>
-   *  </li>
-   *  <li>{@link MidiMessage}</li>
-   *  <li>{@link ShortMessage}</li>
-   *  <li>{@link MidiChannel}
-   *    <ul>
-   *      <li>{@link MidiChannel#getProgram()}</li>
-   *      <li>{@link MidiChannel#programChange(int)}</li>
-   *    </ul>
-   *  </li>
-   * </ul>
-   * @see <a href="https://en.wikipedia.org/wiki/General_MIDI">
-   *   https://en.wikipedia.org/wiki/General_MIDI
-   *   </a>
-   */
 
   // makes the message to play the given note
   //tODO fix the 64
@@ -113,7 +88,7 @@ public class MidiViewImpl implements IMusicEditorView {
     // number of quarter notes this note is
     int duration = note.getDuration();
     // TODO check if this casting is wrong
-    long ticksPerSecond = (long)(this.timingResolution * (this.tempoBPM / 60.0));
+    long ticksPerSecond = (long)(seq.getResolution() * (this.tempoBPM / 60.0));
     // a single tick in second representation
     long tickSize = 1 / ticksPerSecond;
     // TODO check if this is right

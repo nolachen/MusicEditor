@@ -58,4 +58,10 @@ public interface IMusicEditorModel {
    * @return
    */
   int length();
+
+  /**
+   * returns this models tempo.
+   * @return
+   */
+  int getTempo();
 }

@@ -132,6 +132,11 @@ public final class MusicEditorModel implements IMusicEditorModel {
     return lastBeat;
   }
 
+  @Override
+  public int getTempo() {
+    return this.tempo;
+  }
+
 /*  *//**
    * The inclusive list of all notes from the given low note to the high note.
    * @param //low lowest note of range

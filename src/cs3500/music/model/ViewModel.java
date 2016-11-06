@@ -40,6 +40,9 @@ public class ViewModel {
     return this.model.length();
   }
 
+  public int getTempo() {
+    return this.model.getTempo();
+  }
   /**
    * Returns
    * @return

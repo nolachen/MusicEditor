@@ -66,7 +66,8 @@ public class MockMidiDevice {
             "note 56 64 1 60 73\n");
     this.model = reader.parseFile(in, new MusicEditorModel.Builder());
     this.vm = new ViewModel(this.model);
-    //new MidiViewImpl(60, this.vm, )
+    MidiViewImpl view = new MidiViewImpl(60, this.vm);
+    view.makeVisible();
   }
 
 
