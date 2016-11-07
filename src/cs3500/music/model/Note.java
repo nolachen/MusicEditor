@@ -39,39 +39,15 @@ public class Note implements Comparable<Note> {
   private int volume;
 
   /**
-   * Constructs a Note, while ensuring both class invariants in MIDI form.
-   * @param startBeat the start beat.
-   * @param endBeat the end of the beat.
-   * @param instrument the instrument playing this note.
-   * @param pitchOctave the pitch combined with the octave, in the range [0, 127] where 60 is
-   *                    middle C (C4)
-   * @param volume the volume of the note.
-   */
-  public Note(int startBeat, int endBeat, int instrument, int pitchOctave, int volume) {
-    if (startBeat < 0) {
-      throw new IllegalArgumentException("Start beat must be at least 0.");
-    }
-    if (startBeat >= endBeat) {
-      throw new IllegalArgumentException("End beat must be after the start beat.");
-    }
-    this.duration = endBeat - startBeat;
-
-    this.pitch = Pitch.values()[pitchOctave % 12];
-    this.octave = (pitchOctave / 12) - 1;
-    this.startBeat = startBeat;
-    this.instrument = instrument;
-    this.volume = volume;
-  }
-
-  /**
-   * Constructor with a given pitch, octave, start beat, and duration.
-   * Sets the instrument to 1 and the volume to 127.
+   * Constructor for Note given all the fields.
    * @param pitch the pitch
-   * @param octave the octave
+   * @param octave the octave number
    * @param startBeat the start beat
-   * @param duration the duration of the note
+   * @param duration the duration
+   * @param instrument the instrument
+   * @param volume the volume
    */
-  public Note(Pitch pitch, int octave, int startBeat, int duration) {
+  public Note(Pitch pitch, int octave, int startBeat, int duration, int instrument, int volume) {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
@@ -82,8 +58,34 @@ public class Note implements Comparable<Note> {
     this.octave = octave;
     this.startBeat = startBeat;
     this.duration = duration;
-    this.instrument = 1;
-    this.volume = 127;
+    this.instrument = instrument;
+    this.volume = volume;
+  }
+
+  /**
+   * Constructs a Note, while ensuring both class invariants in MIDI form.
+   * @param startBeat the start beat.
+   * @param endBeat the end of the beat.
+   * @param instrument the instrument playing this note.
+   * @param pitchOctave the pitch combined with the octave, in the range [0, 127] where 60 is
+   *                    middle C (C4)
+   * @param volume the volume of the note.
+   */
+  public Note(int startBeat, int endBeat, int instrument, int pitchOctave, int volume) {
+    this(Pitch.values()[pitchOctave % 12], (pitchOctave / 12) - 1, startBeat,
+            endBeat - startBeat, instrument, volume);
+  }
+
+  /**
+   * Convenience constructor with a given pitch, octave, start beat, and duration.
+   * Sets the instrument to 1 and the volume to 127.
+   * @param pitch the pitch
+   * @param octave the octave
+   * @param startBeat the start beat
+   * @param duration the duration of the note
+   */
+  public Note(Pitch pitch, int octave, int startBeat, int duration) {
+    this(pitch, octave, startBeat, duration, 1, 127);
   }
 
   /**
