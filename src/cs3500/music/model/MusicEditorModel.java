@@ -1,6 +1,7 @@
 package cs3500.music.model;
 
 import cs3500.music.util.CompositionBuilder;
+import cs3500.music.util.ModelBuilder;
 import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
@@ -32,12 +33,12 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   // constructor using the builder pattern
-  private MusicEditorModel(Builder builder) {
+  public MusicEditorModel(ModelBuilder builder) {
     this.music = new TreeMap<>();
-    for (Note n : builder.music) {
+    for (Note n : builder.getMusic()) {
       this.add(n);
     }
-    this.tempo = builder.tempo;
+    this.tempo = builder.getTempo();
   }
   /**
    * Default constructor for MusicEditorModel, creates an empty music to start.
@@ -154,39 +155,6 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
     return notes;
   }*/
-
-
-  //TODO this is complete shit
-  public static final class Builder implements CompositionBuilder<IMusicEditorModel> {
-    private ArrayList<Note> music;
-    private int tempo;
-
-    // constructor of builder
-    public Builder(/*TreeMap<Integer, List<Note>> music, int tempo*/) {
-      // arbitrary tempo
-      this.tempo = 200000;
-      this.music = new ArrayList<>();
-    }
-
-    @Override
-    public IMusicEditorModel build() {
-      return new MusicEditorModel(this);
-    }
-
-    @Override
-    public CompositionBuilder<IMusicEditorModel> setTempo(int tempo) {
-      this.tempo = tempo;
-      return this;
-    }
-
-    //TODO
-    @Override
-    public CompositionBuilder<IMusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
-      Note note = new Note(start, end, instrument, pitch, volume);
-      music.add(note);
-      return this;
-    }
-  }
 
 
 }

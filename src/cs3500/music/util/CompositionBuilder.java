@@ -1,5 +1,12 @@
 package cs3500.music.util;
 
+import cs3500.music.model.Note;
+import sun.reflect.generics.tree.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 /**
  * A builder of compositions.  Since we do not know in advance what
  * the name of the main type is for a model, we parameterize this builder interface
@@ -31,4 +38,8 @@ public interface CompositionBuilder<T> {
    * @return
    */
   CompositionBuilder<T> addNote(int start, int end, int instrument, int pitch, int volume);
+
+  ArrayList<Note> getMusic();
+
+  int getTempo();
 }
