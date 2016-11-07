@@ -37,7 +37,7 @@ public class MusicEditor {
     IMusicEditorModel modelBuild = new MusicEditorModel(new ModelBuilder());
     ModelBuilder build = new ModelBuilder();
     // TODO fix the file path
-    FileReader reader = new FileReader("C:\\Users\\Marina\\Documents\\GitHub\\MusicEditor\\mary-little-lamb.txt");
+    FileReader reader = new FileReader("C:\\Users\\Marina\\Documents\\GitHub\\MusicEditor\\df-ttfaf.txt");
     MusicReader musicReader = new MusicReader();
     musicReader.parseFile(reader, build);
     model = new MusicEditorModel(build);

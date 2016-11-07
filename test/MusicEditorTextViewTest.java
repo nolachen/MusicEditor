@@ -39,6 +39,7 @@ public class MusicEditorTextViewTest {
     model.add(g3b24);
 
     view.makeVisible();
+    //assertEquals(view.print);
   }
 
 }

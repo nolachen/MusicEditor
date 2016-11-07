@@ -5,7 +5,9 @@ import cs3500.music.model.Pitch;
 import cs3500.music.model.ViewModel;
 
 import javax.sound.midi.*;
-import java.util.ArrayList;
+import java.nio.channels.Channel;
+
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +17,9 @@ public class MidiViewImpl implements IMusicEditorView {
   private ViewModel viewModel;
   private final Synthesizer synth;
   private final Receiver receiver;
+  //mapping of instruments to it's channel
+  private HashMap<Integer, Integer> channels;
+  private int channelNum;
 
   // Cosntructor
   public MidiViewImpl(ViewModel viewModel) {
@@ -38,6 +43,8 @@ public class MidiViewImpl implements IMusicEditorView {
       throw new IllegalStateException("Midi Unavailable.");
     }
     this.viewModel = viewModel;
+    channels = new HashMap<>();
+    channelNum = -1;
   }
 
   MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
@@ -58,7 +65,8 @@ public class MidiViewImpl implements IMusicEditorView {
     //might have an error with the sequence methods later
     this.receiver = tempReceiver;
     this.viewModel = viewModel;
-
+    channels = new HashMap<>();
+    channelNum = -1;
   }
 
   // makes the message to play the given note
@@ -68,8 +76,15 @@ public class MidiViewImpl implements IMusicEditorView {
     int pitch = note.getPitch().ordinal();
     int noteRepresentation = pitch + octave*12;
     int duration = note.getDuration();
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, note.getInstrument(), noteRepresentation, note.getVolume());
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, note.getInstrument(), noteRepresentation, note.getVolume());
+    int instrument = note.getInstrument();
+    if (!channels.containsKey(instrument)) {
+      channels.put(instrument, this.channelNum + 1);
+      receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument), instrument, 0), -1);
+      channelNum++;
+    }
+    System.out.println(instrument);
+    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument), noteRepresentation, note.getVolume());
+    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument), noteRepresentation, note.getVolume());
     receiver.send(start, viewModel.getTempo() * note.getStartBeat());
     receiver.send(stop, (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
     //todo this.receiver.close(); // Only call this once you're done playing *all* notes

@@ -124,6 +124,13 @@ public class MusicEditorTextView implements IMusicEditorView {
 
   }
 
+  /**
+   * @return the text representation of the view
+   */
+  public String printRendering() {
+    return this.rendering;
+  }
+
   /*@Override
   public String getTextRendering() {
     String output = "";
