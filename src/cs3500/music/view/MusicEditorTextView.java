@@ -1,38 +1,40 @@
 package cs3500.music.view;
 
 import java.util.ArrayList;
+
 import java.util.List;
-import java.util.TreeMap;
 
 import cs3500.music.model.ImmutableNote;
+
 import cs3500.music.model.Note;
+
 import cs3500.music.model.ViewModel;
 
 /**
- * Created by nolachen on 11/3/16.
+ * View for the TextView class.
+ * Creates a text representation of the models music.
  */
 public class MusicEditorTextView implements IMusicEditorView {
+  // viewModel that gives access to necessary information from the model.
   private final ViewModel viewModel;
+  // Rendering of this view.
   private String rendering;
-  private ArrayList<ImmutableNote> notes;
-  private Note min;
-  private Note max;
 
   // TODO : readable & appendable
   private Readable read;
   private Appendable append;
 
+  /**
+   * Constructor of a MusicEditorTextView.
+   * @param viewModel viewModel that gives access to information in the model.
+   */
   public MusicEditorTextView(ViewModel viewModel) {
     this.viewModel = viewModel;
     this.rendering = "";
-    //this.notes = new ArrayList<Note>();
-    // TODO figure out min and max
   }
 
   @Override
   public void makeVisible() {
-    //this.makeString();
-    // instead of printing, append onto appendable
     int length = this.viewModel.length();
 
     List<String> noteRange = this.viewModel.getNoteRange();
@@ -80,10 +82,7 @@ public class MusicEditorTextView implements IMusicEditorView {
       }
 
       this.rendering += "\n";
-
     }
-
-
     System.out.println(this.rendering);
   }
 
@@ -104,79 +103,7 @@ public class MusicEditorTextView implements IMusicEditorView {
     return output;
   }
 
-  //@Override
-  // converts list of notes into a string
-  public void setNotes(List<ImmutableNote> notes) {
-    //this.notes = new ArrayList<Note>(notes);
-    // store notes as field
-  }
-
-
-  // TODO : the min and max should be calculated by the view
-
-  /*private void makeString() {
-
-  }*/
-
-
   @Override
   public void refresh() {
-
   }
-
-  /**
-   * @return the text representation of the view
-   */
-  public String printRendering() {
-    return this.rendering;
-  }
-
-  /*@Override
-  public String getTextRendering() {
-    String output = "";
-
-    if (this.music.isEmpty()) {
-      return output;
-    }
-
-    List<Note> allNotes = this.getAllNotes();
-
-    int maxBeat = this.music.lastKey();
-    int padding = ((int) Math.log10(maxBeat)) + 1;
-
-
-    List<Note> noteRange = this.getNoteRange(allNotes.get(0), allNotes.get(allNotes.size() - 1));
-    String noteRangeString = "";
-    for (Note n : noteRange) {
-      noteRangeString += this.centerString(n.toString(), 5);
-    }
-    noteRangeString += "\n";
-
-    output += String.format("%" + (padding + noteRangeString.length()) + "s", noteRangeString);
-
-    for (int i = 0; i <= maxBeat; i += 1) {
-      output += (String.format("%" + padding + "d", i));
-      List<Note> currentNotes = this.music.get(i);
-
-      for (Note n : noteRange) {
-        if ((currentNotes == null) || !currentNotes.contains(n)) {
-          output += "     ";
-        }
-        else {
-          int index = currentNotes.indexOf(n);
-          for (int j = 0; j < currentNotes.size(); j += 1) {
-            Note curNote = currentNotes.get(j);
-            if (curNote.equals(n)
-                    && (curNote.getStartBeat() > currentNotes.get(index).getStartBeat())) {
-              index = j;
-            }
-          }
-          output += currentNotes.get(index).render(i);
-        }
-      }
-      output += "\n";
-    }
-
-    return output;
-  }*/
 }

@@ -9,8 +9,13 @@ import java.util.List;
  * information without allowing the model to be directly accessed.
  */
 public class ViewModel {
+  // model that this class gets information from.
   private IMusicEditorModel model;
 
+  /**
+   * Constructor.
+   * @param model model where this class gets it's information from.
+   */
   public ViewModel(IMusicEditorModel model) {
     this.model = model;
   }
@@ -25,8 +30,8 @@ public class ViewModel {
 
   /**
    * Returns the list of notes that begin at the given beat.
-   * @param beat
-   * @return
+   * @param beat int representation of the beat we're retrieving notes at.
+   * @return the list of Immutable notes at the given beat.
    */
   public List<ImmutableNote> getNotesAtBeat(int beat) {
     return this.model.getNotesAtBeat(beat);
@@ -34,18 +39,23 @@ public class ViewModel {
 
   /**
    * Number of beats that are currently in this model.
-   * @return
+   * @return int length of the model.
    */
   public int length() {
     return this.model.length();
   }
 
+  /**
+   * Tempo of the model.
+   * @return int tempo of the model.
+   */
   public int getTempo() {
     return this.model.getTempo();
   }
+
   /**
-   * Returns
-   * @return
+   * Returns a list of the pitches and their octaves in the range of this model.
+   * @return a list of Strings of the range of notes.
    */
   public List<String> getNoteRange() {
     List<ImmutableNote> allNotes = new ArrayList<>(this.model.getAllNotes());
@@ -74,55 +84,6 @@ public class ViewModel {
       }
       currentPitch = currentPitch.nextPitch();
     }
-
-    /*while (currentOctave <= maxOctave) {
-      if (currentOctave == maxOctave) {
-        while (currentPitch.compareTo(maxPitch) <= 0) {
-          noteRange.add(currentPitch.toString() + currentOctave);
-          currentPitch = currentPitch.nextPitch();
-        }
-      }
-      else {
-        while (currentPitch != Pitch.C) {
-          noteRange.add(currentPitch.toString() + currentOctave);
-          currentPitch = currentPitch.nextPitch();
-        }
-      }
-      currentOctave += 1;
-    }*/
-
-    // TODO fix
-    /*while (currentOctave < maxOctave) {
-      while (currentPitch != Pitch.C) {
-        noteRange.add(currentPitch.toString() + currentOctave);
-        currentPitch = currentPitch.nextPitch();
-      }
-      currentOctave += 1;
-      noteRange.add(currentPitch.toString() + currentOctave);
-      currentPitch = currentPitch.nextPitch();
-    }
-    while (currentPitch != maxPitch) {
-      noteRange.add(currentPitch.toString() + currentOctave);
-      currentPitch = currentPitch.nextPitch();
-    }*/
-
-    /*int octave = this.octave;
-    if (this.pitch == Pitch.B) {
-      octave += 1;
-    }
-
-    if (this.octave == other.octave) {
-      return this.pitch.compareTo(other.pitch);
-    }
-    else {
-      return this.octave - other.octave;
-    }
-
-    while (current.compareTo(allNotes.get(allNotes.size() - 1)) <= 0) {
-      noteRange.add(current.toString());
-      current = current.nextNote();
-    }*/
-
     return noteRange;
   }
 }

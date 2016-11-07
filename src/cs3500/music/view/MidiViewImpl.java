@@ -1,27 +1,36 @@
 package cs3500.music.view;
 
 import cs3500.music.model.ImmutableNote;
-import cs3500.music.model.Pitch;
+
 import cs3500.music.model.ViewModel;
 
 import javax.sound.midi.*;
-import java.nio.channels.Channel;
 
 import java.util.HashMap;
+
 import java.util.List;
 
 /**
- * A skeleton for MIDI playback
+ * View for the MIDI class.
+ * Uses a Synthesizer to play the music from the viewModel.
  */
 public class MidiViewImpl implements IMusicEditorView {
+  // viewModel that gives access to necessary information in the model.
   private ViewModel viewModel;
+  // Synthesizer for the view.
   private final Synthesizer synth;
+  // Receiver for the synthesizer
   private final Receiver receiver;
-  //mapping of instruments to it's channel
+  // mapping of instruments to it's channel.
   private HashMap<Integer, Integer> channels;
+  // number of channels. Increments for every instrument this view encounters.
+  // INVARIANT: channelNum will always be incremented by 1 only.
   private int channelNum;
 
-  // Cosntructor
+  /**
+   * @param viewModel viewModel that gives access to necessary model information.
+   */
+  // Constructor
   public MidiViewImpl(ViewModel viewModel) {
     // tries to initialize everything.
     Synthesizer tempSynth;
@@ -33,9 +42,9 @@ public class MidiViewImpl implements IMusicEditorView {
     catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
-    //might have an error with the sequence methods later
     this.synth = tempSynth;
     this.receiver = tempReceiver;
+    // tries to open up the synthesizer.
     try {
       this.synth.open();
     }
@@ -47,8 +56,13 @@ public class MidiViewImpl implements IMusicEditorView {
     channelNum = -1;
   }
 
+  /**
+   * @param viewModel viewModel that gives access to necessary model information.
+   * @param sy given synthesizer for testing purposes.
+   */
   MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
+    // tries to open the given synthesizer.
     try {
       this.synth.open();
     }
@@ -62,35 +76,36 @@ public class MidiViewImpl implements IMusicEditorView {
     catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
-    //might have an error with the sequence methods later
     this.receiver = tempReceiver;
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
   }
 
+  /**
+   * @param note note being sent to the synthesizers recevier.
+   * @throws InvalidMidiDataException
+   */
   // makes the message to play the given note
-  //tODO fix the 64
-  public void writeNote(ImmutableNote note) throws InvalidMidiDataException {
+  private void writeNote(ImmutableNote note) throws InvalidMidiDataException {
     int octave = note.getOctave();
     int pitch = note.getPitch().ordinal();
     int noteRepresentation = pitch + octave*12;
     int duration = note.getDuration();
     int instrument = note.getInstrument();
+    // creates a new channel for this instrument if it doesn't yet exist.
     if (!channels.containsKey(instrument)) {
       channels.put(instrument, this.channelNum + 1);
       receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument), instrument, 0), -1);
+      // increments the channel count/
       channelNum++;
     }
-    System.out.println(instrument);
     MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument), noteRepresentation, note.getVolume());
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument), noteRepresentation, note.getVolume());
     receiver.send(start, viewModel.getTempo() * note.getStartBeat());
     receiver.send(stop, (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
-    //todo this.receiver.close(); // Only call this once you're done playing *all* notes
   }
 
-  // TODO NOT RIGHT
   @Override
   public void makeVisible() {
     int length = viewModel.length();
@@ -107,27 +122,9 @@ public class MidiViewImpl implements IMusicEditorView {
     this.receiver.close();
   }
 
-  /*// creates a track and adds it to the sequence
-  // TODO deal with the exception
-  private void makeTrack(){
-    Track track = seq.createTrack();
-    int length = viewModel.length();
-    for(int i = 0; i < length; i++) {
-      List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
-      for(ImmutableNote n: notes) {
-        try {
-          this.writeNote(n, track);
-        }
-        catch (Exception midiE) {
-          throw new IllegalStateException("Invalid midi data exception.");
-        }
-      }
-    }
-  }*/
-
   //TODO probably wrong
   @Override
   public void refresh() {
-    //seqr.setTickPosition(0);
+    //nothing
   }
 }

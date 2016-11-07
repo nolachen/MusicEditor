@@ -26,7 +26,7 @@ public interface IMusicEditorView {
   //void showErrorMessage(String error);
 
   /**
-   * TODO
+   * TODO all of the refreshes
    */
   void refresh();
 
