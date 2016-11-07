@@ -159,25 +159,6 @@ public class Note implements Comparable<Note> {
   }
 
   /**
-   * Returns a text rendering of this note at the given beat.
-   * Each note-head is rendered as an "  X  ", and each note-sustain is rendered as "  |  ".
-   * When a note has a duration of 0, five spaces are rendered (as "     ").
-   * @param beat the beat at which this note is rendered
-   * @return the String rendering of this note
-   */
-  String render(int beat) {
-    if (beat == this.startBeat) {
-      return "  X  ";
-    }
-    else if ((beat > this.startBeat) && (beat < (this.startBeat + this.duration))) {
-      return "  |  ";
-    }
-    else {
-      throw new IllegalArgumentException("This note is not played at the given beat.");
-    }
-  }
-
-  /**
    * @return returns the pitch value of this note.
    */
   public Pitch getPitch() { return this.pitch; }
