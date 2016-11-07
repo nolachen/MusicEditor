@@ -60,7 +60,7 @@ public class MidiViewImpl implements IMusicEditorView {
    * @param viewModel viewModel that gives access to necessary model information.
    * @param sy given synthesizer for testing purposes.
    */
-  MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
+  public MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
     // tries to open the given synthesizer.
     try {
@@ -90,7 +90,7 @@ public class MidiViewImpl implements IMusicEditorView {
   private void writeNote(ImmutableNote note) throws InvalidMidiDataException {
     int octave = note.getOctave();
     int pitch = note.getPitch().ordinal();
-    int noteRepresentation = pitch + octave * 12;
+    int noteRepresentation = pitch + (octave + 1) * 12;
     int duration = note.getDuration();
     int instrument = note.getInstrument();
     // creates a new channel for this instrument if it doesn't yet exist.
@@ -126,9 +126,9 @@ public class MidiViewImpl implements IMusicEditorView {
     this.receiver.close();
   }
 
-  //TODO probably wrong
   @Override
   public void refresh() {
     //nothing
   }
+
 }

@@ -17,12 +17,6 @@ public class Note implements Comparable<Note> {
   private final int octave;
 
   /**
-   * The integer representation of the pitch and octave.
-   * TODO: do we need this?
-   */
-  private final int pitchOctave;
-
-  /**
    * The starting beat of this Note.
    * INVARIANT: startBeat >= 0.
    */
@@ -62,9 +56,8 @@ public class Note implements Comparable<Note> {
     }
     this.duration = endBeat - startBeat;
 
-    this.pitchOctave = pitchOctave;
-    this.pitch = this.getPitchEnumValue(this.pitchOctave % 12);
-    this.octave = this.pitchOctave / 12 - 1;
+    this.pitch = this.getPitchEnumValue(pitchOctave % 12);
+    this.octave = (pitchOctave / 12) - 1;
     this.startBeat = startBeat;
     this.instrument = instrument;
     this.volume = volume;
@@ -86,7 +79,6 @@ public class Note implements Comparable<Note> {
     }
     this.pitch = pitch;
     this.octave = octave;
-    this.pitchOctave = this.pitch.ordinal() + 12 * this.octave;
     this.startBeat = startBeat;
     this.duration = duration;
     this.instrument = instrument;

@@ -1,20 +1,25 @@
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
 import java.io.Reader;
 
 /**
  * Created by Marina on 11/6/2016.
  */
 public class MockReceiver implements Receiver {
-  StringBuilder in;
+  StringBuilder log;
 
-  MockReceiver(StringBuilder in) {
-    this.in = in;
+  MockReceiver(StringBuilder log) {
+    this.log = log;
   }
 
   @Override
   public void send(MidiMessage message, long timeStamp) {
-    this.in.append(message);
+    int channel = ((ShortMessage) message).getChannel();
+    int pitchOctave = ((ShortMessage) message).getData1();
+    int volume = ((ShortMessage) message).getData2();
+    this.log.append("Message " + channel + " " + pitchOctave + " " +
+            volume + " " + timeStamp+  "\n");
   }
 
   @Override

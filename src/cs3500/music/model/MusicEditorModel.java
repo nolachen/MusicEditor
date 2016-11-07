@@ -1,5 +1,6 @@
 package cs3500.music.model;
 
+import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.ModelBuilder;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    * Constructor using the Builder pattern.
    * @param builder to construct this model.
    */
-  public MusicEditorModel(ModelBuilder builder) {
+  public MusicEditorModel(CompositionBuilder<IMusicEditorModel> builder) {
     this.music = new TreeMap<>();
     for (Note n : builder.getMusic()) {
       this.add(n);
@@ -76,7 +77,8 @@ public final class MusicEditorModel implements IMusicEditorModel {
   public void playSimultaneously(IMusicEditorModel other) {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
-        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(), n.getInstrument(), n.getVolume());
+        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
+                n.getInstrument(), n.getVolume());
         this.add(newNote);
       }
     }
