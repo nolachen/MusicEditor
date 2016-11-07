@@ -48,20 +48,20 @@ public interface IMusicEditorModel {
 
   /**
    * Returns the list of notes that begin at the given beat.
-   * @param beat
-   * @return
+   * @param beat int of beat we're retrieving.
+   * @return the List of ImmutableNotes at the given beat.
    */
   List<ImmutableNote> getNotesAtBeat(int beat);
 
   /**
    * Number of beats that are currently in this model.
-   * @return
+   * @return the int length of this model. Gets the last beat regardless of what beat its at.
    */
   int length();
 
   /**
    * returns this models tempo.
-   * @return
+   * @return the tempo of the model.
    */
   int getTempo();
 }

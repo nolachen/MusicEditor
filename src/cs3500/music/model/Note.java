@@ -1,10 +1,6 @@
 package cs3500.music.model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
-import java.util.TreeMap;
 
 /**
  * This class represents a musical note.
@@ -21,7 +17,7 @@ public class Note implements Comparable<Note> {
   private final int octave;
 
   /**
-   * Integer representation of the pitch and octave
+   * Integer representation of the pitch and octave.
    */
   private final int pitchOctave;
 
@@ -34,7 +30,6 @@ public class Note implements Comparable<Note> {
   /**
    * The duration of this note in beats, with only integral durations allowed.
    * INVARIANT: duration >= 0.
-   * TODO: might have to let note of duration 0's exist
    */
   private int duration;
 
@@ -50,11 +45,11 @@ public class Note implements Comparable<Note> {
 
   /**
    * Constructs a Note, while ensuring both class invariants in MIDI form.
-   * @param startBeat the start beat
-   * @param endBeat the end of the beat
-   * @param instrument the instrument playing this note
-   * @param pitchOctave the pitch combined with the octave
-   * @param volume the volume of the note
+   * @param startBeat the start beat.
+   * @param endBeat the end of the beat.
+   * @param instrument the instrument playing this note.
+   * @param pitchOctave the pitch combined with the octave.
+   * @param volume the volume of the note.
    */
   public Note(int startBeat, int endBeat, int instrument, int pitchOctave, int volume) {
     if (startBeat < 0) {
@@ -73,7 +68,6 @@ public class Note implements Comparable<Note> {
     this.startBeat = startBeat;
     this.instrument = instrument;
     this.volume = volume;
-    //tODO should i store the end beat
   }
 
   /**
@@ -99,6 +93,10 @@ public class Note implements Comparable<Note> {
     this.volume = volume;
   }
 
+  /**
+   * @param pitch returns the enumeration at the given pitch.
+   * @return the Pitch at this index.
+   */
   private Pitch getPitchEnumValue(int pitch) {
     Pitch p = Pitch.C;
     while(p.ordinal() != pitch) {
@@ -118,10 +116,16 @@ public class Note implements Comparable<Note> {
     return this.pitch.toString() + this.octave;
   }
 
+  /**
+   * @return the instrument value of this Note.
+   */
   public int getInstrument() {
     return this.instrument;
   }
 
+  /**
+   * @return the volume value of this Volume.
+   */
   public int getVolume() {
     return this.volume;
   }
@@ -190,57 +194,43 @@ public class Note implements Comparable<Note> {
     }
   }
 
+  /**
+   * @return returns the pitch value of this note.
+   */
   public Pitch getPitch() { return this.pitch; }
 
+  /**
+   * @return returns the octave value of this note.
+   */
   public int getOctave() { return this.octave; }
 
   /**
    * Getter for {@code startBeat}.
-   * @return the start beat
+   * @return the start beat.
    */
   public int getStartBeat() {
     return this.startBeat;
   }
 
+  /**
+   * @return returns the duration of this note.
+   */
   public int getDuration() { return this.duration; }
 
+  /**
+   * @return returns the end beat.
+   */
   public int getEndBeat() { return this.startBeat + this.duration; }
 
   /**
    * Setter for {@code startBeat}. Ensures that the invariant is held (startBeat >= 0).
-   * @param startBeat the new start beat
+   * @param startBeat the new start beat.
    */
   public void setStartBeat(int startBeat) {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
     this.startBeat = startBeat;
-  }
-
-/*  *//**
-   * The next note that comes after this note in the chromatic scale, with the same duration and
-   * start beat as this note.
-   * @return the next Note
-   *//*
-  Note nextNote() {
-    int octave = this.octave;
-    if (this.pitch == Pitch.B) {
-      octave += 1;
-    }
-    return new Note(this.pitch.nextPitch(), octave, this.startBeat, this.duration);
-  }*/
-
-  public class PitchComparator implements Comparator<Note> {
-
-    @Override
-    public int compare(Note n1, Note n2) {
-      if (n1.octave == n2.octave) {
-        return n1.pitch.compareTo(n2.pitch);
-      }
-      else {
-        return n1.octave - n2.octave;
-      }
-    }
   }
 
 }

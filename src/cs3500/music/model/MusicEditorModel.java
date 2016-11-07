@@ -1,19 +1,17 @@
 package cs3500.music.model;
 
-import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.ModelBuilder;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.List;
+
 import java.util.TreeMap;
 
 /**
  * This class represents a music editor model.
- * TODO : ask TA if we should be storing notes at every beat lol
- * TODO: how test for users shouldnt be able to mutate model
  */
 public final class MusicEditorModel implements IMusicEditorModel {
   /**
@@ -32,6 +30,9 @@ public final class MusicEditorModel implements IMusicEditorModel {
     this.tempo = tempo;
   }
 
+  /**
+   * @param builder to construct this model.
+   */
   // constructor using the builder pattern
   public MusicEditorModel(ModelBuilder builder) {
     this.music = new TreeMap<>();
@@ -40,10 +41,10 @@ public final class MusicEditorModel implements IMusicEditorModel {
     }
     this.tempo = builder.getTempo();
   }
+
   /**
    * Default constructor for MusicEditorModel, creates an empty music to start.
    */
-  //tODO check default tempo -> i just picked a random average tempo
   public MusicEditorModel() {
     this(new TreeMap<>(), 200000);
   }
@@ -137,24 +138,5 @@ public final class MusicEditorModel implements IMusicEditorModel {
   public int getTempo() {
     return this.tempo;
   }
-
-/*  *//**
-   * The inclusive list of all notes from the given low note to the high note.
-   * @param //low lowest note of range
-   * @param //high highest note of range
-   * @return the list of notes between the given ones
-   *//*
-  private List<Note> getNoteRange(Note low, Note high) {
-    List<Note> notes = new ArrayList<>();
-    Note current = low;
-
-    while (current.compareTo(high) <= 0) {
-      notes.add(current);
-      current = current.nextNote();
-    }
-
-    return notes;
-  }*/
-
 
 }

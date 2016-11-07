@@ -1,11 +1,13 @@
 package cs3500.music.model;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
+
 import java.util.List;
 
 /**
- * A view model that is basically a read-only model. Gives the View access to the model's
+ * A view model that is basically a read-only model. Gives the View access to the model's.
  * information without allowing the model to be directly accessed.
  */
 public class ViewModel {
