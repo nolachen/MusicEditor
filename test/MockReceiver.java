@@ -4,12 +4,18 @@ import javax.sound.midi.ShortMessage;
 import java.io.Reader;
 
 /**
- * Created by Marina on 11/6/2016.
+ * A mock receiver to use for testing purposes.
  */
 public class MockReceiver implements Receiver {
+  // log of sent messages.
   StringBuilder log;
 
-  MockReceiver(StringBuilder log) {
+
+  /**
+   * Constructor
+   * @param log accumulation of sent messages.
+   */
+  public MockReceiver(StringBuilder log) {
     this.log = log;
   }
 
@@ -24,6 +30,5 @@ public class MockReceiver implements Receiver {
 
   @Override
   public void close() {
-    //does nothing
   }
 }

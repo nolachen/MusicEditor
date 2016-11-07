@@ -15,13 +15,17 @@ import java.util.List;
 import java.util.TreeMap;
 
 /**
- * To test the midiview
+ * Mock synthesizer for testing.
  */
 public class MockMidiDevice implements Synthesizer{
-  StringBuilder build;
+  // log of messages.
+  StringBuilder log;
 
+  /**
+   * constructor.
+   */
   MockMidiDevice() {
-    this.build = new StringBuilder();
+    this.log = new StringBuilder();
   }
 
   @Override
@@ -61,7 +65,7 @@ public class MockMidiDevice implements Synthesizer{
 
   @Override
   public MockReceiver getReceiver() throws MidiUnavailableException {
-    return new MockReceiver(this.build);
+    return new MockReceiver(this.log);
   }
 
   @Override

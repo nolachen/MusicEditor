@@ -90,7 +90,7 @@ public class MockMidiTest {
             "Message 1 54 90 800000\n");
   }
 
-/*  // checks if midi will process a note with a 0 duration.
+  // checks if 2 of the same notes are added to the model.
   @Test
   public void testMidi3() {
     this.midiView.makeVisible();
@@ -98,15 +98,60 @@ public class MockMidiTest {
     //first message: channel 0 is set to instrument 1.
     //note is sent to start. note = channel pitch volume time-stamp.
     //note is sent to end.
-    this.builder.addNote(0, 0, 1, 64, 72);
+    //last two notes repeated.
+    this.builder.addNote(0, 1, 1, 64, 72).addNote(0, 1, 1, 64, 72);
     this.model = new MusicEditorModel(this.builder);
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
     assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
             "Message 0 64 72 0\n" +
-            "Message 0 64 72 0\n");
-  }*/
+            "Message 0 64 72 200000\n" +
+            "Message 0 64 72 0\n" +
+            "Message 0 64 72 200000\n");
+  }
 
+  // checks if 2 different notes are written onto the same channel.
+  @Test
+  public void testMidi4() {
+    this.midiView.makeVisible();
+    assertEquals(this.log.toString(), "");
+    //first message: channel 0 is set to instrument 1.
+    //note is sent to start. note = channel pitch volume time-stamp.
+    //note is sent to end.
+    //new note start and end are printed.
+    this.builder.addNote(0, 1, 1, 64, 72).addNote(3, 4, 1, 65, 72);
+    this.model = new MusicEditorModel(this.builder);
+    this.vm = new ViewModel(this.model);
+    this.midiView = new MidiViewImpl(this.vm, this.device);
+    this.midiView.makeVisible();
+    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
+            "Message 0 64 72 0\n" +
+            "Message 0 64 72 200000\n" +
+            "Message 0 65 72 600000\n" +
+            "Message 0 65 72 800000\n");
+  }
 
+  // checks if overlapping notes are printed in the correct order.
+  // start of the shorter notes should come before the end of the longer note.
+  // which is seen in the time stamps.
+  @Test
+  public void testMidi5() {
+    this.midiView.makeVisible();
+    assertEquals(this.log.toString(), "");
+    //first message: channel 0 is set to instrument 1.
+    //note is sent to start. note = channel pitch volume time-stamp.
+    //note is sent to end.
+    //new note start and end are printed.
+    this.builder.addNote(0, 4, 1, 64, 72).addNote(2, 3, 1, 65, 72);
+    this.model = new MusicEditorModel(this.builder);
+    this.vm = new ViewModel(this.model);
+    this.midiView = new MidiViewImpl(this.vm, this.device);
+    this.midiView.makeVisible();
+    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
+            "Message 0 64 72 0\n" +
+            "Message 0 64 72 800000\n" +
+            "Message 0 65 72 400000\n" +
+            "Message 0 65 72 600000\n");
+  }
 }
