@@ -25,36 +25,32 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
     super();
     this.viewModel = viewModel;
 
+    // set the title, close operation, and background of the frame
     this.setTitle("Music Editor");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.getContentPane().setBackground(new Color(235, 239, 240));
     //this.setContentPane(new JLabel(new ImageIcon("lol.jpg")));
 
-    // use a BorderLayout with pitches in west, beat numbers in north, and the notes in center
-    this.getContentPane().setLayout(new BorderLayout());
-    this.setPreferredSize(new Dimension(900, 500));
-
     // create the display panel
     displayPanel = new MusicEditorPanel(this.viewModel);
-    //displayPanel.setPreferredSize(new Dimension(500,500));
     displayPanel.setOpaque(false);
 
     // create the pitches panel
     pitchPanel = new PitchPanel(this.viewModel);
-    pitchPanel.setPreferredSize(new Dimension(50,200));
     pitchPanel.setOpaque(false);
 
+    // create new BorderLayout container for the panels, to add to the scroll pane
+    // add the pitches in the west and the display in the center
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(pitchPanel, BorderLayout.WEST);
     panel.add(displayPanel, BorderLayout.CENTER);
 
-    // add the panels to this frame
-    //this.getContentPane().add(pitchPanel, BorderLayout.WEST);
-    //this.getContentPane().add(displayPanel, BorderLayout.CENTER);
-
     // create the scroll pane
-    JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants
-            .VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    JScrollPane scrollPane = new JScrollPane(panel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+    // add the scroll pane to the frame
     this.getContentPane().add(scrollPane);
 
     // size the frame
@@ -65,11 +61,6 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
   public void makeVisible(){
     this.setVisible(true);
   }
-
-  /*@Override
-  public Dimension getPreferredSize(){
-    return new Dimension(100, 100);
-  }*/
 
   @Override
   public void refresh() {

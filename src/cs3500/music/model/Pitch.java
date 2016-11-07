@@ -2,6 +2,7 @@ package cs3500.music.model;
 
 /**
  * This enumeration represents the 12 pitches in the chromatic scale.
+ * The chromatic scale contains the pitches C, C#, D, D#, E, F, F#, G, G#, A, A#, B.
  */
 public enum Pitch {
   C, C_SHARP, D, D_SHARP, E, F, F_SHARP, G, G_SHARP, A, A_SHARP, B;

@@ -81,5 +81,12 @@ public class MusicEditorPanel extends JPanel {
 
   }
 
+  @Override
+  public Dimension getPreferredSize() {
+    int height = (this.viewModel.getNoteRange().size() + 2) * MusicEditorPanel.NOTE_SIZE;
+    int width = this.viewModel.length() * MusicEditorPanel.NOTE_SIZE;
+    return new Dimension(width, height);
+  }
+
 
 }

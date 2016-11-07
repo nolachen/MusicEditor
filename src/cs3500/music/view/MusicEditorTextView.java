@@ -18,7 +18,7 @@ public class MusicEditorTextView implements IMusicEditorView {
   // viewModel that gives access to necessary information from the model.
   private final ViewModel viewModel;
   // Rendering of this view.
-  private String rendering;
+  private StringBuilder rendering;
 
   // TODO : readable & appendable
   private Readable read;
@@ -30,7 +30,7 @@ public class MusicEditorTextView implements IMusicEditorView {
    */
   public MusicEditorTextView(ViewModel viewModel) {
     this.viewModel = viewModel;
-    this.rendering = "";
+    this.rendering = new StringBuilder();
   }
 
   @Override
@@ -42,14 +42,16 @@ public class MusicEditorTextView implements IMusicEditorView {
 
     int padding = ((int) Math.log10(length)) + 1;
 
+    // create the string of note ranges, with each note taking up 5 spaces
     String noteRangeString = "";
     for (String s : noteRange) {
       noteRangeString += this.centerString(s, 5);
     }
     noteRangeString += "\n";
 
-    this.rendering += String.format("%" + (padding + noteRangeString.length()) + "s",
-            noteRangeString);
+    // pad the note range at the top and append it to the rendering
+    this.rendering.append(String.format("%" + (padding + noteRangeString.length()) + "s",
+            noteRangeString));
 
     // initialize the String of notes to be all empty
     List<List<String>> notesGrid = new ArrayList<>();
@@ -61,7 +63,7 @@ public class MusicEditorTextView implements IMusicEditorView {
       notesGrid.add(temp);
     }
 
-    // set values in notesGrid
+    // set values in notesGrid if there is a note
     for (int i = 0; i < length; i += 1) {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
 
@@ -76,14 +78,14 @@ public class MusicEditorTextView implements IMusicEditorView {
 
     // append strings in notesGrid to this rendering
     for (int i = 0; i < notesGrid.size(); i += 1) {
-      this.rendering += (String.format("%" + padding + "d", i));
+      this.rendering.append((String.format("%" + padding + "d", i)));
       for (String s : notesGrid.get(i)) {
-        this.rendering += s;
+        this.rendering.append(s);
       }
 
-      this.rendering += "\n";
+      this.rendering.append("\n");
     }
-    System.out.println(this.rendering);
+    System.out.println(this.rendering.toString());
   }
 
   /**
