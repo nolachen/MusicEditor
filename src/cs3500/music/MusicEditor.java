@@ -4,7 +4,9 @@ import cs3500.music.controller.IMusicEditorController;
 
 import cs3500.music.controller.MusicEditorController;
 
-import cs3500.music.model.*;
+import cs3500.music.model.IMusicEditorModel;
+
+import cs3500.music.model.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
 
@@ -12,17 +14,14 @@ import cs3500.music.util.MusicReader;
 
 import cs3500.music.view.IMusicEditorView;
 
-import cs3500.music.view.MidiViewImpl;
-
-import cs3500.music.view.MusicEditorGuiView;
-
-import cs3500.music.view.MusicEditorTextView;
 import cs3500.music.view.MusicEditorViewFactory;
 
 import java.io.FileNotFoundException;
+
 import java.io.FileReader;
 
 import java.io.IOException;
+
 import java.util.Scanner;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -35,8 +34,6 @@ public final class MusicEditor {
    * Takes in command-line input that specifies the file you want to read in and the view name
    * you want to use.
    * @param args the args
-   * @throws IOException
-   * @throws InvalidMidiDataException
    */
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
@@ -70,6 +67,6 @@ public final class MusicEditor {
 
     // create the controller and start the program
     IMusicEditorController controller = new MusicEditorController(model, view);
-    controller.go();
+    controller.gooooo();
   }
 }

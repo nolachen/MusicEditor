@@ -21,7 +21,7 @@ public class MusicEditorController implements IMusicEditorController {
   }
 
   @Override
-  public void go() {
+  public void gooooo() {
     this.view.makeVisible();
   }
 }

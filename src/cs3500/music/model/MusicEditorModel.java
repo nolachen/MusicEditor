@@ -1,7 +1,6 @@
 package cs3500.music.model;
 
 import cs3500.music.util.CompositionBuilder;
-import cs3500.music.util.ModelBuilder;
 
 import java.util.ArrayList;
 

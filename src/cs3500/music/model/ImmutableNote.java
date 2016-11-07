@@ -16,6 +16,7 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
   }
 
   /**
+   * gets the pitch value.
    * @return the pitch value of this class's note.
    */
   public Pitch getPitch() {
@@ -23,6 +24,7 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
   }
 
   /**
+   * gets the octave value.
    * @return the octave value of this class's note.
    */
   public int getOctave() {
@@ -30,6 +32,7 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
   }
 
   /**
+   * gets the startbeat value.
    * @return the startBeat of this class's note.
    */
   public int getStartBeat() {
@@ -37,6 +40,7 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
   }
 
   /**
+   * gets the duration value.
    * @return the duration value of this class's note.
    */
   public int getDuration() {
@@ -44,14 +48,20 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
   }
 
   /**
+   * gets the instrument value.
    * @return the instrument value of this class's note.
    */
-  public int getInstrument() {return note.getInstrument();}
+  public int getInstrument() {
+    return note.getInstrument();
+  }
 
   /**
+   * gets the volume value.
    * @return the volume value of this class's note.
    */
-  public int getVolume() {return note.getVolume();}
+  public int getVolume() {
+    return note.getVolume();
+  }
 
   @Override
   public int compareTo(ImmutableNote other) {
