@@ -60,7 +60,7 @@ public class Note implements Comparable<Note> {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
-    if (startBeat < endBeat) {
+    if (startBeat > endBeat) {
       throw new IllegalArgumentException("End beat must be after the start beat.");
     }
     this.duration = endBeat - startBeat;
@@ -83,7 +83,7 @@ public class Note implements Comparable<Note> {
    * @param duration the duration of the note
    */
   // Constructor with a given Pitch and Octave
-  public Note(Pitch pitch, int octave, int startBeat, int duration) {
+  public Note(Pitch pitch, int octave, int startBeat, int duration, int instrument, int volume) {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
@@ -95,6 +95,8 @@ public class Note implements Comparable<Note> {
     this.pitchOctave = this.pitch.ordinal() + 12 * this.octave;
     this.startBeat = startBeat;
     this.duration = duration;
+    this.instrument = instrument;
+    this.volume = volume;
   }
 
   private Pitch getPitchEnumValue(int pitch) {
@@ -114,6 +116,14 @@ public class Note implements Comparable<Note> {
   @Override
   public String toString() {
     return this.pitch.toString() + this.octave;
+  }
+
+  public int getInstrument() {
+    return this.instrument;
+  }
+
+  public int getVolume() {
+    return this.volume;
   }
 
   /**

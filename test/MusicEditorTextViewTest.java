@@ -19,10 +19,10 @@ public class MusicEditorTextViewTest {
   private IMusicEditorModel model;
   private ViewModel viewModel;
   private IMusicEditorView view;
-  Note g3b0 = new Note(Pitch.G, 3, 0, 7);
-  Note c4b4 = new Note(Pitch.C, 4, 4, 2);
-  Note g3b16 = new Note(Pitch.G, 3, 16, 10);
-  Note g3b24 = new Note(Pitch.G, 3, 24, 2);
+  Note g3b0 = new Note(Pitch.G, 3, 0, 7, 1, 64);
+  Note c4b4 = new Note(Pitch.C, 4, 4, 2, 1, 64);
+  Note g3b16 = new Note(Pitch.G, 3, 16, 10, 1, 64);
+  Note g3b24 = new Note(Pitch.G, 3, 24, 2, 1, 64);
 
   @Before
   public void setup() {

@@ -12,120 +12,107 @@ import java.util.List;
  * A skeleton for MIDI playback
  */
 public class MidiViewImpl implements IMusicEditorView {
-  private final Synthesizer synth;
-  // receiver for the synthesizer.
-  private final Receiver receiver;
-  private final Sequencer seqr;
-  // receiver for the sequencer.
-  private final Receiver seqrReceiver;
-  // transmitter for the sequencer.
-  private final Transmitter seqrTrans;
-  private Sequence seq;
-  // represents tick, number of pulses per quarter note
-  // TODO do i need this
-  // used to set a tempo for the sequence
-  // PPQ, ticks per quarter note
-  // each duration unit is one quarter note, 1 duration = tick PPQ
-  private final int tick;
-  // tempo in beats per millisecond
-  private final float tempoBPM;
   private ViewModel viewModel;
-  private List<Track> tracks;
-  //private final int timingResolution;
+  private final Synthesizer synth;
+  private final Receiver receiver;
 
   // Cosntructor
-  public MidiViewImpl(int tick, ViewModel viewModel/*, int timingResolution, float tempoBPM*/) {
+  public MidiViewImpl(ViewModel viewModel) {
     // tries to initialize everything.
     Synthesizer tempSynth;
-    Sequencer tempSeqr;
-    Sequence tempSeq;
-    Transmitter tempSeqrTrans;
     Receiver tempReceiver;
-    Receiver tempSeqrReceiver;
     try {
       tempSynth = MidiSystem.getSynthesizer();
-      tempSeqr = MidiSystem.getSequencer();
-      tempSeq = new Sequence(Sequence.PPQ, 10);
-      tempSeqr.setSequence(tempSeq);
-      tempSeqrTrans = tempSeqr.getTransmitter();
       tempReceiver = tempSynth.getReceiver();
-      tempSeqrReceiver = tempSeqr.getReceiver();
     }
     catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
-
     //might have an error with the sequence methods later
     this.synth = tempSynth;
-    this.seq = tempSeq;
-    this.seqr = tempSeqr;
-    this.seqrTrans = tempSeqrTrans;
     this.receiver = tempReceiver;
-    this.seqrReceiver = tempSeqrReceiver;
-    this.seqrTrans.setReceiver(receiver);
-    this.tick = tick;
-    this.viewModel = viewModel;
-    this.tracks = new ArrayList<>();
-    //this.timingResolution = timingResolution;
-    this.tempoBPM = viewModel.getTempo();
-    this.seqr.setTempoInBPM(this.tempoBPM);
     try {
       this.synth.open();
     }
     catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
+    this.viewModel = viewModel;
+  }
+
+  MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
+    this.synth = sy;
+    try {
+      this.synth.open();
+    }
+    catch (Exception me) {
+      throw new IllegalStateException("Midi Unavailable.");
+    }
+    Receiver tempReceiver;
+    try {
+      tempReceiver = synth.getReceiver();
+    }
+    catch (Exception e) {
+      throw new IllegalStateException("MidiSystem unavailable.");
+    }
+    //might have an error with the sequence methods later
+    this.receiver = tempReceiver;
+    this.viewModel = viewModel;
 
   }
 
   // makes the message to play the given note
   //tODO fix the 64
-  public void writeNote(ImmutableNote note, Track track) throws InvalidMidiDataException {
+  public void writeNote(ImmutableNote note) throws InvalidMidiDataException {
     int octave = note.getOctave();
-    //TODO GET PITCH OCTAVE
     int pitch = note.getPitch().ordinal();
     int noteRepresentation = pitch + octave*12;
-    // number of quarter notes this note is
     int duration = note.getDuration();
-    // TODO check if this casting is wrong
-    long ticksPerSecond = (long)(seq.getResolution() * (this.tempoBPM / 60.0));
-    // a single tick in second representation
-    long tickSize = 1 / ticksPerSecond;
-    // TODO check if this is right
-    // quarter note size in milliseconds
-    long quarterNoteSize = tickSize * tick * 1000;
-    // TODO check what the 64 is
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, noteRepresentation, 64);
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, noteRepresentation, 64);
-    track.add(new MidiEvent(start, -1));
-    //TODO IMPORTANT fix the timing cause who knows what the fuck that is
-    // 200000 represents the duration time
-    track.add(new MidiEvent(stop, this.synth.getMicrosecondPosition() + (quarterNoteSize * duration)));
+    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, note.getInstrument(), noteRepresentation, note.getVolume());
+    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, note.getInstrument(), noteRepresentation, note.getVolume());
+    receiver.send(start, viewModel.getTempo() * note.getStartBeat());
+    receiver.send(stop, (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
     //todo this.receiver.close(); // Only call this once you're done playing *all* notes
   }
 
   // TODO NOT RIGHT
   @Override
   public void makeVisible() {
-    this.seqr.start();
+    int length = viewModel.length();
+    for (int i = 0; i < length; i++) {
+      List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
+      for (ImmutableNote n : notes) {
+        try {
+          this.writeNote(n);
+        } catch (Exception midiE) {
+          throw new IllegalStateException("Invalid midi data exception.");
+        }
+      }
+    }
+    this.receiver.close();
   }
 
-  // creates a track and adds it to the sequence
+  /*// creates a track and adds it to the sequence
   // TODO deal with the exception
-  private void makeTrack() throws InvalidMidiDataException{
+  private void makeTrack(){
     Track track = seq.createTrack();
     int length = viewModel.length();
     for(int i = 0; i < length; i++) {
       List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
       for(ImmutableNote n: notes) {
-        this.writeNote(n, track);
+        try {
+          this.writeNote(n, track);
+        }
+        catch (Exception midiE) {
+          throw new IllegalStateException("Invalid midi data exception.");
+        }
       }
     }
-  }
+  }*/
 
   //TODO probably wrong
   @Override
   public void refresh() {
-    seqr.setTickPosition(0);
+    //seqr.setTickPosition(0);
   }
 }

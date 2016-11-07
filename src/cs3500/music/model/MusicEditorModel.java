@@ -72,7 +72,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
   public void playSimultaneously(IMusicEditorModel other) {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
-        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration());
+        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(), n.getInstrument(), n.getVolume());
         this.add(newNote);
       }
     }
@@ -84,7 +84,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
         Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
-                n.getDuration());
+                n.getDuration(), n.getInstrument(), n.getVolume());
         this.add(newNote);
       }
     }

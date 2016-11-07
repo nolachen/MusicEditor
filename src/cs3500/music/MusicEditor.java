@@ -8,6 +8,7 @@ import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
 import cs3500.music.model.ViewModel;
 import cs3500.music.view.IMusicEditorView;
+import cs3500.music.view.MidiViewImpl;
 import cs3500.music.view.MusicEditorGuiView;
 import cs3500.music.view.MusicEditorTextView;
 
@@ -19,10 +20,10 @@ public class MusicEditor {
   public static void main(String[] args) throws IOException, InvalidMidiDataException {
     IMusicEditorModel model = new MusicEditorModel();
     ViewModel viewModel = new ViewModel(model);
-    Note g3b0 = new Note(Pitch.G, 3, 0, 7);
-    Note c4b4 = new Note(Pitch.C, 4, 4, 2);
-    Note g3b16 = new Note(Pitch.G, 3, 16, 10);
-    Note g3b24 = new Note(Pitch.G, 3, 24, 2);
+    Note g3b0 = new Note(Pitch.A, 5, 0, 7, 1, 64);
+    Note c4b4 = new Note(Pitch.C, 4, 4, 2, 1, 64);
+    Note g3b16 = new Note(Pitch.G, 3, 16, 10, 1, 64);
+    Note g3b24 = new Note(Pitch.G, 3, 24, 2, 1, 64);
 
     model.add(g3b0);
     model.add(c4b4);
@@ -33,7 +34,8 @@ public class MusicEditor {
     // You probably need to connect these views to your model, too...
     IMusicEditorView textView = new MusicEditorTextView(viewModel);
     IMusicEditorView guiView = new MusicEditorGuiView(viewModel);
-    IMusicEditorController controller = new MusicEditorController(model, guiView);
+    IMusicEditorView midiView = new MidiViewImpl(viewModel);
+    IMusicEditorController controller = new MusicEditorController(model, midiView);
 
 
 

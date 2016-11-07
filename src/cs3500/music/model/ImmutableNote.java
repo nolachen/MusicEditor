@@ -26,6 +26,10 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
     return note.getDuration();
   }
 
+  public int getInstrument() {return note.getInstrument();}
+
+  public int getVolume() {return note.getVolume();}
+
   @Override
   public int compareTo(ImmutableNote other) {
     return - other.compareTo(this.note);

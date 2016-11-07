@@ -48,7 +48,9 @@ public class MusicReader {
             int instrument = scanner.nextInt();
             int pitch = scanner.nextInt();
             int volume = scanner.nextInt();
+            System.out.println(startBeat);
             piece.addNote(startBeat, endBeat, instrument, pitch, volume);
+
           } catch (NoSuchElementException e) {
             throw new IllegalArgumentException("Malformed note line: " + scanner.nextLine());
           }
