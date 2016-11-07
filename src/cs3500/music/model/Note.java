@@ -18,13 +18,13 @@ public class Note implements Comparable<Note> {
 
   /**
    * The starting beat of this Note.
-   * INVARIANT: startBeat >= 0.
+   * INVARIANT: startBeat >- 0.
    */
   private int startBeat;
 
   /**
    * The duration of this note in beats, with only integral durations allowed.
-   * INVARIANT: duration >= 0.
+   * INVARIANT: duration > 0.
    */
   private int duration;
 
@@ -51,12 +51,12 @@ public class Note implements Comparable<Note> {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
-    if (startBeat > endBeat) {
+    if (startBeat >= endBeat) {
       throw new IllegalArgumentException("End beat must be after the start beat.");
     }
     this.duration = endBeat - startBeat;
 
-    this.pitch = this.getPitchEnumValue(pitchOctave % 12);
+    this.pitch = Pitch.values()[pitchOctave % 12];
     this.octave = (pitchOctave / 12) - 1;
     this.startBeat = startBeat;
     this.instrument = instrument;
@@ -64,40 +64,26 @@ public class Note implements Comparable<Note> {
   }
 
   /**
-   * Constructor with a given pitch and octave.
+   * Constructor with a given pitch, octave, start beat, and duration.
+   * Sets the instrument to 1 and the volume to 127.
    * @param pitch the pitch
    * @param octave the octave
    * @param startBeat the start beat
    * @param duration the duration of the note
    */
-  public Note(Pitch pitch, int octave, int startBeat, int duration, int instrument, int volume) {
+  public Note(Pitch pitch, int octave, int startBeat, int duration) {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
-    if (duration < 0) {
+    if (duration <= 0) {
       throw new IllegalArgumentException("Duration must be greater than 0.");
     }
     this.pitch = pitch;
     this.octave = octave;
     this.startBeat = startBeat;
     this.duration = duration;
-    this.instrument = instrument;
-    this.volume = volume;
-  }
-
-  /**
-   * Returns the enumeration Pitch at the given integer pitch.
-   * TODO: is this needed
-   * @param pitch returns the enumeration at the given pitch.
-   * @return the Pitch at this index.
-   */
-  private Pitch getPitchEnumValue(int pitch) {
-    //return Pitch.values()[pitch]; TODO: couldnt you just return this?
-    Pitch p = Pitch.C;
-    while(p.ordinal() != pitch) {
-      p = p.nextPitch();
-    }
-    return p;
+    this.instrument = 1;
+    this.volume = 127;
   }
 
   /**
@@ -127,7 +113,7 @@ public class Note implements Comparable<Note> {
 
   /**
    * Determines whether this {@link Note} is equal to the given object.
-   * Two Notes are equal if they have the same pitch, octave, duration, and start beat.
+   * Two Notes are equal if they have the same fields.
    * @param obj the object to check equality with
    * @return true if obj is equal to this note, false otherwise
    */
@@ -139,7 +125,8 @@ public class Note implements Comparable<Note> {
     Note that = (Note) obj;
 
     return (this.pitch == that.pitch) && (this.octave == that.octave) &&
-            (this.startBeat == that.startBeat) && (this.duration == that.duration);
+            (this.startBeat == that.startBeat) && (this.duration == that.duration) &&
+            (this.instrument == that.instrument) && (this.volume == that.volume);
   }
 
   /**
@@ -148,7 +135,8 @@ public class Note implements Comparable<Note> {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(this.pitch, this.octave, this.duration);
+    return Objects.hash(this.pitch, this.octave, this.duration,
+            this.instrument, this.volume);
   }
 
   /**

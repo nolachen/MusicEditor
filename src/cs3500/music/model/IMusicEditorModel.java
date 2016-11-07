@@ -33,7 +33,7 @@ public interface IMusicEditorModel {
   void playConsecutively(IMusicEditorModel other);
 
   /**
-   * A list of all Notes that are currently in this music editor, in chromatic order.
+   * A list of all Notes that are currently in this music editor.
    * @return the list of all notes
    */
   List<ImmutableNote> getAllNotes();
