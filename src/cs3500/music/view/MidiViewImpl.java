@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * View for the MIDI class.
- * Uses a Synthesizer to play the music from the viewModel.
+ * View for the MIDI playback.
+ * Uses a Synthesizer to play the music from the ViewModel.
  */
 public class MidiViewImpl implements IMusicEditorView {
   // viewModel that gives access to necessary information in the model.
@@ -28,9 +28,9 @@ public class MidiViewImpl implements IMusicEditorView {
   private int channelNum;
 
   /**
+   * Constructor for the MidiView implementation.
    * @param viewModel viewModel that gives access to necessary model information.
    */
-  // Constructor
   public MidiViewImpl(ViewModel viewModel) {
     // tries to initialize everything.
     Synthesizer tempSynth;
@@ -83,27 +83,31 @@ public class MidiViewImpl implements IMusicEditorView {
   }
 
   /**
+   * Writes the message to play the given tone.
    * @param note note being sent to the synthesizers recevier.
    * @throws InvalidMidiDataException
    */
-  // makes the message to play the given note
   private void writeNote(ImmutableNote note) throws InvalidMidiDataException {
     int octave = note.getOctave();
     int pitch = note.getPitch().ordinal();
-    int noteRepresentation = pitch + octave*12;
+    int noteRepresentation = pitch + octave * 12;
     int duration = note.getDuration();
     int instrument = note.getInstrument();
     // creates a new channel for this instrument if it doesn't yet exist.
     if (!channels.containsKey(instrument)) {
       channels.put(instrument, this.channelNum + 1);
-      receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument), instrument, 0), -1);
-      // increments the channel count/
+      receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument),
+              instrument, 0), -1);
+      // increments the channel count
       channelNum++;
     }
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument), noteRepresentation, note.getVolume());
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument), noteRepresentation, note.getVolume());
+    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument),
+            noteRepresentation, note.getVolume());
+    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
+            noteRepresentation, note.getVolume());
     receiver.send(start, viewModel.getTempo() * note.getStartBeat());
-    receiver.send(stop, (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
+    receiver.send(stop,
+            (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
   }
 
   @Override

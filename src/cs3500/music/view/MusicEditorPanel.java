@@ -1,112 +1,83 @@
 package cs3500.music.view;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import javax.swing.*;
 
-import cs3500.music.MusicEditor;
 import cs3500.music.model.ImmutableNote;
 import cs3500.music.model.ViewModel;
 
 /**
- * A dummy view that simply draws a string 
+ * This panel represents the region where the notes and measures of a music editor are drawn.
  */
 public class MusicEditorPanel extends JPanel {
-  private static final int NOTE_SIZE = 100;
+  public static final int NOTE_SIZE = 20; //width of a whole note in pixels
+  public static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
   private final ViewModel viewModel;
-  //private final int beat;
-  //private final List<ImmutableNote> notes;
 
+  /**
+   * Constructs a {@link MusicEditorPanel} given the {@ViewModel}.
+   * @param viewModel the given ViewModel to get data from
+   */
   public MusicEditorPanel(ViewModel viewModel) {
-    super(); //TODO ???
-    //this.setBackground(Color.WHITE);
+    super();
     this.viewModel = viewModel;
-    //this.beat = beat;
-    //this.notes = notes;
-
-    this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    /*if ((this.beat % 16) == 0) {
-      this.add(new JLabel("" + this.beat));
-    }*/
   }
 
+  /**
+   * Draws the notes and measures using data from the {@link ViewModel}.
+   * @param g the Graphics object
+   */
   @Override
   protected void paintComponent(Graphics g){
     // Handle the default painting
     super.paintComponent(g);
 
-    // Look for more documentation about the Graphics class,
-    // and methods on it that may be useful
-    //g.drawString("Hello World", 25, 25);
     // cast Graphics object to Graphics2D
     Graphics2D g2d = (Graphics2D) g;
 
-    g2d.setColor(Color.BLACK);
-
-    /*
-    the origin of the panel is top left. In order
-    to make the origin bottom left, we must "flip" the
-    y coordinates so that y = height - y
-
-    We do that by using an affine transform. The flip
-    can be specified as scaling y by -1 and then
-    translating by height.
-     */
-
-    AffineTransform originalTransform = g2d.getTransform();
-
-    //the order of transforms is bottom-to-top
-    //so as a result of the two lines below,
-    //each y will first be scaled, and then translated
-    g2d.translate(0, this.getPreferredSize().getHeight());
-    g2d.scale(1, -1);
-
     int length = this.viewModel.length();
-    for (int i = 0; i < length; i += 1) {
-      if ((i % 16) == 0) {
-        g2d.drawString("" + i, i * MusicEditorPanel.NOTE_SIZE, 0);
-      }
-      List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
-      for (ImmutableNote n : currentNotes) {
-
-      }
-    }
-
-    /*int length = this.viewModel.length();
-
     List<String> noteRange = this.viewModel.getNoteRange();
-    int width = noteRange.size();
+    Collections.reverse(noteRange);
 
-    for (int i = 0; i < length; i += 1) {
-      //JPanel currentBeat = new JPanel();
-      //currentBeat.setLayout(new BoxLayout(currentBeat, BoxLayout.PAGE_AXIS));
-      for (int j = 0; j < width; j += 1) {
-        g2d.drawLine(50*i, 50*j, 50*i + 50, 50*j);
-        g2d.drawLine(50*i, 50*j + 50, 50*i + 50, 50*j + 50);
-      }
-    }
+    int height = noteRange.size();
 
+    // draw the notes
     for (int i = 0; i <= length; i += 1) {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
-
       for (ImmutableNote n : currentNotes) {
         int pitchIndex = noteRange.indexOf(n.toString());
-        g2d.setColor(Color.BLACK);
-        g2d.fillRect(50*i, 50*pitchIndex, 50, 50);
-        for (int j = 1; j < n.getDuration(); j += 1) {
-          g2d.setColor(Color.GREEN);
-          g2d.fillRect(50*i, 50*pitchIndex + 50*j, 50, 50);
-        }
-      }
-    }*/
 
-    //reset the transform to what it was!
-    g2d.setTransform(originalTransform);
+        // draw the note-sustains
+        g2d.setColor(new Color(0, 178, 237));
+        g2d.fillRect(i * MusicEditorPanel.NOTE_SIZE, (pitchIndex + 1) * MusicEditorPanel.NOTE_SIZE,
+                MusicEditorPanel.NOTE_SIZE * n.getDuration(), MusicEditorPanel.NOTE_SIZE);
+
+        // draw the note-heads
+        g2d.setColor(new Color(0, 61, 82));
+        g2d.fillRect(i * MusicEditorPanel.NOTE_SIZE, (pitchIndex + 1) * MusicEditorPanel.NOTE_SIZE,
+                MusicEditorPanel.NOTE_SIZE, MusicEditorPanel.NOTE_SIZE);
+
+      }
+    }
+
+    // draw the beat numbers and the measures grid
+    g2d.setColor(Color.BLACK);
+    for (int i = 0; i < length; i += MusicEditorPanel.BEATS_PER_MEASURE) {
+      // only draw the beat numbers every 4 measures
+      if ((i % (MusicEditorPanel.BEATS_PER_MEASURE * 4)) == 0) {
+        g2d.drawString("" + i, i * MusicEditorPanel.NOTE_SIZE, MusicEditorPanel.NOTE_SIZE - 2);
+      }
+
+      // draw the grid of all measures
+      for (int j = 0; j < height; j += 1) {
+        g2d.drawRect(i * MusicEditorPanel.NOTE_SIZE, (j + 1) * MusicEditorPanel.NOTE_SIZE,
+                MusicEditorPanel.BEATS_PER_MEASURE * MusicEditorPanel.NOTE_SIZE,
+                MusicEditorPanel.NOTE_SIZE);
+      }
+    }
 
   }
 

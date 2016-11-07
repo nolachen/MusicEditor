@@ -1,16 +1,12 @@
 package cs3500.music.view;
 
-import java.util.List;
-
-import cs3500.music.model.ImmutableNote;
-
 /**
- * Created by nolachen on 11/2/16.
+ * The view interface for the music editor.
  */
 public interface IMusicEditorView {
 
   /**
-   * TODO Make the view visible.
+   * Make the view visible.
    */
   void makeVisible();
 

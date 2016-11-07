@@ -11,8 +11,8 @@ import java.util.ArrayList;
 /**
  * Builder for the music editor model.
  */
-public class ModelBuilder implements CompositionBuilder {
-  // list of notes that has to be added to the model.
+public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
+  // list of notes that have to be added to the model.
   private ArrayList<Note> music;
   // tempo of the model.
   private int tempo;

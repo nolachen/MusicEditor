@@ -1,7 +1,7 @@
 package cs3500.music.controller;
 
 /**
- * Created by nolachen on 11/3/16.
+ * The controller interface for the music editor.
  */
 public interface IMusicEditorController {
   /**

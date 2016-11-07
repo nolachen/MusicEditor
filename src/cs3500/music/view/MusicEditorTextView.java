@@ -6,13 +6,13 @@ import java.util.List;
 
 import cs3500.music.model.ImmutableNote;
 
-import cs3500.music.model.Note;
-
 import cs3500.music.model.ViewModel;
 
 /**
- * View for the TextView class.
- * Creates a text representation of the models music.
+ * Creates a text view of the music editor.
+ * Represents the present state of the model as a string, formatted with the column of beats on the
+ * left, and the range of notes on the top. The note-heads are represented with X and the
+ * note-sustains are represented as |.
  */
 public class MusicEditorTextView implements IMusicEditorView {
   // viewModel that gives access to necessary information from the model.
@@ -62,7 +62,7 @@ public class MusicEditorTextView implements IMusicEditorView {
     }
 
     // set values in notesGrid
-    for (int i = 0; i <= length; i += 1) {
+    for (int i = 0; i < length; i += 1) {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
 
       for (ImmutableNote n : currentNotes) {

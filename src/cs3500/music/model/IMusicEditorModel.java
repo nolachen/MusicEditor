@@ -3,7 +3,7 @@ package cs3500.music.model;
 import java.util.List;
 
 /**
- * This is the interface of the music editor model.
+ * The model interface for the music editor.
  */
 public interface IMusicEditorModel {
   /**
@@ -33,14 +33,6 @@ public interface IMusicEditorModel {
   void playConsecutively(IMusicEditorModel other);
 
   /**
-   * Return the present state of the model as a string, formatted with the column of beats on the
-   * left, and the range of notes on the top. The note-heads are represented with X and the
-   * note-sustains are represented as |.
-   * @return String representation of the music model
-   */
-  //String getTextRendering();
-
-  /**
    * A list of all Notes that are currently in this music editor, in chromatic order.
    * @return the list of all notes
    */
@@ -60,8 +52,8 @@ public interface IMusicEditorModel {
   int length();
 
   /**
-   * returns this models tempo.
-   * @return the tempo of the model.
+   * Gets the tempo of this model.
+   * @return the tempo
    */
   int getTempo();
 }

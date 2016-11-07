@@ -18,7 +18,9 @@ public final class MusicEditorModel implements IMusicEditorModel {
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    */
   private TreeMap<Integer, List<Note>> music;
-  //represented in Beats per Millisecond
+  /**
+   * The tempo of this model represented in Beats per Millisecond.
+   */
   private int tempo;
 
   /**
@@ -31,9 +33,9 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   /**
+   * Constructor using the Builder pattern.
    * @param builder to construct this model.
    */
-  // constructor using the builder pattern
   public MusicEditorModel(ModelBuilder builder) {
     this.music = new TreeMap<>();
     for (Note n : builder.getMusic()) {

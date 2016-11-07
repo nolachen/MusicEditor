@@ -41,5 +41,6 @@ public class MusicEditorTextViewTest {
     view.makeVisible();
     //assertEquals(view.print);
   }
+  // TODO: test combining compositions (consecutive + simultaneous)
 
 }

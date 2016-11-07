@@ -1,106 +1,61 @@
 package cs3500.music.view;
 
 import java.awt.*;
-import java.util.*;
-import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
-import cs3500.music.model.ImmutableNote;
 import cs3500.music.model.ViewModel;
 
 /**
  * An implementation of the {@link IMusicEditorView} interface that uses Java Swing to draw the
- * current state of the music editor. It shows
- * A skeleton Frame (i.e., a window) in Swing
+ * current state of the music editor. It shows the notes as time increases to the right.
  * // TODO: should this be handling error messages? what errors even are there
  */
 public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
   private final ViewModel viewModel;
-  private final MusicEditorPanel displayPanel; // You may want to refine this to a subtype of
-  // JPanel
-  //private final PitchPanel pitchesPanel;
-  //private final BeatPanel beatsPanel;
+  private final MusicEditorPanel displayPanel;
+  private final PitchPanel pitchPanel;
 
   /**
-   * Creates new GuiView.
+   * Constructor for the GUI view implementation.
+   * @param viewModel the given view model
    */
   public MusicEditorGuiView(ViewModel viewModel) {
-    super(); //TODO do i need this?
+    super();
     this.viewModel = viewModel;
 
-    this.setTitle("fuck this");
-    //this.setSize(500, 500);
+    this.setTitle("Music Editor");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //this.setIconImage(); TODO
+    this.getContentPane().setBackground(new Color(235, 239, 240));
+    //this.setContentPane(new JLabel(new ImageIcon("lol.jpg")));
 
     // use a BorderLayout with pitches in west, beat numbers in north, and the notes in center
-    //this.setLayout(new BorderLayout());
+    this.getContentPane().setLayout(new BorderLayout());
+    this.setPreferredSize(new Dimension(900, 500));
 
-    // initialize the String of notes to be all empty
-    /*List<List<String>> notesGrid = new ArrayList<>();
-    for (int i = 0; i < length; i += 1) {
-      java.util.List<String> temp = new ArrayList<>();
-      for (int j = 0; j < width; j += 1) {
-        temp.add("     ");
-      }
-      notesGrid.add(temp);
-    }*/
-    this.displayPanel = new MusicEditorPanel(this.viewModel);
+    // create the display panel
+    displayPanel = new MusicEditorPanel(this.viewModel);
+    //displayPanel.setPreferredSize(new Dimension(500,500));
+    displayPanel.setOpaque(false);
 
-    /*int length = this.viewModel.length();
-    List<String> noteRange = this.viewModel.getNoteRange();
-    int width = noteRange.size();
+    // create the pitches panel
+    pitchPanel = new PitchPanel(this.viewModel);
+    pitchPanel.setPreferredSize(new Dimension(50,200));
+    pitchPanel.setOpaque(false);
 
-    List<List<JPanel>> notesGrid = new ArrayList<>();
-    for (int i = 0; i < length; i += 1) {
-      List<JPanel> temp = new ArrayList<>();
-      for (int j = 0; j < width; j += 1) {
-        temp.add(new JPanel());
-      }
-      notesGrid.add(temp);
-    }
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(pitchPanel, BorderLayout.WEST);
+    panel.add(displayPanel, BorderLayout.CENTER);
 
-    // set values in notesGrid
-    for (int i = 0; i <= length; i += 1) {
-      List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
+    // add the panels to this frame
+    //this.getContentPane().add(pitchPanel, BorderLayout.WEST);
+    //this.getContentPane().add(displayPanel, BorderLayout.CENTER);
 
-      for (ImmutableNote n : currentNotes) {
-        int pitchIndex = noteRange.indexOf(n.toString());
-        notesGrid.get(i).set(pitchIndex, new NoteHeadPanel());
-        for (int j = 1; j < n.getDuration(); j += 1) {
-          notesGrid.get(n.getStartBeat() + j).set(pitchIndex, new NoteSustainPanel());
-        }
-      }
-    }
-
-    // create and add the music editor notes panel
-    //displayPanel = new MusicEditorPanel(this.viewModel);
-    displayPanel = new JPanel();
-    displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.X_AXIS));
-    //displayPanel.setPreferredSize(new Dimension(500, 500));
-    for (List<JPanel> list : notesGrid) {
-      Box temp = Box.createVerticalBox();
-      for (JPanel j : list) {
-        temp.add(j);
-      }
-      displayPanel.add(temp);
-    }
-    this.add(displayPanel, BorderLayout.CENTER);
-   */
-
-    // create and add the pitches panel
-    /*pitchesPanel = new JPanel();
-    pitchesPanel.setLayout(new BoxLayout(pitchesPanel, BoxLayout.PAGE_AXIS));
-    for (String s : this.viewModel.getNoteRange()) {
-      System.out.println(s);
-      pitchesPanel.add(new JLabel(s));
-    }
-    this.add(pitchesPanel, BorderLayout.WEST);*/
-
-    // create and add the beats panel
-    //beatsPanel = new JPanel();
-    //beatsPanel.setLayout(new BoxLayout(beatsPanel, BoxLayout.LINE_AXIS));
+    // create the scroll pane
+    JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants
+            .VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    this.getContentPane().add(scrollPane);
 
     // size the frame
     this.pack();
