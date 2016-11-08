@@ -3,13 +3,13 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import cs3500.music.model.IMusicEditorModel;
+import cs3500.music.model.ImmutableNote;
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
@@ -19,11 +19,18 @@ import cs3500.music.model.Pitch;
  */
 public class ModelTest {
   private IMusicEditorModel model;
-  private Note g3b0 = new Note(Pitch.G, 5, 0, 7);
+
+  private Note g5b0 = new Note(Pitch.G, 5, 0, 7);
   private Note c4b4 = new Note(Pitch.C, 4, 4, 2);
   private Note g3b16 = new Note(Pitch.G, 3, 16, 10);
   private Note g3b24 = new Note(Pitch.G, 3, 24, 2);
   private Note f3b0 = new Note(Pitch.F, 3, 0, 4);
+
+  private ImmutableNote ig5b0 = new ImmutableNote(g5b0);
+  private ImmutableNote ic4b4 = new ImmutableNote(c4b4);
+  private ImmutableNote ig3b16 = new ImmutableNote(g3b16);
+  private ImmutableNote ig3b24 = new ImmutableNote(g3b24);
+  private ImmutableNote if3b0 = new ImmutableNote(f3b0);
 
   @Before
   public void setup() {
@@ -33,166 +40,84 @@ public class ModelTest {
   @Test
   public void testTempo() {
     // tests for getting the tempo
-    assertEquals(100, model.getTempo());
+    assertEquals(200000, model.getTempo());
   }
 
   @Test
   public void testAdd() {
     // basic tests for adding notes to the model
 
-    model.add(g3b0);
+    model.add(g5b0);
 
     assertEquals(1 , model.getAllNotes().size());
-    assertEquals(1, model.length());
-    assertEquals(Arrays.asList(g3b0), model.getAllNotes());
-    assertEquals(Arrays.asList(g3b0), model.getNotesAtBeat(0));
+    assertEquals(7, model.length());
+    assertEquals("[G5]", model.getAllNotes().toString());
+    assertEquals("[G5]", model.getNotesAtBeat(0).toString());
 
     model.add(c4b4);
 
     assertEquals(2, model.getAllNotes().size());
-    assertEquals(2, model.length());
-    assertEquals(Arrays.asList(c4b4, g3b0), model.getAllNotes());
-    assertEquals(Arrays.asList(c4b4), model.getNotesAtBeat(4));
+    assertEquals(7, model.length());
+    assertEquals("[G5, C4]", model.getAllNotes().toString());
+    assertEquals("[C4]", model.getNotesAtBeat(4).toString());
 
     model.add(g3b16);
 
-    assertEquals(3, model.length());
-    assertEquals(Arrays.asList(g3b0, c4b4, g3b16), model.getAllNotes());
-    assertEquals(Arrays.asList(g3b0), model.getNotesAtBeat(0));
-    assertEquals(Arrays.asList(g3b16), model.getNotesAtBeat(16));
+    assertEquals(26, model.length());
+    assertEquals("[G5, C4, G3]", model.getAllNotes().toString());
+    assertEquals("[G5]", model.getNotesAtBeat(0).toString());
+    assertEquals("[G3]", model.getNotesAtBeat(16).toString());
 
     // make sure only note heads are stored
-    assertEquals(new ArrayList<Note>(), model.getNotesAtBeat(1));
-
+    assertEquals(new ArrayList<ImmutableNote>(), model.getNotesAtBeat(1));
   }
 
   @Test
   public void testAddOverlap() {
     // test adding a note that starts at the same time as an existing note
 
-    model.add(g3b0);
+    model.add(g5b0);
     model.add(f3b0);
 
-    assertEquals(0, model.length());
-    assertEquals(Arrays.asList(g3b0, f3b0), model.getAllNotes());
-    assertEquals(Arrays.asList(g3b0, f3b0), model.getNotesAtBeat(0));
+    assertEquals(7, model.length());
+    assertEquals("[G5, F3]", model.getAllNotes().toString());
+    assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
   }
 
   @Test
   public void testRemove() {
     // basic test from removing notes from the model
 
-    model.add(g3b0);
+    model.add(g5b0);
     model.add(c4b4);
     model.add(g3b16);
     model.add(g3b24);
     model.add(f3b0);
 
-    assertEquals(Arrays.asList(g3b0, f3b0), model.getNotesAtBeat(0));
+    assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
     assertEquals(5, model.getAllNotes().size());
-    assertEquals(0, model.length());
+    assertEquals(26, model.length());
+    assertEquals("[G5, F3, C4, G3, G3]", model.getAllNotes().toString());
 
-    model.remove(g3b0);
+    model.remove(g5b0);
 
-    assertTrue(model.getAllNotes().contains(c4b4));
+    assertEquals("[F3]", model.getNotesAtBeat(0).toString());
+    assertEquals(4, model.getAllNotes().size());
+    assertEquals(26, model.length());
+    assertEquals("[F3, C4, G3, G3]", model.getAllNotes().toString());
+
+    assertTrue(model.getAllNotes().toString().contains(ic4b4.toString()));
     model.remove(c4b4);
-
-    assertEquals("    G3 \n" +
-            " 0     \n" +
-            " 1     \n" +
-            " 2     \n" +
-            " 3     \n" +
-            " 4     \n" +
-            " 5     \n" +
-            " 6     \n" +
-            " 7     \n" +
-            " 8     \n" +
-            " 9     \n" +
-            "10     \n" +
-            "11     \n" +
-            "12     \n" +
-            "13     \n" +
-            "14     \n" +
-            "15     \n" +
-            "16  X  \n" +
-            "17  |  \n" +
-            "18  |  \n" +
-            "19  |  \n" +
-            "20  |  \n" +
-            "21  |  \n" +
-            "22  |  \n" +
-            "23  |  \n" +
-            "24  X  \n" +
-            "25  |  \n", model.getTextRendering());
-
-    assertFalse(model.getAllNotes().contains(c4b4));
-
-  }
-
-  @Test
-  public void testRemoveOverlap() {
-    // test removing an overlapping note from the model
-
-    model.add(g3b0);
-    model.add(c4b4);
-    model.add(g3b16);
-    model.add(g3b24);
-
-    model.remove(g3b16);
-
-    assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
-            " 0  X                           \n" +
-            " 1  |                           \n" +
-            " 2  |                           \n" +
-            " 3  |                           \n" +
-            " 4  |                        X  \n" +
-            " 5  |                        |  \n" +
-            " 6  |                           \n" +
-            " 7                              \n" +
-            " 8                              \n" +
-            " 9                              \n" +
-            "10                              \n" +
-            "11                              \n" +
-            "12                              \n" +
-            "13                              \n" +
-            "14                              \n" +
-            "15                              \n" +
-            "16                              \n" +
-            "17                              \n" +
-            "18                              \n" +
-            "19                              \n" +
-            "20                              \n" +
-            "21                              \n" +
-            "22                              \n" +
-            "23                              \n" +
-            "24  X                           \n" +
-            "25  |                           \n", model.getTextRendering());
+    assertFalse(model.getAllNotes().toString().contains(ic4b4.toString()));
   }
 
   @Test (expected = IllegalArgumentException.class)
   public void testBadRemove() {
     // test trying to remove a note that doesn't exist in the model
-    model.add(g3b0);
+    model.add(g5b0);
     model.add(g3b16);
 
     model.remove(c4b4);
-  }
-
-  @Test
-  public void testNegOctave() {
-    // test adding a note with negative octave
-
-    Note tester = new Note(Pitch.A, -2, 2, 5);
-    model.add(tester);
-
-    assertEquals("  A-2 \n" +
-            "0     \n" +
-            "1     \n" +
-            "2  X  \n" +
-            "3  |  \n" +
-            "4  |  \n" +
-            "5  |  \n" +
-            "6  |  \n", model.getTextRendering());
   }
 
   @Test (expected = IllegalArgumentException.class)
@@ -210,7 +135,7 @@ public class ModelTest {
 
   @Test (expected = IllegalArgumentException.class)
   public void testBadDuration2() {
-    // test trying to make an ote with an illegal duration
+    // test trying to make an note with an illegal duration
 
     Note bad = new Note(Pitch.B, 2, 2, -1);
   }
@@ -221,68 +146,22 @@ public class ModelTest {
 
     model.add(c4b4);
     model.add(g3b16);
+    model.add(f3b0);
 
-    assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
-            " 0                              \n" +
-            " 1                              \n" +
-            " 2                              \n" +
-            " 3                              \n" +
-            " 4                           X  \n" +
-            " 5                           |  \n" +
-            " 6                              \n" +
-            " 7                              \n" +
-            " 8                              \n" +
-            " 9                              \n" +
-            "10                              \n" +
-            "11                              \n" +
-            "12                              \n" +
-            "13                              \n" +
-            "14                              \n" +
-            "15                              \n" +
-            "16  X                           \n" +
-            "17  |                           \n" +
-            "18  |                           \n" +
-            "19  |                           \n" +
-            "20  |                           \n" +
-            "21  |                           \n" +
-            "22  |                           \n" +
-            "23  |                           \n" +
-            "24  |                           \n" +
-            "25  |                           \n", model.getTextRendering());
+    assertEquals(3, model.getAllNotes().size());
+    assertEquals(26, model.length());
 
     IMusicEditorModel model2 = new MusicEditorModel();
     model2.add(g3b24);
-    model2.add(g3b0);
+    model2.add(c4b4);
+    model2.add(g5b0);
 
     model.playSimultaneously(model2);
 
-    assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
-            " 0  X                           \n" +
-            " 1  |                           \n" +
-            " 2  |                           \n" +
-            " 3  |                           \n" +
-            " 4  |                        X  \n" +
-            " 5  |                        |  \n" +
-            " 6  |                           \n" +
-            " 7                              \n" +
-            " 8                              \n" +
-            " 9                              \n" +
-            "10                              \n" +
-            "11                              \n" +
-            "12                              \n" +
-            "13                              \n" +
-            "14                              \n" +
-            "15                              \n" +
-            "16  X                           \n" +
-            "17  |                           \n" +
-            "18  |                           \n" +
-            "19  |                           \n" +
-            "20  |                           \n" +
-            "21  |                           \n" +
-            "22  |                           \n" +
-            "23  |                           \n" +
-            "24  |                           \n" +
-            "25  |                           \n", model.getTextRendering());
+    assertEquals(6, model.getAllNotes().size());
+    assertEquals("[F3, G5, C4, C4, G3, G3]", model.getAllNotes().toString());
+    assertEquals(26, model.length());
+    assertEquals("[F3, G5]", model.getNotesAtBeat(0).toString());
   }
 
   @Test
@@ -292,65 +171,37 @@ public class ModelTest {
     model.add(c4b4);
     model.add(g3b16);
 
+    assertEquals(2, model.getAllNotes().size());
+    assertEquals(26, model.length());
+
     IMusicEditorModel model2 = new MusicEditorModel();
-    model2.add(g3b0);
+    model2.add(g5b0);
 
     model.playConsecutively(model2);
 
-    assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
-            " 0                              \n" +
-            " 1                              \n" +
-            " 2                              \n" +
-            " 3                              \n" +
-            " 4                           X  \n" +
-            " 5                           |  \n" +
-            " 6                              \n" +
-            " 7                              \n" +
-            " 8                              \n" +
-            " 9                              \n" +
-            "10                              \n" +
-            "11                              \n" +
-            "12                              \n" +
-            "13                              \n" +
-            "14                              \n" +
-            "15                              \n" +
-            "16  X                           \n" +
-            "17  |                           \n" +
-            "18  |                           \n" +
-            "19  |                           \n" +
-            "20  |                           \n" +
-            "21  |                           \n" +
-            "22  |                           \n" +
-            "23  |                           \n" +
-            "24  |                           \n" +
-            "25  X                           \n" +
-            "26  |                           \n" +
-            "27  |                           \n" +
-            "28  |                           \n" +
-            "29  |                           \n" +
-            "30  |                           \n" +
-            "31  |                           \n", model.getTextRendering());
+    assertEquals(26 + model2.length(), model.length());
+    assertEquals(3, model.getAllNotes().size());
+    assertEquals("[C4, G3, G5]", model.getAllNotes().toString());
   }
 
   @Test
-  public void testTextOutput() {
-    // test the text rendering of the model for an empty model
+  public void testEmptyMOdel() {
+    // test an empty model
 
-    assertEquals("", model.getTextRendering());
-
-    // the other methods sufficiently test the functionality of the method
+    assertEquals(0, model.length());
+    assertEquals(0, model.getAllNotes().size());
   }
 
   @Test
   public void testGetAllNotes() {
     // test getAllNotes
 
-    model.add(g3b0);
+    model.add(g3b24);
+    model.add(g5b0);
     model.add(c4b4);
     model.add(g3b16);
-    model.add(g3b24);
 
-    assertEquals("[G3, C4]", model.getAllNotes().toString());
+    assertEquals("[G5, C4, G3, G3]", model.getAllNotes().toString());
   }
 
 
