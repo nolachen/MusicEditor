@@ -162,10 +162,11 @@ public class MockMidiTest {
             "Message 0 65 72 600000\n");
   }
 
-  //gets the midi-transcript of mary.
-  /*@Test
+ /* //gets the midi-transcript of mary.
+  @Test
   public void maryMidi() throws FileNotFoundException {
-    FileReader reader = new FileReader("C:\\Users\\Marina\\Documents\\GitHub\\MusicEditor\\mary-little-lamb.txt");
+    FileReader reader = new FileReader("C:\\Users\\Marina\\Documents\\GitHub" +
+            "\\MusicEditor\\mary-little-lamb.txt");
     MusicReader mr = new MusicReader();
     mr.parseFile(reader, this.builder);
     this.model = new MusicEditorModel(builder);
