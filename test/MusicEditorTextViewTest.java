@@ -1,19 +1,24 @@
 import org.junit.Before;
+
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cs3500.music.model.IMusicEditorModel;
+
 import cs3500.music.model.MusicEditorModel;
+
 import cs3500.music.model.Note;
+
 import cs3500.music.model.Pitch;
+
 import cs3500.music.model.ViewModel;
+
 import cs3500.music.view.IMusicEditorView;
-import cs3500.music.view.MusicEditorGuiView;
+
 import cs3500.music.view.MusicEditorTextView;
 
-import static org.junit.Assert.*;
+import static junit.framework.Assert.assertEquals;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests for {@link MusicEditorTextView}.
@@ -29,6 +34,9 @@ public class MusicEditorTextViewTest {
   Note g3b16 = new Note(Pitch.G, 3, 16, 10);
   Note g3b24 = new Note(Pitch.G, 3, 24, 2);
 
+  /**
+   * sets initial conditions for the tests.
+   */
   @Before
   public void setup() {
     this.out = new StringBuilder();

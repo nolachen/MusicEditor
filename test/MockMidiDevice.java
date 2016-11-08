@@ -120,7 +120,7 @@ public class MockMidiDevice implements Synthesizer {
 
   @Override
   public void unloadInstrument(Instrument instrument) {
-
+    //empty body
   }
 
   @Override
@@ -150,7 +150,7 @@ public class MockMidiDevice implements Synthesizer {
 
   @Override
   public void unloadAllInstruments(Soundbank soundbank) {
-
+    //empty body.
   }
 
   @Override
