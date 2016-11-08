@@ -1,11 +1,14 @@
 package cs3500.music;
 
+import sun.awt.ModalityListener;
+
 import cs3500.music.controller.IMusicEditorController;
 
 import cs3500.music.controller.MusicEditorController;
 
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
@@ -14,6 +17,7 @@ import cs3500.music.util.MusicReader;
 
 import cs3500.music.view.IMusicEditorView;
 
+import cs3500.music.view.MidiViewImpl;
 import cs3500.music.view.MusicEditorViewFactory;
 
 import java.io.FileNotFoundException;
@@ -35,7 +39,7 @@ public final class MusicEditor {
    * you want to use.
    * @param args the args
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException {
     Scanner sc = new Scanner(System.in);
 
     // try to get the file

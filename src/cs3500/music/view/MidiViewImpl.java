@@ -67,6 +67,7 @@ public class MidiViewImpl implements IMusicEditorView {
   }
 
   /**
+   * Convenience constructor that takes in a synthesizer.
    * @param viewModel viewModel that gives access to necessary model information.
    * @param sy given synthesizer for testing purposes.
    */
@@ -94,7 +95,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   /**
    * Writes the message to play the given tone.
-   * @param note note being sent to the synthesizers recevier.
+   * @param note note being sent to the synthesizers receiver.
    * @throws InvalidMidiDataException when the midi is invalid.
    */
   private void writeNote(ImmutableNote note) throws InvalidMidiDataException {

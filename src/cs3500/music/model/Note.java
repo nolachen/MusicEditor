@@ -18,13 +18,13 @@ public class Note implements Comparable<Note> {
 
   /**
    * The starting beat of this Note.
-   * INVARIANT: startBeat >- 0.
+   * INVARIANT: startBeat >= 0.
    */
   private int startBeat;
 
   /**
    * The duration of this note in beats, with only integral durations allowed.
-   * INVARIANT: duration > 0.
+   * INVARIANT: duration >= 0.
    */
   private int duration;
 
@@ -51,8 +51,8 @@ public class Note implements Comparable<Note> {
     if (startBeat < 0) {
       throw new IllegalArgumentException("Start beat must be at least 0.");
     }
-    if (duration <= 0) {
-      throw new IllegalArgumentException("Duration must be greater than 0.");
+    if (duration < 0) {
+      throw new IllegalArgumentException("Duration must be at least 0.");
     }
     this.pitch = pitch;
     this.octave = octave;

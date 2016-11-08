@@ -1,15 +1,15 @@
 package cs3500.music.model;
 
 /**
- * Creates a version of a note class that can't be altered by a user.
+ * Creates a version of a {@link Note} that can't be altered by a user.
  */
 public final class ImmutableNote implements Comparable<ImmutableNote> {
-  // Note where this gets it's data from.
+  // Note where this gets its data from.
   private final Note note;
 
   /**
    * Constructor
-   * @param note where this gets it's data from.
+   * @param note where this gets its data from.
    */
   public ImmutableNote(Note note) {
     this.note = note;

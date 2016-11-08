@@ -104,8 +104,4 @@ public class MusicEditorTextView implements IMusicEditorView {
 
     return output;
   }
-
-  @Override
-  public void refresh() {
-  }
 }
