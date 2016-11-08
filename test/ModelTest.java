@@ -2,7 +2,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,11 +25,7 @@ public class ModelTest {
   private Note g3b24 = new Note(Pitch.G, 3, 24, 2);
   private Note f3b0 = new Note(Pitch.F, 3, 0, 4);
 
-  private ImmutableNote ig5b0 = new ImmutableNote(g5b0);
   private ImmutableNote ic4b4 = new ImmutableNote(c4b4);
-  private ImmutableNote ig3b16 = new ImmutableNote(g3b16);
-  private ImmutableNote ig3b24 = new ImmutableNote(g3b24);
-  private ImmutableNote if3b0 = new ImmutableNote(f3b0);
 
   @Before
   public void setup() {

@@ -1,8 +1,10 @@
 package cs3500.music.view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Objects;
 
 import cs3500.music.model.ImmutableNote;
 
@@ -15,22 +17,22 @@ import cs3500.music.model.ViewModel;
  * note-sustains are represented as |.
  */
 public class MusicEditorTextView implements IMusicEditorView {
-  // viewModel that gives access to necessary information from the model.
+  // ViewModel that gives access to necessary information from the model.
   private final ViewModel viewModel;
-  // Rendering of this view.
-  private StringBuilder rendering;
-
-  // TODO : readable & appendable
-  private Readable read;
-  private Appendable append;
+  // Appendable output of this view.
+  private final Appendable ap;
 
   /**
    * Constructor of a MusicEditorTextView.
    * @param viewModel viewModel that gives access to information in the model.
+   * @param ap the appendable output
    */
-  public MusicEditorTextView(ViewModel viewModel) {
+  public MusicEditorTextView(ViewModel viewModel, Appendable ap) {
+    Objects.requireNonNull(ap);
+    Objects.requireNonNull(viewModel);
+
     this.viewModel = viewModel;
-    this.rendering = new StringBuilder();
+    this.ap = ap;
   }
 
   @Override
@@ -50,7 +52,7 @@ public class MusicEditorTextView implements IMusicEditorView {
     noteRangeString += "\n";
 
     // pad the note range at the top and append it to the rendering
-    this.rendering.append(String.format("%" + (padding + noteRangeString.length()) + "s",
+    this.appendOutput(String.format("%" + (padding + noteRangeString.length()) + "s",
             noteRangeString));
 
     // initialize the String of notes to be all empty
@@ -78,14 +80,13 @@ public class MusicEditorTextView implements IMusicEditorView {
 
     // append strings in notesGrid to this rendering
     for (int i = 0; i < notesGrid.size(); i += 1) {
-      this.rendering.append((String.format("%" + padding + "d", i)));
+      this.appendOutput((String.format("%" + padding + "d", i)));
       for (String s : notesGrid.get(i)) {
-        this.rendering.append(s);
+        this.appendOutput(s);
       }
 
-      this.rendering.append("\n");
+      this.appendOutput("\n");
     }
-    System.out.println(this.rendering.toString());
   }
 
   /**
@@ -103,5 +104,20 @@ public class MusicEditorTextView implements IMusicEditorView {
     output = String.format("%-" + width + "s", output);
 
     return output;
+  }
+
+  /**
+   * Appends the given string to the Appendable output of this controller.
+   * Adds a newline as well, if specified.
+   * Changed in HW04 to throw an IllegalArgumentException in the case of IOException, instead of
+   * printing to system.out
+   * @param s the string to add to the Appendable output
+   */
+  private void appendOutput(String s) {
+    try {
+      this.ap.append(s);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Invalid output.");
+    }
   }
 }

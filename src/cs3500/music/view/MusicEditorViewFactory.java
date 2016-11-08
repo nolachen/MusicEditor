@@ -1,5 +1,7 @@
 package cs3500.music.view;
 
+import java.io.InputStreamReader;
+
 import cs3500.music.model.ViewModel;
 
 /**
@@ -10,6 +12,7 @@ public class MusicEditorViewFactory {
 
   /**
    * A static factory method that creates a view specified by the string, with the given view model.
+   * The types of view are "console", "visual", and "midi".
    * @param view the type of view to create
    * @param viewModel the view model to give the view
    * @return the view
@@ -19,7 +22,7 @@ public class MusicEditorViewFactory {
 
     switch (view) {
       case "console":
-        return new MusicEditorTextView(viewModel);
+        return new MusicEditorTextView(viewModel, System.out);
       case "visual":
         return new MusicEditorGuiView(viewModel);
       case "midi":
