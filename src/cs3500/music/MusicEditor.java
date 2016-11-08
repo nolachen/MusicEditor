@@ -20,8 +20,6 @@ import java.io.FileNotFoundException;
 
 import java.io.FileReader;
 
-import java.util.Scanner;
-
 
 /**
  * The class from which the program is run.
@@ -33,18 +31,17 @@ public final class MusicEditor {
    * @param args the args
    */
   public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
 
     // try to get the file
     FileReader reader = null;
-    while (reader == null) {
-      String file = sc.nextLine();
-      try {
-        reader = new FileReader(file);
-      } catch (FileNotFoundException e) {
-        System.err.print("File not found, try again.");
-      }
+
+    String file = args[0];
+    try {
+      reader = new FileReader(file);
+    } catch (FileNotFoundException e) {
+      System.err.print("File not found, try again.");
     }
+
     // create the builder, the model from the builder and the file, and the view model
     ModelBuilder build = new ModelBuilder();
     MusicReader rm = new MusicReader();
@@ -53,13 +50,11 @@ public final class MusicEditor {
 
     // try to get the view type and create the view
     IMusicEditorView view = null;
-    while (view == null) {
-      String viewType = sc.nextLine();
-      try {
-        view = MusicEditorViewFactory.create(viewType, viewModel);
-      } catch (IllegalArgumentException e) {
-        System.err.print("Incorrect view type, try again.");
-      }
+    String viewType = args[1];
+    try {
+      view = MusicEditorViewFactory.create(viewType, viewModel);
+    } catch (IllegalArgumentException e) {
+      System.err.print("Incorrect view type, try again.");
     }
 
     // create the controller and start the program

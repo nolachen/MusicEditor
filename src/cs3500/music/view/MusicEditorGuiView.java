@@ -24,6 +24,9 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
   //private MusicEditorPanel displayPanel;
   //private PitchPanel pitchPanel;
 
+  // TODO: make pitch panel not scroll horizontally
+  // TODO: make the pitch labels centered in the measure bars
+
   /**
    * Constructor for the GUI view implementation.
    * @param viewModel the given view model

@@ -16,8 +16,7 @@ import cs3500.music.view.IMusicEditorView;
 
 import cs3500.music.view.MusicEditorTextView;
 
-import static junit.framework.Assert.assertEquals;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
