@@ -8,11 +8,16 @@ import cs3500.music.util.CompositionBuilder;
 
 import cs3500.music.util.ModelBuilder;
 
+import cs3500.music.util.MusicReader;
 import cs3500.music.view.MidiViewImpl;
 
 import org.junit.Before;
 
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -160,5 +165,17 @@ public class MockMidiTest {
             "Message 0 64 72 800000\n" +
             "Message 0 65 72 400000\n" +
             "Message 0 65 72 600000\n");
+  }
+
+  @Test
+  public void maryMidi() throws FileNotFoundException {
+    FileReader reader = new FileReader("C:\\Users\\Marina\\Documents\\GitHub\\MusicEditor\\mary-little-lamb.txt");
+    MusicReader mr = new MusicReader();
+    mr.parseFile(reader, this.builder);
+    this.model = new MusicEditorModel(builder);
+    this.vm = new ViewModel(this.model);
+    this.midiView = new MidiViewImpl(this.vm, this.device);
+    this.midiView.makeVisible();
+    System.out.println(this.receiver.log.toString());
   }
 }
