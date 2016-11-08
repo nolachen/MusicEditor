@@ -134,6 +134,13 @@ public class MidiViewImpl implements IMusicEditorView {
         }
       }
     }
+    
+    try {
+      //TODO // FIXME: 11/7/2016 
+      Thread.sleep(length * viewModel.getTempo());
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     this.receiver.close();
   }
 

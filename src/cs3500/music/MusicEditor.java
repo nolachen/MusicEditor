@@ -52,10 +52,10 @@ public final class MusicEditor {
         System.err.print("File not found, try again.");
       }
     }
-
     // create the builder, the model from the builder and the file, and the view model
     ModelBuilder build = new ModelBuilder();
-    IMusicEditorModel model = MusicReader.parseFile(reader, build);
+    MusicReader rm = new MusicReader();
+    IMusicEditorModel model = rm.parseFile(reader, build);
     ViewModel viewModel = new ViewModel(model);
 
     // try to get the view type and create the view
