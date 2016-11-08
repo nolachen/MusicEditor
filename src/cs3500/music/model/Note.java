@@ -100,6 +100,7 @@ public class Note implements Comparable<Note> {
   }
 
   /**
+   * gets the instrument value of this note.
    * @return the instrument value of this Note.
    */
   public int getInstrument() {
@@ -107,7 +108,8 @@ public class Note implements Comparable<Note> {
   }
 
   /**
-   * @return the volume value of this Volume.
+   * gets the volume value of this note.
+   * @return the volume value of this Note.
    */
   public int getVolume() {
     return this.volume;
@@ -126,9 +128,12 @@ public class Note implements Comparable<Note> {
     }
     Note that = (Note) obj;
 
-    return (this.pitch == that.pitch) && (this.octave == that.octave) &&
-            (this.startBeat == that.startBeat) && (this.duration == that.duration) &&
-            (this.instrument == that.instrument) && (this.volume == that.volume);
+    return (this.pitch == that.pitch)
+            && (this.octave == that.octave)
+            && (this.startBeat == that.startBeat)
+            && (this.duration == that.duration)
+            && (this.instrument == that.instrument)
+            && (this.volume == that.volume);
   }
 
   /**
@@ -161,29 +166,43 @@ public class Note implements Comparable<Note> {
   }
 
   /**
+   * returns the pitch value.
    * @return returns the pitch value of this note.
    */
-  public Pitch getPitch() { return this.pitch; }
+  public Pitch getPitch() {
+    return this.pitch;
+  }
 
   /**
+   * returns the octave value.
    * @return returns the octave value of this note.
    */
-  public int getOctave() { return this.octave; }
+  public int getOctave() {
+    return this.octave;
+  }
 
   /**
    * Getter for {@code startBeat}.
    * @return the start beat.
    */
-  public int getStartBeat() { return this.startBeat; }
+  public int getStartBeat() {
+    return this.startBeat;
+  }
 
   /**
+   * gets the duration of this note.
    * @return returns the duration of this note.
    */
-  public int getDuration() { return this.duration; }
+  public int getDuration() {
+    return this.duration;
+  }
 
   /**
+   * gets the end beat of this note.
    * @return returns the end beat.
    */
-  public int getEndBeat() { return this.startBeat + this.duration; }
+  public int getEndBeat() {
+    return this.startBeat + this.duration;
+  }
 
 }

@@ -1,7 +1,8 @@
 import javax.sound.midi.MidiMessage;
+
 import javax.sound.midi.Receiver;
+
 import javax.sound.midi.ShortMessage;
-import java.io.Reader;
 
 /**
  * A mock receiver to use for testing purposes.
@@ -25,10 +26,11 @@ public class MockReceiver implements Receiver {
     int pitchOctave = ((ShortMessage) message).getData1();
     int volume = ((ShortMessage) message).getData2();
     this.log.append("Message " + channel + " " + pitchOctave + " " +
-            volume + " " + timeStamp+  "\n");
+            volume + " " + timeStamp +  "\n");
   }
 
   @Override
   public void close() {
+    //empty body.
   }
 }

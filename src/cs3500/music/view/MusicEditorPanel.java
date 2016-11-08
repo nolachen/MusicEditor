@@ -1,12 +1,21 @@
 package cs3500.music.view;
 
-import java.awt.*;
+import java.awt.Color;
+
+import java.awt.Dimension;
+
+import java.awt.Graphics;
+
+import java.awt.Graphics2D;
+
 import java.util.Collections;
+
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import cs3500.music.model.ImmutableNote;
+
 import cs3500.music.model.ViewModel;
 
 /**
@@ -31,7 +40,7 @@ public class MusicEditorPanel extends JPanel {
    * @param g the Graphics object
    */
   @Override
-  protected void paintComponent(Graphics g){
+  protected void paintComponent(Graphics g) {
     // Handle the default painting
     super.paintComponent(g);
 

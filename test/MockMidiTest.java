@@ -1,4 +1,8 @@
-import cs3500.music.model.*;
+import cs3500.music.model.IMusicEditorModel;
+
+import cs3500.music.model.MusicEditorModel;
+
+import cs3500.music.model.ViewModel;
 
 import cs3500.music.util.CompositionBuilder;
 
@@ -24,6 +28,9 @@ public class MockMidiTest {
   MidiViewImpl midiView;
   CompositionBuilder builder;
 
+  /**
+   * sets the initial conditions.
+   */
   @Before
   public void initCond() {
     this.model = new MusicEditorModel();

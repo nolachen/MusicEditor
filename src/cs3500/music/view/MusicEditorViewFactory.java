@@ -17,7 +17,7 @@ public class MusicEditorViewFactory {
   public static IMusicEditorView create(String view, ViewModel viewModel) {
     view = view.toLowerCase();
 
-    switch(view) {
+    switch (view) {
       case "console":
         return new MusicEditorTextView(viewModel);
       case "visual":

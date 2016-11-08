@@ -1,23 +1,28 @@
-import cs3500.music.model.IMusicEditorModel;
-import cs3500.music.model.MusicEditorModel;
-import cs3500.music.model.Note;
-import cs3500.music.model.ViewModel;
-import cs3500.music.util.CompositionBuilder;
-import cs3500.music.util.MusicReader;
-import cs3500.music.view.MidiViewImpl;
-import org.junit.Test;
+import javax.sound.midi.Instrument;
 
-import javax.sound.midi.*;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
+import javax.sound.midi.MidiChannel;
+
+import javax.sound.midi.MidiUnavailableException;
+
+import javax.sound.midi.Patch;
+
+import javax.sound.midi.Receiver;
+
+import javax.sound.midi.Soundbank;
+
+import javax.sound.midi.Synthesizer;
+
+import javax.sound.midi.Transmitter;
+
+import javax.sound.midi.VoiceStatus;
+
 import java.util.List;
-import java.util.TreeMap;
+
 
 /**
  * Mock synthesizer for testing.
  */
-public class MockMidiDevice implements Synthesizer{
+public class MockMidiDevice implements Synthesizer {
   // log of messages.
   StringBuilder log;
 
@@ -35,12 +40,12 @@ public class MockMidiDevice implements Synthesizer{
 
   @Override
   public void open() throws MidiUnavailableException {
-
+    //empty body
   }
 
   @Override
   public void close() {
-
+    //empty body
   }
 
   @Override
@@ -155,7 +160,7 @@ public class MockMidiDevice implements Synthesizer{
 
   @Override
   public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
-
+    //empty body
   }
 }
 

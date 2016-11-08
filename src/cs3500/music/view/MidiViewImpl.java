@@ -4,7 +4,17 @@ import cs3500.music.model.ImmutableNote;
 
 import cs3500.music.model.ViewModel;
 
-import javax.sound.midi.*;
+import javax.sound.midi.InvalidMidiDataException;
+
+import javax.sound.midi.MidiMessage;
+
+import javax.sound.midi.MidiSystem;
+
+import javax.sound.midi.Receiver;
+
+import javax.sound.midi.ShortMessage;
+
+import javax.sound.midi.Synthesizer;
 
 import java.util.HashMap;
 
@@ -85,7 +95,7 @@ public class MidiViewImpl implements IMusicEditorView {
   /**
    * Writes the message to play the given tone.
    * @param note note being sent to the synthesizers recevier.
-   * @throws InvalidMidiDataException
+   * @throws InvalidMidiDataException when the midi is invalid.
    */
   private void writeNote(ImmutableNote note) throws InvalidMidiDataException {
     int octave = note.getOctave();
@@ -124,11 +134,6 @@ public class MidiViewImpl implements IMusicEditorView {
       }
     }
     this.receiver.close();
-  }
-
-  @Override
-  public void refresh() {
-    //nothing
   }
 
 }

@@ -1,9 +1,7 @@
 package cs3500.music.util;
 
-import cs3500.music.model.*;
-
-import java.io.IOException;
 import java.util.NoSuchElementException;
+
 import java.util.Scanner;
 
 /**
@@ -27,7 +25,7 @@ public class MusicReader {
    * @param readable The source of data for the music composition
    * @param piece A builder for helping to construct a new composition
    * @param <T> The main model interface type describing music compositions
-   * @return
+   * @return the given value of T that the given builder creates.
    */
   public static <T> T parseFile(Readable readable, CompositionBuilder<T> piece) {
     Scanner scanner = new Scanner(readable);

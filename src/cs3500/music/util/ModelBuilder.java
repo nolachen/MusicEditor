@@ -17,7 +17,9 @@ public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
   // tempo of the model.
   private int tempo;
 
-  // constructor of builder.
+  /**
+   * constructor of builder.
+   */
   public ModelBuilder() {
     // arbitrary tempo
     this.tempo = 200000;
@@ -37,8 +39,8 @@ public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
 
   //TODO
   @Override
-  public CompositionBuilder<IMusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
-    Note note = new Note(start, end, instrument, pitch, volume);
+  public CompositionBuilder<IMusicEditorModel> addNote(int s, int e, int i, int p, int v) {
+    Note note = new Note(s, e, i, p, v);
     music.add(note);
     return this;
   }

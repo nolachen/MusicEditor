@@ -1,9 +1,16 @@
 package cs3500.music.view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
-import javax.swing.border.Border;
+import java.awt.Color;
+
+import javax.swing.JFrame;
+
+import javax.swing.JPanel;
+
+import javax.swing.JScrollPane;
+
+import javax.swing.ScrollPaneConstants;
 
 import cs3500.music.model.ViewModel;
 
@@ -58,12 +65,8 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
   }
 
   @Override
-  public void makeVisible(){
+  public void makeVisible() {
     this.setVisible(true);
   }
 
-  @Override
-  public void refresh() {
-    //this.repaint();
-  }
 }
