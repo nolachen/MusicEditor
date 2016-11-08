@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ViewModel {
   // model that this class gets information from.
-  private IMusicEditorModel model;
+  private final IMusicEditorModel model;
 
   /**
    * Constructor.
@@ -20,14 +20,6 @@ public class ViewModel {
    */
   public ViewModel(IMusicEditorModel model) {
     this.model = model;
-  }
-
-  /**
-   * A list of all Notes that are currently in this music editor, in chromatic order.
-   * @return the list of all notes
-   */
-  public List<ImmutableNote> getAllNotes() {
-    return this.model.getAllNotes();
   }
 
   /**

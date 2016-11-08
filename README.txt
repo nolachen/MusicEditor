@@ -10,6 +10,22 @@ Since each note has a duration and start beat, it would be redundant to store it
 
 Note represents a musical note with pitch, octave, start beat, duration, instrument, and volume.
 The instrument and volume fields were added to support MIDI.
-Note can get the next note which is helpful to make the range of all notes for the model. The map representing the music is passed in from the model to Note in order to add this note to the model.
+Note has several constructors, including one to construct notes from the data in the text files,
+and a convenience constructor that initializes the instrument and volume to a constant.
 
-Pitch is an enum with all the possible pitches.
+To implement our views, we made a ViewModel to give data to the View without giving it direct
+access to the Model. The ViewModel has several helpful methods to transfer data to the View,
+including getNotesAtBeat, length (in beats), and getNoteRange (a list of strings of the range of
+pitches).
+
+We also made sure that any method in the model interface that would return lists of notes would
+return an unmodifiable list and also, we created a wrapper class for Note called ImmutableNote so
+ that it could not be changed.
+
+For the text view, we initialized an arraylist of arraylists of empty strings, and placed the
+existing notes accordingly.
+
+For the GUI view, we created a custom JPanel for the notes grid, and a JPanel for the pitches on
+the left side. We put these both into another JPanel and added it into a scrollpane. The notes
+grid is drawn by placing rectangles where each note belongs, and then drawing the entire measure
+grid on top.
