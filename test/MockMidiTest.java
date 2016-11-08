@@ -14,7 +14,6 @@ import org.junit.Before;
 
 import org.junit.Test;
 
-
 import static org.junit.Assert.assertEquals;
 
 
@@ -163,5 +162,4 @@ public class MockMidiTest {
             "Message 0 65 72 400000\n" +
             "Message 0 65 72 600000\n");
   }
-
 }
