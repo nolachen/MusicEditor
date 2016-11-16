@@ -28,11 +28,8 @@ public class MusicEditorTextView implements IMusicEditorView {
    * @param ap the appendable output
    */
   public MusicEditorTextView(ViewModel viewModel, Appendable ap) {
-    Objects.requireNonNull(ap);
-    Objects.requireNonNull(viewModel);
-
-    this.viewModel = viewModel;
-    this.ap = ap;
+    this.viewModel = Objects.requireNonNull(viewModel);
+    this.ap = Objects.requireNonNull(ap);
   }
 
   @Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A view model that is basically a read-only model. Gives the View access to the model's.
@@ -19,7 +20,7 @@ public class ViewModel {
    * @param model model where this class gets it's information from.
    */
   public ViewModel(IMusicEditorModel model) {
-    this.model = model;
+    this.model = Objects.requireNonNull(model);
   }
 
   /**

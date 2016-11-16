@@ -25,6 +25,7 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
   //private PitchPanel pitchPanel;
 
   // TODO: make pitch panel not scroll horizontally
+  // TODO: make static fields in this class instead of musiceditorpanel
   // TODO: make the pitch labels centered in the measure bars
 
   /**
@@ -33,7 +34,7 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
    */
   public MusicEditorGuiView(ViewModel viewModel) {
     super();
-    //this.viewModel = viewModel;
+    //this.viewModel = Objects.requireNonNull(viewModel);
 
     // set the title, close operation, and background of the frame
     this.setTitle("Music Editor");
