@@ -21,16 +21,16 @@ import cs3500.music.model.ViewModel;
 /**
  * This panel represents the region where the notes and measures of a music editor are drawn.
  */
-public class MusicEditorPanel extends JPanel {
+public class MusicPanel extends JPanel {
   public static final int NOTE_SIZE = 20; //width of a whole note in pixels
   public static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
   private final ViewModel viewModel;
 
   /**
-   * Constructs a {@link MusicEditorPanel} given the {@ViewModel}.
+   * Constructs a {@link MusicPanel} given the {@ViewModel}.
    * @param viewModel the given ViewModel to get data from
    */
-  public MusicEditorPanel(ViewModel viewModel) {
+  public MusicPanel(ViewModel viewModel) {
     super();
     this.viewModel = viewModel;
   }
@@ -61,30 +61,30 @@ public class MusicEditorPanel extends JPanel {
 
         // draw the note-sustains
         g2d.setColor(new Color(0, 178, 237));
-        g2d.fillRect(i * MusicEditorPanel.NOTE_SIZE, (pitchIndex + 1) * MusicEditorPanel.NOTE_SIZE,
-                MusicEditorPanel.NOTE_SIZE * n.getDuration(), MusicEditorPanel.NOTE_SIZE);
+        g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
+                MusicPanel.NOTE_SIZE * n.getDuration(), MusicPanel.NOTE_SIZE);
 
         // draw the note-heads
         g2d.setColor(new Color(0, 61, 82));
-        g2d.fillRect(i * MusicEditorPanel.NOTE_SIZE, (pitchIndex + 1) * MusicEditorPanel.NOTE_SIZE,
-                MusicEditorPanel.NOTE_SIZE, MusicEditorPanel.NOTE_SIZE);
+        g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
+                MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
 
       }
     }
 
     // draw the beat numbers and the measures grid
     g2d.setColor(Color.BLACK);
-    for (int i = 0; i < length; i += MusicEditorPanel.BEATS_PER_MEASURE) {
+    for (int i = 0; i < length; i += MusicPanel.BEATS_PER_MEASURE) {
       // only draw the beat numbers every 4 measures
-      if ((i % (MusicEditorPanel.BEATS_PER_MEASURE * 4)) == 0) {
-        g2d.drawString("" + i, i * MusicEditorPanel.NOTE_SIZE, MusicEditorPanel.NOTE_SIZE - 2);
+      if ((i % (MusicPanel.BEATS_PER_MEASURE * 4)) == 0) {
+        g2d.drawString("" + i, i * MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE - 2);
       }
 
       // draw the grid of all measures
       for (int j = 0; j < height; j += 1) {
-        g2d.drawRect(i * MusicEditorPanel.NOTE_SIZE, (j + 1) * MusicEditorPanel.NOTE_SIZE,
-                MusicEditorPanel.BEATS_PER_MEASURE * MusicEditorPanel.NOTE_SIZE,
-                MusicEditorPanel.NOTE_SIZE);
+        g2d.drawRect(i * MusicPanel.NOTE_SIZE, (j + 1) * MusicPanel.NOTE_SIZE,
+                MusicPanel.BEATS_PER_MEASURE * MusicPanel.NOTE_SIZE,
+                MusicPanel.NOTE_SIZE);
       }
     }
 
@@ -92,8 +92,8 @@ public class MusicEditorPanel extends JPanel {
 
   @Override
   public Dimension getPreferredSize() {
-    int height = (this.viewModel.getNoteRange().size() + 2) * MusicEditorPanel.NOTE_SIZE;
-    int width = this.viewModel.length() * MusicEditorPanel.NOTE_SIZE;
+    int height = (this.viewModel.getNoteRange().size() + 2) * MusicPanel.NOTE_SIZE;
+    int width = this.viewModel.length() * MusicPanel.NOTE_SIZE;
     return new Dimension(width, height);
   }
 

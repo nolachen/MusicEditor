@@ -20,9 +20,9 @@ public class MusicEditorViewFactory {
 
     switch (view) {
       case "console":
-        return new MusicEditorTextView(viewModel, System.out);
+        return new ConsoleViewImpl(viewModel, System.out);
       case "visual":
-        return new MusicEditorGuiView(viewModel);
+        return new GuiViewImpl(viewModel);
       case "midi":
         return new MidiViewImpl(viewModel);
       default:

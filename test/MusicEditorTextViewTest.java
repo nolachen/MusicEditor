@@ -12,15 +12,14 @@ import cs3500.music.model.Pitch;
 
 import cs3500.music.model.ViewModel;
 
+import cs3500.music.view.ConsoleViewImpl;
 import cs3500.music.view.IMusicEditorView;
-
-import cs3500.music.view.MusicEditorTextView;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
- * Tests for {@link MusicEditorTextView}.
+ * Tests for {@link ConsoleViewImpl}.
  */
 public class MusicEditorTextViewTest {
   private IMusicEditorModel model;
@@ -41,7 +40,7 @@ public class MusicEditorTextViewTest {
     this.out = new StringBuilder();
     this.model = new MusicEditorModel();
     this.viewModel = new ViewModel(model);
-    this.view = new MusicEditorTextView(viewModel, out);
+    this.view = new ConsoleViewImpl(viewModel, out);
   }
 
   @Test
@@ -62,7 +61,7 @@ public class MusicEditorTextViewTest {
 
     model.add(c4b4);
     out = new StringBuilder();
-    view = new MusicEditorTextView(viewModel, out);
+    view = new ConsoleViewImpl(viewModel, out);
     view.makeVisible();
 
     assertEquals("   G3  G#3   A3  A#3   B3   C4 \n" +
@@ -76,7 +75,7 @@ public class MusicEditorTextViewTest {
 
     model.add(g3b16);
     out = new StringBuilder();
-    view = new MusicEditorTextView(viewModel, out);
+    view = new ConsoleViewImpl(viewModel, out);
     view.makeVisible();
 
     assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
@@ -227,7 +226,7 @@ public class MusicEditorTextViewTest {
 
     model.remove(c4b4);
     out = new StringBuilder();
-    view = new MusicEditorTextView(viewModel, out);
+    view = new ConsoleViewImpl(viewModel, out);
     view.makeVisible();
 
     assertEquals("    G3 \n" +
@@ -346,7 +345,7 @@ public class MusicEditorTextViewTest {
 
     model.playSimultaneously(model2);
     out = new StringBuilder();
-    view = new MusicEditorTextView(viewModel, out);
+    view = new ConsoleViewImpl(viewModel, out);
     view.makeVisible();
 
     assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +
@@ -391,7 +390,7 @@ public class MusicEditorTextViewTest {
     model.playConsecutively(model2);
 
     out = new StringBuilder();
-    view = new MusicEditorTextView(viewModel, out);
+    view = new ConsoleViewImpl(viewModel, out);
     view.makeVisible();
 
     assertEquals("    G3  G#3   A3  A#3   B3   C4 \n" +

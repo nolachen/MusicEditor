@@ -16,18 +16,18 @@ import cs3500.music.model.ViewModel;
  * left, and the range of notes on the top. The note-heads are represented with X and the
  * note-sustains are represented as |.
  */
-public class MusicEditorTextView implements IMusicEditorView {
+public class ConsoleViewImpl implements IMusicEditorView {
   // ViewModel that gives access to necessary information from the model.
   private final ViewModel viewModel;
   // Appendable output of this view.
   private final Appendable ap;
 
   /**
-   * Constructor of a MusicEditorTextView.
+   * Constructor of a ConsoleViewImpl.
    * @param viewModel viewModel that gives access to information in the model.
    * @param ap the appendable output
    */
-  public MusicEditorTextView(ViewModel viewModel, Appendable ap) {
+  public ConsoleViewImpl(ViewModel viewModel, Appendable ap) {
     this.viewModel = Objects.requireNonNull(viewModel);
     this.ap = Objects.requireNonNull(ap);
   }

@@ -18,10 +18,10 @@ import cs3500.music.model.ViewModel;
  * An implementation of the {@link IMusicEditorView} interface that uses Java Swing to draw the
  * current state of the music editor. It shows the notes as time increases to the right.
  */
-public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
+public class GuiViewImpl extends JFrame implements IMusicEditorView {
   // These fields are commented out because the style grader doesn't like them.
   //private final ViewModel viewModel;
-  //private MusicEditorPanel displayPanel;
+  //private MusicPanel displayPanel;
   //private PitchPanel pitchPanel;
 
   // TODO: make pitch panel not scroll horizontally
@@ -32,7 +32,7 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
    * Constructor for the GUI view implementation.
    * @param viewModel the given view model
    */
-  public MusicEditorGuiView(ViewModel viewModel) {
+  public GuiViewImpl(ViewModel viewModel) {
     super();
     //this.viewModel = Objects.requireNonNull(viewModel);
 
@@ -43,7 +43,7 @@ public class MusicEditorGuiView extends JFrame implements IMusicEditorView {
     //this.setContentPane(new JLabel(new ImageIcon("lol.jpg")));
 
     // create the display panel
-    MusicEditorPanel displayPanel = new MusicEditorPanel(viewModel);
+    MusicPanel displayPanel = new MusicPanel(viewModel);
     displayPanel.setOpaque(false);
 
     // create the pitches panel

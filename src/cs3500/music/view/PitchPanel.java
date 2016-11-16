@@ -42,13 +42,13 @@ public class PitchPanel extends JPanel {
     int height = noteRange.size();
 
     for (int i = 0; i < height; i += 1) {
-      g2d.drawString(noteRange.get(i), 0, (i + 2) * MusicEditorPanel.NOTE_SIZE);
+      g2d.drawString(noteRange.get(i), 0, (i + 2) * MusicPanel.NOTE_SIZE);
     }
   }
 
   @Override
   public Dimension getPreferredSize() {
-    int height = (this.viewModel.getNoteRange().size() + 2) * MusicEditorPanel.NOTE_SIZE;
+    int height = (this.viewModel.getNoteRange().size() + 2) * MusicPanel.NOTE_SIZE;
     return new Dimension(50, height);
   }
 }
