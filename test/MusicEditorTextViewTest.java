@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.MusicEditorModel;
 
 import cs3500.music.model.Note;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertFalse;
  */
 public class MusicEditorTextViewTest {
   private IMusicEditorModel model;
-  private ViewModel viewModel;
+  private IViewModel viewModel;
   private IMusicEditorView view;
   private Appendable out;
 

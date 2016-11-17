@@ -3,6 +3,7 @@ package cs3500.music.view;
 import java.awt.BorderLayout;
 
 import java.awt.Color;
+import java.util.Objects;
 
 import javax.swing.JFrame;
 
@@ -12,17 +13,19 @@ import javax.swing.JScrollPane;
 
 import javax.swing.ScrollPaneConstants;
 
+import cs3500.music.model.IViewModel;
+import cs3500.music.model.Note;
 import cs3500.music.model.ViewModel;
 
 /**
  * An implementation of the {@link IMusicEditorView} interface that uses Java Swing to draw the
  * current state of the music editor. It shows the notes as time increases to the right.
  */
-public class GuiViewImpl extends JFrame implements IMusicEditorView {
+public class GuiViewImpl extends JFrame implements GuiView {
   // These fields are commented out because the style grader doesn't like them.
-  //private final ViewModel viewModel;
-  //private MusicPanel displayPanel;
-  //private PitchPanel pitchPanel;
+  private final IViewModel viewModel;
+  private MusicPanel displayPanel;
+  private PitchPanel pitchPanel;
 
   // TODO: make pitch panel not scroll horizontally
   // TODO: make static fields in this class instead of musiceditorpanel
@@ -32,15 +35,14 @@ public class GuiViewImpl extends JFrame implements IMusicEditorView {
    * Constructor for the GUI view implementation.
    * @param viewModel the given view model
    */
-  public GuiViewImpl(ViewModel viewModel) {
+  public GuiViewImpl(IViewModel viewModel) {
     super();
-    //this.viewModel = Objects.requireNonNull(viewModel);
+    this.viewModel = Objects.requireNonNull(viewModel);
 
     // set the title, close operation, and background of the frame
     this.setTitle("Music Editor");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.getContentPane().setBackground(new Color(235, 239, 240));
-    //this.setContentPane(new JLabel(new ImageIcon("lol.jpg")));
 
     // create the display panel
     MusicPanel displayPanel = new MusicPanel(viewModel);
@@ -73,4 +75,18 @@ public class GuiViewImpl extends JFrame implements IMusicEditorView {
     this.setVisible(true);
   }
 
+  // TODO
+  @Override
+  public Note getNoteAtPosition(int x, int y) {
+    return displayPanel.getNoteAtPosition(displayPanel.getX() + x, displayPanel.getY() + y);
+  }
+
+  // TODO
+  @Override
+  public String getInputNote() {
+    return null;
+  }
+
+  @Override
+  public void refresh() { this.repaint(); }
 }

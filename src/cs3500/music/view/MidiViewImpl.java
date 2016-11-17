@@ -1,5 +1,6 @@
 package cs3500.music.view;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
 import cs3500.music.model.ViewModel;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class MidiViewImpl implements IMusicEditorView {
   // viewModel that gives access to necessary information in the model.
-  private ViewModel viewModel;
+  private final IViewModel viewModel;
   // Synthesizer for the view.
   private final Synthesizer synth;
   // Receiver for the synthesizer
@@ -41,7 +42,7 @@ public class MidiViewImpl implements IMusicEditorView {
    * Constructor for the MidiView implementation.
    * @param viewModel viewModel that gives access to necessary model information.
    */
-  public MidiViewImpl(ViewModel viewModel) {
+  public MidiViewImpl(IViewModel viewModel) {
     // tries to initialize everything.
     Synthesizer tempSynth;
     Receiver tempReceiver;
@@ -71,7 +72,7 @@ public class MidiViewImpl implements IMusicEditorView {
    * @param viewModel viewModel that gives access to necessary model information.
    * @param sy given synthesizer for testing purposes.
    */
-  public MidiViewImpl(ViewModel viewModel, Synthesizer sy) {
+  public MidiViewImpl(IViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
     // tries to open the given synthesizer.
     try {

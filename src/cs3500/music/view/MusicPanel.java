@@ -14,29 +14,31 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
+import cs3500.music.model.Note;
 import cs3500.music.model.ViewModel;
 
 /**
  * This panel represents the region where the notes and measures of a music editor are drawn.
  */
 public class MusicPanel extends JPanel {
-  public static final int NOTE_SIZE = 20; //width of a whole note in pixels
-  public static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
-  private final ViewModel viewModel;
+  static final int NOTE_SIZE = 20; //width of a whole note in pixels
+  static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
+  private final IViewModel viewModel;
 
   /**
-   * Constructs a {@link MusicPanel} given the {@ViewModel}.
+   * Constructs a {@link MusicPanel} given the {@link IViewModel}.
    * @param viewModel the given ViewModel to get data from
    */
-  public MusicPanel(ViewModel viewModel) {
+  public MusicPanel(IViewModel viewModel) {
     super();
     this.viewModel = viewModel;
   }
 
   /**
-   * Draws the notes and measures using data from the {@link ViewModel}.
+   * Draws the notes and measures using data from the {@link IViewModel}.
    * @param g the Graphics object
    */
   @Override
@@ -58,6 +60,11 @@ public class MusicPanel extends JPanel {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
       for (ImmutableNote n : currentNotes) {
         int pitchIndex = noteRange.indexOf(n.toString());
+
+        /*TODO maybe make rectangles instead of just filling them, and then store like a hashmap
+        of rectangles to notes. then i can check if a rectangle contains a posn, and find it in
+        the map ????
+         */
 
         // draw the note-sustains
         g2d.setColor(new Color(0, 178, 237));
@@ -98,4 +105,7 @@ public class MusicPanel extends JPanel {
   }
 
 
+  public Note getNoteAtPosition(int x, int y) {
+
+  }
 }

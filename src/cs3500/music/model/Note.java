@@ -20,23 +20,23 @@ public class Note implements Comparable<Note> {
    * The starting beat of this Note.
    * INVARIANT: startBeat >= 0.
    */
-  private int startBeat;
+  private final int startBeat;
 
   /**
    * The duration of this note in beats, with only integral durations allowed.
    * INVARIANT: duration >= 0.
    */
-  private int duration;
+  private final int duration;
 
   /**
    * The integer representation of the instrument.
    */
-  private int instrument;
+  private final int instrument;
 
   /**
    * that integer representation of the volume.
    */
-  private int volume;
+  private final int volume;
 
   /**
    * Constructor for Note given all the fields.

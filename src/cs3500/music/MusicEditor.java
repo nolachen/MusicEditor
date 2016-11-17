@@ -6,6 +6,7 @@ import cs3500.music.controller.MusicEditorController;
 
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
@@ -46,7 +47,7 @@ public final class MusicEditor {
     ModelBuilder build = new ModelBuilder();
     MusicReader rm = new MusicReader();
     IMusicEditorModel model = rm.parseFile(reader, build);
-    ViewModel viewModel = new ViewModel(model);
+    IViewModel viewModel = new ViewModel(model);
 
     // try to get the view type and create the view
     IMusicEditorView view = null;

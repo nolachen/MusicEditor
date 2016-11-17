@@ -8,50 +8,41 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A view model that is basically a read-only model. Gives the View access to the model's.
- * information without allowing the model to be directly accessed.
+ * This class represents an implementation of a music editor view model.
+ *
+ * Changed in HW07 to implement an interface {@link IViewModel} to provide looser coupling
+ * between the view and the view model.
  */
-public class ViewModel {
-  // model that this class gets information from.
+public class ViewModel implements IViewModel {
+  /**
+   * The model that this class gets information from.
+   */
   private final IMusicEditorModel model;
 
   /**
-   * Constructor.
+   * Constructor for ViewModel.
    * @param model model where this class gets it's information from.
    */
   public ViewModel(IMusicEditorModel model) {
     this.model = Objects.requireNonNull(model);
   }
 
-  /**
-   * Returns the list of notes that begin at the given beat.
-   * @param beat int representation of the beat we're retrieving notes at.
-   * @return the list of Immutable notes at the given beat.
-   */
+  @Override
   public List<ImmutableNote> getNotesAtBeat(int beat) {
     return this.model.getNotesAtBeat(beat);
   }
 
-  /**
-   * Number of beats that are currently in this model.
-   * @return int length of the model.
-   */
+  @Override
   public int length() {
     return this.model.length();
   }
 
-  /**
-   * Tempo of the model.
-   * @return int tempo of the model.
-   */
+  @Override
   public int getTempo() {
     return this.model.getTempo();
   }
 
-  /**
-   * Returns a list of the pitches and their octaves in the range of this model.
-   * @return a list of Strings of the range of notes.
-   */
+  @Override
   public List<String> getNoteRange() {
     List<ImmutableNote> allNotes = new ArrayList<>(this.model.getAllNotes());
     Collections.sort(allNotes);

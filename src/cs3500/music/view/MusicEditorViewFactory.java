@@ -1,5 +1,6 @@
 package cs3500.music.view;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.ViewModel;
 
 /**
@@ -15,7 +16,7 @@ public class MusicEditorViewFactory {
    * @param viewModel the view model to give the view
    * @return the view
    */
-  public static IMusicEditorView create(String view, ViewModel viewModel) {
+  public static IMusicEditorView create(String view, IViewModel viewModel) {
     view = view.toLowerCase();
 
     switch (view) {

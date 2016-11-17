@@ -1,5 +1,6 @@
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.MusicEditorModel;
 
 import cs3500.music.model.ViewModel;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class MockMidiTest {
   IMusicEditorModel model;
-  ViewModel vm;
+  IViewModel vm;
   MockReceiver receiver;
   StringBuilder log;
   MockMidiDevice device;

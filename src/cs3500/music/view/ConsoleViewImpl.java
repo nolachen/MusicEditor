@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
 import cs3500.music.model.ViewModel;
@@ -18,7 +19,7 @@ import cs3500.music.model.ViewModel;
  */
 public class ConsoleViewImpl implements IMusicEditorView {
   // ViewModel that gives access to necessary information from the model.
-  private final ViewModel viewModel;
+  private final IViewModel viewModel;
   // Appendable output of this view.
   private final Appendable ap;
 
@@ -27,7 +28,7 @@ public class ConsoleViewImpl implements IMusicEditorView {
    * @param viewModel viewModel that gives access to information in the model.
    * @param ap the appendable output
    */
-  public ConsoleViewImpl(ViewModel viewModel, Appendable ap) {
+  public ConsoleViewImpl(IViewModel viewModel, Appendable ap) {
     this.viewModel = Objects.requireNonNull(viewModel);
     this.ap = Objects.requireNonNull(ap);
   }
