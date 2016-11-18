@@ -29,10 +29,11 @@ public class MidiViewImpl implements IMusicEditorView {
   // hashmap of int beats to messages sent at that beat
   private TreeMap<Integer, List<MidiEvent>> messages;
   // int current beat
-  int beat;
+  int curBeat;
 
   /**
    * Constructor for the MidiView implementation.
+   *
    * @param viewModel viewModel that gives access to necessary model information.
    */
   public MidiViewImpl(IViewModel viewModel) {
@@ -42,8 +43,7 @@ public class MidiViewImpl implements IMusicEditorView {
     try {
       tempSynth = MidiSystem.getSynthesizer();
       tempReceiver = tempSynth.getReceiver();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
     this.synth = tempSynth;
@@ -51,36 +51,34 @@ public class MidiViewImpl implements IMusicEditorView {
     // tries to open up the synthesizer.
     try {
       this.synth.open();
-    }
-    catch (Exception me) {
+    } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
     this.messages = new TreeMap<>();
-    this.beat = 0;
+    this.curBeat = 0;
   }
 
   /**
    * Convenience constructor that takes in a synthesizer.
+   *
    * @param viewModel viewModel that gives access to necessary model information.
-   * @param sy given synthesizer for testing purposes.
+   * @param sy        given synthesizer for testing purposes.
    */
   public MidiViewImpl(IViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
     // tries to open the given synthesizer.
     try {
       this.synth.open();
-    }
-    catch (Exception me) {
+    } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
     Receiver tempReceiver;
     try {
       tempReceiver = synth.getReceiver();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
     this.receiver = tempReceiver;
@@ -91,6 +89,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   /**
    * Writes the message to play the given tone.
+   *
    * @param note note being sent to the synthesizers receiver.
    * @throws InvalidMidiDataException when the midi is invalid.
    */
@@ -125,19 +124,20 @@ public class MidiViewImpl implements IMusicEditorView {
             (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));*/
   }
 
+  // CHANGED from get notes at beat to get all notes because getNoteAtBeat now returns
+  // sustained notes that overlap this beat that may have a different startbeat so we just
+  // use the heads of each note to play them in midi
   @Override
   public void makeVisible() {
-    int length = viewModel.length();
-    for (int i = beat; i < length; i++) {
-      List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
-      for (ImmutableNote n : notes) {
-        try {
-          this.writeNote(n);
-        } catch (Exception midiE) {
-          throw new IllegalStateException("Invalid midi data exception.");
-        }
+    List<ImmutableNote> notes = viewModel.getAllNotes();
+    for (ImmutableNote n : notes) {
+      try {
+        this.writeNote(n);
+      } catch (Exception midiE) {
+        throw new IllegalStateException("Invalid midi data exception.");
       }
     }
+
 /*
     try {
       Thread.sleep(viewModel.getTempo() * length / 1000);
@@ -146,16 +146,21 @@ public class MidiViewImpl implements IMusicEditorView {
     }
     this.receiver.close();*/
 
-   // this.play();
+  // this.play();
   }
-/*
   private void play() {
-    NavigableMap<Integer, List<MidiEvent>> beatsToPlay = this.messages.tailMap(this.beat, true);
+    // TODO figure out how to adjust tick when the beat played is not 0
+    NavigableMap<Integer, List<MidiEvent>> beatsToPlay = this.messages.tailMap(this.curBeat, true);
     NavigableSet<Integer> eventsToRun = beatsToPlay.navigableKeySet();
     for (int i : eventsToRun) {
       for (MidiEvent event : beatsToPlay.get(i)) {
-        this.receiver.send(event);
+        this.receiver.send(event.getMessage(), event.getTick());
       }
+      // setting the current beat to the beat that was just played
+      //TODO Will only work for beats in the tree
+      this.curBeat = i;
     }
-  }*/
+    //TODO check if this will fuck up without thread.sleep
+    this.receiver.close();
+  }
 }
