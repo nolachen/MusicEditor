@@ -33,6 +33,9 @@ public class ViewModel implements IViewModel {
   }
 
   @Override
+  public List<ImmutableNote> getAllNotes() { return this.model.getAllNotes(); }
+
+  @Override
   public int length() {
     return this.model.length();
   }

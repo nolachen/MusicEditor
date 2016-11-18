@@ -24,7 +24,7 @@ import cs3500.music.model.ViewModel;
  * This panel represents the region where the notes and measures of a music editor are drawn.
  */
 public class MusicPanel extends JPanel {
-  static final int NOTE_SIZE = 20; //width of a whole note in pixels
+  static final int NOTE_SIZE = 20; //width of a note of duration 1, in pixels
   static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
   private final IViewModel viewModel;
 
@@ -105,7 +105,14 @@ public class MusicPanel extends JPanel {
   }
 
 
+  // TODO: can we return null, is that ok ;(
   public Note getNoteAtPosition(int x, int y) {
-    int length
+    int beat = x / MusicPanel.NOTE_SIZE;
+    List<ImmutableNote> notesAtBeat = this.viewModel.getNotesAtBeat(beat);
+
+    List<String> noteRange = this.viewModel.getNoteRange();
+
+    int pitchIndex = noteRange.size() - ((y - MusicPanel.NOTE_SIZE) / MusicPanel.NOTE_SIZE);
+    String pitch = noteRange.get(pitchIndex);
   }
 }

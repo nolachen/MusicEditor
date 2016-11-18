@@ -12,11 +12,17 @@ import java.util.List;
 public interface IViewModel {
 
   /**
-   * Returns the list of notes that begin at the given beat.
+   * Returns the list of notes at the given beat.
    * @param beat int representation of the beat we're retrieving notes at.
    * @return the list of Immutable notes at the given beat.
    */
   List<ImmutableNote> getNotesAtBeat(int beat);
+
+  /**
+   * A list of all Notes that are currently in the model.
+   * @return the list of all notes
+   */
+  List<ImmutableNote> getAllNotes();
 
   /**
    * Number of beats that are currently in this model.

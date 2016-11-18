@@ -1,6 +1,7 @@
 package cs3500.music.model;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The model interface for the music editor.
@@ -34,12 +35,13 @@ public interface IMusicEditorModel {
 
   /**
    * A list of all Notes that are currently in this music editor.
-   * @return the list of all notes
+   ** @return the list of all notes
    */
   List<ImmutableNote> getAllNotes();
 
   /**
-   * Returns the list of notes that begin at the given beat.
+   * Returns the list of notes at the given beat.
+   * Changed in HW07 to get all notes playing at the beat, not just ones that start.
    * @param beat int of beat we're retrieving.
    * @return the List of ImmutableNotes at the given beat.
    */
