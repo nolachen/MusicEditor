@@ -5,22 +5,11 @@ import cs3500.music.model.ImmutableNote;
 
 import cs3500.music.model.ViewModel;
 
-import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.*;
 
-import javax.sound.midi.MidiMessage;
+import java.util.*;
 
-import javax.sound.midi.MidiSystem;
-
-import javax.sound.midi.Receiver;
-
-import javax.sound.midi.ShortMessage;
-
-import javax.sound.midi.Synthesizer;
-
-import java.util.HashMap;
-
-import java.util.List;
-
+// TODO WHAT IF MAKEVISIBLE CREATED A MAP OF MESSAGES TO THEIR BEATS THEN WE CAN PAUSE EASILY
 /**
  * View for the MIDI playback.
  * Uses a Synthesizer to play the music from the ViewModel.
@@ -37,6 +26,10 @@ public class MidiViewImpl implements IMusicEditorView {
   // number of channels. Increments for every instrument this view encounters.
   // INVARIANT: channelNum will always be incremented by 1 only.
   private int channelNum;
+  // hashmap of int beats to messages sent at that beat
+  private TreeMap<Integer, List<MidiEvent>> messages;
+  // int current beat
+  int beat;
 
   /**
    * Constructor for the MidiView implementation.
@@ -65,6 +58,8 @@ public class MidiViewImpl implements IMusicEditorView {
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
+    this.messages = new TreeMap<>();
+    this.beat = 0;
   }
 
   /**
@@ -105,6 +100,7 @@ public class MidiViewImpl implements IMusicEditorView {
     int noteRepresentation = pitch + (octave + 1) * 12;
     int duration = note.getDuration();
     int instrument = note.getInstrument();
+    int beat = note.getStartBeat();
     // creates a new channel for this instrument if it doesn't yet exist.
     if (!channels.containsKey(instrument)) {
       channels.put(instrument, this.channelNum + 1);
@@ -117,15 +113,22 @@ public class MidiViewImpl implements IMusicEditorView {
             noteRepresentation, note.getVolume());
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
             noteRepresentation, note.getVolume());
-    receiver.send(start, viewModel.getTempo() * note.getStartBeat());
+    if (!this.messages.containsKey(beat)) {
+      this.messages.put(beat, new ArrayList<>());
+    }
+    this.messages.get(beat).add(new MidiEvent(start, viewModel.getTempo() * note.getStartBeat()));
+    this.messages.get(beat).add(new MidiEvent(stop,
+            (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat())));
+
+    /*receiver.send(start, viewModel.getTempo() * note.getStartBeat());
     receiver.send(stop,
-            (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
+            (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));*/
   }
 
   @Override
   public void makeVisible() {
     int length = viewModel.length();
-    for (int i = 0; i < length; i++) {
+    for (int i = beat; i < length; i++) {
       List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
       for (ImmutableNote n : notes) {
         try {
@@ -135,13 +138,24 @@ public class MidiViewImpl implements IMusicEditorView {
         }
       }
     }
-    
+/*
     try {
       Thread.sleep(viewModel.getTempo() * length / 1000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    this.receiver.close();
-  }
+    this.receiver.close();*/
 
+   // this.play();
+  }
+/*
+  private void play() {
+    NavigableMap<Integer, List<MidiEvent>> beatsToPlay = this.messages.tailMap(this.beat, true);
+    NavigableSet<Integer> eventsToRun = beatsToPlay.navigableKeySet();
+    for (int i : eventsToRun) {
+      for (MidiEvent event : beatsToPlay.get(i)) {
+        this.receiver.send(event);
+      }
+    }
+  }*/
 }
