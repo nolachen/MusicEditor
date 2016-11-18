@@ -106,6 +106,6 @@ public class MusicPanel extends JPanel {
 
 
   public Note getNoteAtPosition(int x, int y) {
-
+    int length
   }
 }
