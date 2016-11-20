@@ -32,16 +32,28 @@ public class MusicEditorController implements IMusicEditorController {
   }
 
   private void configureKeyboardHandler() {
-    Runnable remove =
+    Runnable remove  =
+            new Runnable() {
+              Note currentNote;
+
+              @Override
+              public void run() {
+                if (this.currentNote != null) {
+                  model.remove(this.currentNote);
+                }
+              }
+            };
+
+    Runnable scrollLeft  =
             new Runnable() {
               @Override
               public void run() {
-                model.remove();
+                gui.scrollLeft();
               }
             };
 
     KeyboardHandler k = new KeyboardHandler();
-    k.addKeyReleasedAction(KeyEvent.VK_R, remove);
+    k.addKeyReleasedAction(KeyEvent.VK_LEFT, scrollLeft);
 
     gui.addKeyListener(k);
   }

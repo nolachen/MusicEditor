@@ -61,11 +61,27 @@ public class MusicPanel extends JPanel {
       for (ImmutableNote n : currentNotes) {
         int pitchIndex = noteRange.indexOf(n.toString());
 
-        /*TODO maybe make rectangles instead of just filling them, and then store like a hashmap
+        /*TODO maybe make rectangles instead of just filling them, and then store like a treemap
         of rectangles to notes. then i can check if a rectangle contains a posn, and find it in
         the map ????
+        Tell the tree map to sort the rectangles based on x value?
          */
 
+        // set the color of the note-head
+        if (i == n.getStartBeat()) {
+          g2d.setColor(new Color(0, 61, 82));
+        }
+
+        // set the color of the note-sustain
+        else {
+          g2d.setColor(new Color(0, 178, 237));
+        }
+
+        // draw the note at the beat
+        g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
+                MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
+
+        /*
         // draw the note-sustains
         g2d.setColor(new Color(0, 178, 237));
         g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
@@ -75,6 +91,7 @@ public class MusicPanel extends JPanel {
         g2d.setColor(new Color(0, 61, 82));
         g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
                 MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
+                */
 
       }
     }
@@ -108,11 +125,22 @@ public class MusicPanel extends JPanel {
   // TODO: can we return null, is that ok ;(
   public Note getNoteAtPosition(int x, int y) {
     int beat = x / MusicPanel.NOTE_SIZE;
-    List<ImmutableNote> notesAtBeat = this.viewModel.getNotesAtBeat(beat);
 
     List<String> noteRange = this.viewModel.getNoteRange();
 
     int pitchIndex = noteRange.size() - ((y - MusicPanel.NOTE_SIZE) / MusicPanel.NOTE_SIZE);
     String pitch = noteRange.get(pitchIndex);
+
+    List<ImmutableNote> notesAtBeat = this.viewModel.getNotesAtBeat(beat);
+    Note toReturn = null;
+    for (ImmutableNote n : notesAtBeat) {
+      if (n.toString().equals(pitch) &&
+              ((toReturn == null) || (n.getStartBeat() < toReturn.getStartBeat()))) {
+        toReturn = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
+                n.getInstrument(), n.getVolume());
+      }
+    }
+
+    return toReturn;
   }
 }

@@ -14,8 +14,8 @@ import cs3500.music.model.Note;
  */
 public interface GuiView extends IMusicEditorView {
   // TODO Lol idk if this is right
-  //void scrollLeft();
-  //void scrollRight();
+  void scrollLeft();
+  void scrollRight();
 
   void addKeyListener(KeyListener listener);
 
