@@ -4,6 +4,7 @@ import cs3500.music.controller.IMusicEditorController;
 
 import cs3500.music.controller.MusicEditorController;
 
+import cs3500.music.controller.MusicEditorGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
 import cs3500.music.model.IViewModel;
@@ -13,6 +14,7 @@ import cs3500.music.util.ModelBuilder;
 
 import cs3500.music.util.MusicReader;
 
+import cs3500.music.view.GuiView;
 import cs3500.music.view.IMusicEditorView;
 
 import cs3500.music.view.MusicEditorViewFactory;
@@ -58,8 +60,16 @@ public final class MusicEditor {
       System.err.print("Incorrect view type, try again.");
     }
 
+    //TODO: is this right
     // create the controller and start the program
-    IMusicEditorController controller = new MusicEditorController(model, view);
+    IMusicEditorController controller;
+    if (viewType.equals("visual") || viewType.equals("composite")) {
+      controller = new MusicEditorGuiController(model, (GuiView) view);
+    }
+    else {
+      controller = new MusicEditorController(model, view);
+    }
+
     controller.gooooo();
   }
 }

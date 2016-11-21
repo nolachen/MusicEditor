@@ -20,8 +20,13 @@ public class ViewModel implements IViewModel {
   private final IMusicEditorModel model;
 
   /**
+   * The current selected note in the view.
+   */
+  private Note selectedNote;
+
+  /**
    * Constructor for ViewModel.
-   * @param model model where this class gets it's information from.
+   * @param model model where this class gets its information from.
    */
   public ViewModel(IMusicEditorModel model) {
     this.model = Objects.requireNonNull(model);
@@ -74,5 +79,15 @@ public class ViewModel implements IViewModel {
       currentPitch = currentPitch.nextPitch();
     }
     return noteRange;
+  }
+
+  @Override
+  public void setSelectedNote(Note note) {
+    this.selectedNote = note;
+  }
+
+  @Override
+  public Note getSelectedNote() {
+    return this.selectedNote;
   }
 }

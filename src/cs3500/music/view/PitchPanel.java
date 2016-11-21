@@ -17,16 +17,19 @@ import cs3500.music.model.ViewModel;
 
 /**
  * This panel represents the range of pitches in a music editor.
+ * TODO: ABstract MusicPanel & PitchPanel
  */
 public class PitchPanel extends JPanel {
-  IViewModel viewModel;
+  private final IViewModel viewModel;
+  private int firstPitchShown;
 
   /**
    * Constructs a PitchPanel with the given ViewModel.
    * @param viewModel the given ViewModel
    */
-  PitchPanel(IViewModel viewModel) {
+  public PitchPanel(IViewModel viewModel) {
     this.viewModel = viewModel;
+    this.firstPitchShown = 0;
   }
 
   /**
@@ -40,16 +43,33 @@ public class PitchPanel extends JPanel {
 
     List<String> noteRange = this.viewModel.getNoteRange();
     Collections.reverse(noteRange);
-    int height = noteRange.size();
 
-    for (int i = 0; i < height; i += 1) {
-      g2d.drawString(noteRange.get(i), 0, (i + 2) * MusicPanel.NOTE_SIZE);
+    for (int i = 0; i <= this.lastPitchShown() - firstPitchShown; i += 1) {
+      g2d.drawString(noteRange.get(i + firstPitchShown), 0, (i + 2) * MusicPanel.NOTE_SIZE);
     }
   }
 
   @Override
   public Dimension getPreferredSize() {
-    int height = (this.viewModel.getNoteRange().size() + 2) * MusicPanel.NOTE_SIZE;
+    int height = Math.min(500, (this.viewModel.getNoteRange().size() + 2) * MusicPanel.NOTE_SIZE);
     return new Dimension(50, height);
+  }
+
+  void scrollUp() {
+    if (this.firstPitchShown > 0) {
+      this.firstPitchShown -= 1;
+    }
+  }
+
+  void scrollDown() {
+    if (this.viewModel.getNoteRange().size() >=
+            this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1) {
+      this.firstPitchShown += 1;
+    }
+  }
+
+  private int lastPitchShown() {
+    return Math.min(this.viewModel.getNoteRange().size() - 1,
+            this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1);
   }
 }

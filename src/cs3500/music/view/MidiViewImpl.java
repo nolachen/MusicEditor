@@ -26,11 +26,12 @@ public class MidiViewImpl implements IMusicEditorView {
   // INVARIANT: channelNum will always be incremented by 1 only.
   private int channelNum;
   // hashmap of int beats to messages sent at that beat
-  private TreeMap<Integer, List<MidiEvent>> messages;
+  private List<MidiEvent> messages;
   // int current beat
-  private int curBeat;
+  private int currentBeat;
   // TODO int beat paused at or should i use a boolean
-  private int paused;
+  //private int beatPausedAt;
+  private boolean paused;
 
   /**
    * Constructor for the MidiView implementation.
@@ -51,16 +52,17 @@ public class MidiViewImpl implements IMusicEditorView {
     this.receiver = tempReceiver;
     // tries to open up the synthesizer.
     try {
-      this.synth.close();
+      this.synth.open();
     } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
-    this.messages = new TreeMap<>();
-    this.curBeat = 0;
-    this.paused = this.curBeat;
+    this.messages = new ArrayList<>();
+    this.currentBeat = 0;
+    //this.beatPausedAt = this.currentBeat;
+    this.paused = false;
   }
 
   /**
@@ -87,6 +89,9 @@ public class MidiViewImpl implements IMusicEditorView {
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
+    this.messages = new ArrayList<>();
+    this.currentBeat = 0;
+    this.paused = false;
   }
 
   /**
@@ -114,15 +119,11 @@ public class MidiViewImpl implements IMusicEditorView {
             noteRepresentation, note.getVolume());
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
             noteRepresentation, note.getVolume());
-    if (!this.messages.containsKey(beat)) {
-      this.messages.put(beat, new ArrayList<>());
-    }
 
     // will send the start message without a time stamp then the stop message is sent
     // timing might not work when starting from a different beat but who knows lets find out
-    this.messages.get(beat).add(new MidiEvent(start, -1));
-    this.messages.get(beat).add(new MidiEvent(stop, this.synth.getMicrosecondPosition() +
-            (viewModel.getTempo() * duration)));
+    this.messages.add(new MidiEvent(start, beat * viewModel.getTempo()));
+    this.messages.add(new MidiEvent(stop, (beat + duration) * viewModel.getTempo()));
 
     /*receiver.send(start, viewModel.getTempo() * note.getStartBeat());
     receiver.send(stop,
@@ -136,14 +137,31 @@ public class MidiViewImpl implements IMusicEditorView {
   // creates the hashmap of beats and plays from the beginning
   @Override
   public void makeVisible() {
-    List<ImmutableNote> notes = viewModel.getAllNotes();
+    /*List<ImmutableNote> notes = viewModel.getAllNotes();
     for (ImmutableNote n : notes) {
       try {
         this.writeNote(n);
       } catch (Exception midiE) {
         throw new IllegalStateException("Invalid midi data exception.");
       }
+    }*/
+
+    int length = viewModel.length();
+    for (int i = 0; i < length; i++) {
+      List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
+      for (ImmutableNote n : notes) {
+        if (n.getStartBeat() == i) {
+          try {
+            this.writeNote(n);
+          } catch (Exception midiE) {
+            //midiE.printStackTrace();
+            throw new IllegalStateException("Invalid midi data exception.");
+          }
+        }
+      }
     }
+
+    this.play();
 
 /*
     try {
@@ -153,42 +171,96 @@ public class MidiViewImpl implements IMusicEditorView {
     }
     this.receiver.close();*/
   //TODO
-  this.play(this.paused);
+    //this.play();
+  }
+
+
+  @Override
+  public void togglePause() {
+    if (this.paused) {
+      this.play();
+    }
+    else {
+      this.pause();
+    }
+    this.paused = !this.paused;
+  }
+
+  @Override
+  public void jumpToStart() {
+    //TODO
+  }
+
+  @Override
+  public void jumpToEnd() {
+    //TODO
   }
 
 
   /**
-   * sends the messages from the hashmap
-   * @param startBeat
+   * Sends the messages from the hashmap
    */
-  private void play(int startBeat) {
+  private void play() {
+    System.out.println("Played.");
     try {
       this.synth.open();
     } catch (MidiUnavailableException e) {
-      throw new IllegalStateException("Synthesizor is not valid.");
+      throw new IllegalStateException("Synthesizer is not valid.");
     }
+    //System.out.println(this.messages.size());
+
+    for (int i = 0; i < this.messages.size(); i += 1) {
+      this.receiver.send(this.messages.get(i).getMessage(), this.messages.get(i).getTick());
+    }
+
+   //while (this.synth.getMicrosecondPosition() <= viewModel.length() * viewModel.getTempo()) {
+
+     //}
+
+
+
+    /*
     //todo check with nola
-    while (this.curBeat <= this.viewModel.length()) {
+    while (this.synth.getMicrosecondPosition() <= viewModel.length() * viewModel.getTempo()) {
+      //System.out.println("cur beat: " +currentBeat);
       long time = this.synth.getMicrosecondPosition();
       //will only send messages on each beat calculated by the tempo
       // TODO check this integer division
-      if (time % (((long)1 / this.viewModel.getTempo()) * 1000) == 0) {
-        if (this.messages.get(this.curBeat) != null) {
-          for (MidiEvent event : this.messages.get(this.curBeat)) {
-            this.receiver.send(event.getMessage(), event.getTick());
+      //System.out.println(( (1.0 / this.viewModel.getTempo()) * 1000));
+      //if (time % ((1.0 / this.viewModel.getTempo()) * 1000) == 0) {
+      if (time % this.viewModel.getTempo() == 0) {
+        if (this.messages.get(this.currentBeat) != null) {
+          List<MidiEvent> currentMessages = this.messages.get(this.currentBeat);
+          for (int i = 0; i < currentMessages.size(); i += 1) {
+            this.receiver.send(currentMessages.get(i).getMessage(),
+                    currentMessages.get(i).getTick());
           }
         }
-        //increments the beat count
-        this.curBeat = this.curBeat + 1;
+        //System.out.println(currentBeat);
+
       }
-    }
+      //increments the beat count
+      this.currentBeat += 1;
+    }*/
+
+
     this.synth.close();
   }
 
   //TODO not right, should it be private?
   public void pause() {
-    this.receiver.close();
-    this.paused = curBeat;
+    System.out.println("Paused.");
+    try {
+      MidiMessage stop = new ShortMessage(ShortMessage.STOP);
+      this.receiver.send(stop, this.currentBeat * viewModel.getTempo());
+    } catch (InvalidMidiDataException e) {
+      e.printStackTrace();
+    }
+    //this.receiver.close();
+    //this.beatPausedAt = currentBeat;
   }
 
+  public int getCurrentBeat() {
+    return this.currentBeat;
+  }
 }

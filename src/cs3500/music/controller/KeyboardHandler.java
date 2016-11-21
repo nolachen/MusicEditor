@@ -54,9 +54,6 @@ public class KeyboardHandler implements KeyListener {
     if (r != null) {
       r.run();
     }
-    else {
-      // TODO: BOING or SAVE ME
-    }
   }
 
   // TODO: should there be 3 separate methods for adding?

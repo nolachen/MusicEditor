@@ -59,7 +59,7 @@ public class MockMidiTest {
     assertEquals(this.log.toString(), "");
   }
 
-  // Tests if the receiver recieves all appropriate messages representing the models notes.
+  // Tests if the receiver receives all appropriate messages representing the models notes.
   @Test
   public void testMidi1() {
     this.midiView.makeVisible();

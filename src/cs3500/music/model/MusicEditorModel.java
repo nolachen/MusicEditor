@@ -57,12 +57,22 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public void add(Note note) {
+    int i = note.getStartBeat();
+    do {
+      if (!this.music.containsKey(i)) {
+        this.music.put(i, new ArrayList<>());
+      }
+      this.music.get(i).add(note);
+      i += 1;
+    } while (i < note.getEndBeat());
+
+/*
     for (int i = note.getStartBeat(); i < note.getEndBeat(); i += 1) {
       if (!this.music.containsKey(i)) {
         this.music.put(i, new ArrayList<>());
       }
       this.music.get(i).add(note);
-    }
+    }*/
   }
 
   @Override
@@ -103,9 +113,11 @@ public final class MusicEditorModel implements IMusicEditorModel {
     List<ImmutableNote> allNotes = new ArrayList<>();
 
     for (int i = 0; i < this.music.lastKey(); i += 1) {
-      for (Note n : this.music.get(i)) {
-        if (n.getStartBeat() == i) {
-          allNotes.add(new ImmutableNote(n));
+      if (this.music.containsKey(i)) {
+        for (Note n : this.music.get(i)) {
+          if (n.getStartBeat() == i) {
+            allNotes.add(new ImmutableNote(n));
+          }
         }
       }
     }
@@ -130,6 +142,9 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public int length() {
+    if (this.music.isEmpty()) {
+      return 0;
+    }
     return this.music.lastKey();
   }
 

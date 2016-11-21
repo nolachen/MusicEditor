@@ -88,6 +88,25 @@ public class ConsoleViewImpl implements IMusicEditorView {
   }
 
   /**
+   * Doesn't do anything in text view.
+   */
+  @Override
+  public void togglePause() {
+    return;
+  }
+
+  @Override
+  public void jumpToStart() {
+    return;
+  }
+
+  @Override
+  public void jumpToEnd() {
+    return;
+  }
+
+
+  /**
    * Pads the given String with spaces so that it is centered in the given width.
    * @param s the string to center
    * @param width the total width in chars

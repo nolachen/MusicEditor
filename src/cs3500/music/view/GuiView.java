@@ -1,5 +1,6 @@
 package cs3500.music.view;
 
+import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
@@ -14,8 +15,6 @@ import cs3500.music.model.Note;
  */
 public interface GuiView extends IMusicEditorView {
   // TODO Lol idk if this is right
-  void scrollLeft();
-  void scrollRight();
 
   void addKeyListener(KeyListener listener);
 
@@ -24,7 +23,9 @@ public interface GuiView extends IMusicEditorView {
   void removeMouseListener(MouseListener listener);
 
   // TODO: let this return null?
-  Note getNoteAtPosition(int x, int y);
+  void saveNoteAtPosition(int x, int y);
+
+  Note getSelectedNote();
 
   /**
    * Get the note typed by the user.
@@ -36,4 +37,25 @@ public interface GuiView extends IMusicEditorView {
    * Signal the view to draw itself.
    */
   void refresh();
+
+  void scrollLeft();
+  void scrollRight();
+  void scrollUp();
+  void scrollDown();
+
+  void nextPage();
+
+  void addActionListener(ActionListener actionListener);
+
+  void clearInputString();
+
+  void resetFocus();
+
+  void showErrorMessage(String error);
+
+  void resetSelectedNote();
+
+  void setCurrentBeat(int currentBeat);
+
+  int getCurrentBeat();
 }

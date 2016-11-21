@@ -31,7 +31,7 @@ public interface IViewModel {
   int length();
 
   /**
-   * Tempo of the model.
+   * Tempo of the model in microseconds per beat.
    * @return int tempo of the model.
    */
   int getTempo();
@@ -42,4 +42,7 @@ public interface IViewModel {
    */
   List<String> getNoteRange();
 
+  void setSelectedNote(Note note);
+
+  Note getSelectedNote();
 }

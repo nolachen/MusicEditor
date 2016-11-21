@@ -26,6 +26,9 @@ public class MusicEditorViewFactory {
         return new GuiViewImpl(viewModel);
       case "midi":
         return new MidiViewImpl(viewModel);
+      case "composite":
+        return new CompositeViewImpl(new GuiViewImpl(viewModel), new MidiViewImpl(viewModel),
+                viewModel);
       default:
         throw new IllegalArgumentException("Not a correct view type.");
     }
