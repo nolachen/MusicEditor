@@ -44,7 +44,9 @@ public class PitchPanel extends JPanel {
     List<String> noteRange = this.viewModel.getNoteRange();
     Collections.reverse(noteRange);
 
-    for (int i = 0; i <= this.lastPitchShown() - firstPitchShown; i += 1) {
+    int lastPitchShown = this.lastPitchShown();
+
+    for (int i = 0; i <= lastPitchShown - firstPitchShown; i += 1) {
       g2d.drawString(noteRange.get(i + firstPitchShown), 0, (i + 2) * MusicPanel.NOTE_SIZE);
     }
   }

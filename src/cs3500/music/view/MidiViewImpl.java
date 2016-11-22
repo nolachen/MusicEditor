@@ -8,7 +8,6 @@ import javax.sound.midi.*;
 
 import java.util.*;
 
-// TODO WHAT IF MAKEVISIBLE CREATED A MAP OF MESSAGES TO THEIR BEATS THEN WE CAN PAUSE EASILY
 /**
  * View for the MIDI playback.
  * Uses a Synthesizer to play the music from the ViewModel.
@@ -19,19 +18,22 @@ public class MidiViewImpl implements IMusicEditorView {
   // Synthesizer for the view.
   private final Synthesizer synth;
   // Receiver for the synthesizer
-  private final Receiver receiver;
+  //private final Receiver receiver;
+  // Sequencer
+  private final Sequencer sequencer;
   // mapping of instruments to it's channel.
   private HashMap<Integer, Integer> channels;
   // number of channels. Increments for every instrument this view encounters.
   // INVARIANT: channelNum will always be incremented by 1 only.
   private int channelNum;
   // hashmap of int beats to messages sent at that beat
-  private List<MidiEvent> messages;
+  //private List<MidiEvent> messages;
   // int current beat
-  private int currentBeat;
+  //private int currentBeat;
   // TODO int beat paused at or should i use a boolean
   //private int beatPausedAt;
   private boolean paused;
+  private static final int TICKS_PER_BEAT = 1;
 
   /**
    * Constructor for the MidiView implementation.
@@ -41,17 +43,22 @@ public class MidiViewImpl implements IMusicEditorView {
   public MidiViewImpl(IViewModel viewModel) {
     // tries to initialize everything.
     Synthesizer tempSynth;
-    Receiver tempReceiver;
+    //Receiver tempReceiver;
+    Sequencer tempSequencer;
     try {
       tempSynth = MidiSystem.getSynthesizer();
-      tempReceiver = tempSynth.getReceiver();
+      //tempReceiver = tempSynth.getReceiver();
+      tempSequencer = MidiSystem.getSequencer();
     } catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
     this.synth = tempSynth;
-    this.receiver = tempReceiver;
+    //this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
+    //this.receiver = tempReceiver;
+    this.sequencer = tempSequencer;
     // tries to open up the synthesizer.
     try {
+      this.sequencer.open();
       this.synth.open();
     } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
@@ -59,10 +66,13 @@ public class MidiViewImpl implements IMusicEditorView {
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
-    this.messages = new ArrayList<>();
-    this.currentBeat = 0;
+    //this.messages = new ArrayList<>();
+    //this.currentBeat = 0;
     //this.beatPausedAt = this.currentBeat;
     this.paused = false;
+
+
+    this.sequencer.addMetaEventListener(new CloseProgram());
   }
 
   /**
@@ -73,34 +83,54 @@ public class MidiViewImpl implements IMusicEditorView {
    */
   public MidiViewImpl(IViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
+    //this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
     // tries to open the given synthesizer.
     try {
       this.synth.open();
     } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
-    Receiver tempReceiver;
+    Sequencer tempSequencer;
+    //Receiver tempReceiver;
     try {
-      tempReceiver = synth.getReceiver();
+      //tempReceiver = synth.getReceiver();
+      tempSequencer = MidiSystem.getSequencer();
     } catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
-    this.receiver = tempReceiver;
+    this.sequencer = tempSequencer;
+    try {
+      this.sequencer.open();
+    } catch (MidiUnavailableException e) {
+      e.printStackTrace();
+    }
+    //this.receiver = tempReceiver;
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
-    this.messages = new ArrayList<>();
-    this.currentBeat = 0;
+    //this.messages = new ArrayList<>();
+    //this.currentBeat = 0;
     this.paused = false;
+  }
+
+  public class CloseProgram implements MetaEventListener {
+    @Override
+    public void meta(MetaMessage meta) {
+      if (meta.getType() == 0x2f) {
+        sequencer.close();
+        paused = true;
+      }
+    }
   }
 
   /**
    * Writes the message to play the given tone.
    *
    * @param note note being sent to the synthesizers receiver.
+   * @param track the track to write the note to
    * @throws InvalidMidiDataException when the midi is invalid.
    */
-  private void writeNote(ImmutableNote note) throws InvalidMidiDataException {
+  private void writeNote(ImmutableNote note, Track track) throws InvalidMidiDataException {
     int octave = note.getOctave();
     int pitch = note.getPitch().ordinal();
     int noteRepresentation = pitch + (octave + 1) * 12;
@@ -110,20 +140,25 @@ public class MidiViewImpl implements IMusicEditorView {
     // creates a new channel for this instrument if it doesn't yet exist.
     if (!channels.containsKey(instrument)) {
       channels.put(instrument, this.channelNum + 1);
-      receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument),
-              instrument, 0), -1);
+      MidiMessage instr = new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument),
+              instrument, 0);
+      track.add(new MidiEvent(instr, beat * MidiViewImpl.TICKS_PER_BEAT));
       // increments the channel count
       channelNum++;
     }
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument),
+
+    //synth.getChannels()[0].programChange(synth.getChannels()[0].getProgram());
+
+
+    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0,
             noteRepresentation, note.getVolume());
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
+    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
             noteRepresentation, note.getVolume());
 
     // will send the start message without a time stamp then the stop message is sent
     // timing might not work when starting from a different beat but who knows lets find out
-    this.messages.add(new MidiEvent(start, beat * viewModel.getTempo()));
-    this.messages.add(new MidiEvent(stop, (beat + duration) * viewModel.getTempo()));
+    track.add(new MidiEvent(start, beat * MidiViewImpl.TICKS_PER_BEAT));
+    track.add(new MidiEvent(stop, (beat + duration) * MidiViewImpl.TICKS_PER_BEAT));
 
     /*receiver.send(start, viewModel.getTempo() * note.getStartBeat());
     receiver.send(stop,
@@ -146,121 +181,62 @@ public class MidiViewImpl implements IMusicEditorView {
       }
     }*/
 
-    int length = viewModel.length();
-    for (int i = 0; i < length; i++) {
-      List<ImmutableNote> notes = viewModel.getNotesAtBeat(i);
-      for (ImmutableNote n : notes) {
-        if (n.getStartBeat() == i) {
-          try {
-            this.writeNote(n);
-          } catch (Exception midiE) {
-            //midiE.printStackTrace();
-            throw new IllegalStateException("Invalid midi data exception.");
-          }
-        }
-      }
-    }
-
-    this.play();
-
-/*
     try {
-      Thread.sleep(viewModel.getTempo() * length / 1000);
-    } catch (InterruptedException e) {
+      this.sequencer.open();
+      Sequence sequence = new Sequence(Sequence.PPQ, MidiViewImpl.TICKS_PER_BEAT);
+      Track track = sequence.createTrack();
+      for (ImmutableNote n : viewModel.getAllNotes()) {
+        this.writeNote(n, track);
+      }
+      this.sequencer.setSequence(sequence);
+    } catch (InvalidMidiDataException | MidiUnavailableException e) {
       e.printStackTrace();
     }
-    this.receiver.close();*/
-  //TODO
-    //this.play();
+
+    if (!this.paused) {
+      this.sequencer.start();
+      this.sequencer.setTempoInMPQ(viewModel.getTempo());
+    }
   }
 
 
   @Override
   public void togglePause() {
     if (this.paused) {
-      this.play();
+      if (this.getCurrentBeat() == 0) {
+        this.makeVisible();
+      }
+      try {
+        this.sequencer.open();
+      } catch (MidiUnavailableException e) {
+        throw new IllegalStateException("Midi unavailable");
+      }
+      this.sequencer.start();
+      this.sequencer.setTempoInMPQ(viewModel.getTempo());
     }
     else {
-      this.pause();
+      this.sequencer.stop();
     }
+
+    // toggle whether the view is paused
     this.paused = !this.paused;
   }
 
   @Override
   public void jumpToStart() {
-    //TODO
+    this.sequencer.setTickPosition(0);
   }
 
   @Override
   public void jumpToEnd() {
-    //TODO
+    this.sequencer.setTickPosition(this.viewModel.length() * MidiViewImpl.TICKS_PER_BEAT);
   }
-
 
   /**
-   * Sends the messages from the hashmap
+   * Gets the current beat of this view.
+   * @return the current beat
    */
-  private void play() {
-    System.out.println("Played.");
-    try {
-      this.synth.open();
-    } catch (MidiUnavailableException e) {
-      throw new IllegalStateException("Synthesizer is not valid.");
-    }
-    //System.out.println(this.messages.size());
-
-    for (int i = 0; i < this.messages.size(); i += 1) {
-      this.receiver.send(this.messages.get(i).getMessage(), this.messages.get(i).getTick());
-    }
-
-   //while (this.synth.getMicrosecondPosition() <= viewModel.length() * viewModel.getTempo()) {
-
-     //}
-
-
-
-    /*
-    //todo check with nola
-    while (this.synth.getMicrosecondPosition() <= viewModel.length() * viewModel.getTempo()) {
-      //System.out.println("cur beat: " +currentBeat);
-      long time = this.synth.getMicrosecondPosition();
-      //will only send messages on each beat calculated by the tempo
-      // TODO check this integer division
-      //System.out.println(( (1.0 / this.viewModel.getTempo()) * 1000));
-      //if (time % ((1.0 / this.viewModel.getTempo()) * 1000) == 0) {
-      if (time % this.viewModel.getTempo() == 0) {
-        if (this.messages.get(this.currentBeat) != null) {
-          List<MidiEvent> currentMessages = this.messages.get(this.currentBeat);
-          for (int i = 0; i < currentMessages.size(); i += 1) {
-            this.receiver.send(currentMessages.get(i).getMessage(),
-                    currentMessages.get(i).getTick());
-          }
-        }
-        //System.out.println(currentBeat);
-
-      }
-      //increments the beat count
-      this.currentBeat += 1;
-    }*/
-
-
-    this.synth.close();
-  }
-
-  //TODO not right, should it be private?
-  public void pause() {
-    System.out.println("Paused.");
-    try {
-      MidiMessage stop = new ShortMessage(ShortMessage.STOP);
-      this.receiver.send(stop, this.currentBeat * viewModel.getTempo());
-    } catch (InvalidMidiDataException e) {
-      e.printStackTrace();
-    }
-    //this.receiver.close();
-    //this.beatPausedAt = currentBeat;
-  }
-
-  public int getCurrentBeat() {
-    return this.currentBeat;
+  int getCurrentBeat() {
+    return Math.toIntExact(this.sequencer.getTickPosition());
   }
 }

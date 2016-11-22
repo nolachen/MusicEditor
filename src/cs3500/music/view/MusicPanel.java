@@ -54,17 +54,17 @@ public class MusicPanel extends JPanel {
     List<String> noteRange = this.viewModel.getNoteRange();
     Collections.reverse(noteRange);
 
-    // the number of pitches that need to be shown
-    int height = noteRange.size();
+    int lastBeatShown = this.getLastBeatShown();
+    int lastPitchShown = this.lastPitchShown();
 
     // draw the notes from the first beat to the last beat that fits in the current window width
-    for (int i = 0; i <= this.getLastBeatShown() - firstBeatShown; i += 1) {
+    for (int i = 0; i <= lastBeatShown - firstBeatShown; i += 1) {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i + firstBeatShown);
       for (ImmutableNote n : currentNotes) {
         int pitchIndex = noteRange.indexOf(n.toString());
 
         // only draw the note if it is in the y-range of the current window height
-        if ((pitchIndex <= this.lastPitchShown()) && (pitchIndex >= firstPitchShown)) {
+        if ((pitchIndex <= lastPitchShown) && (pitchIndex >= firstPitchShown)) {
 
           /*TODO maybe make rectangles instead of just filling them, and then store like a treemap
           of rectangles to notes. then i can check if a rectangle contains a posn, and find it in
@@ -90,26 +90,29 @@ public class MusicPanel extends JPanel {
           // TODO: give precedence to noteheads if there are multiple notes at a spot
           // Maybe with the treemap. check if already contains, etc
 
-        /*
-        // draw the note-sustains
-        g2d.setColor(new Color(0, 178, 237));
-        g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
-                MusicPanel.NOTE_SIZE * n.getDuration(), MusicPanel.NOTE_SIZE);
 
-        // draw the note-heads
-        g2d.setColor(new Color(0, 61, 82));
-        g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
-                MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
-                */
+          /*if (i + firstBeatShown == n.getStartBeat()) {
+            // draw the note-sustains
+            g2d.setColor(new Color(0, 178, 237));
+            g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
+                    MusicPanel.NOTE_SIZE * n.getDuration(), MusicPanel.NOTE_SIZE);
+
+            // draw the note-heads
+            g2d.setColor(new Color(0, 61, 82));
+            g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
+                    MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
+          }*/
+
 
         }
       }
     }
 
+
     // draw the beat numbers and the measures grid
     g2d.setColor(Color.BLACK);
     g2d.setStroke(new BasicStroke(2.0f));
-    for (int i = 0; i <= this.getLastBeatShown() - firstBeatShown; i += 1) {
+    for (int i = 0; i <= lastBeatShown - firstBeatShown; i += 1) {
       int curBeat = i + firstBeatShown;
 
       // only draw the beat numbers every 4 measures
@@ -119,7 +122,7 @@ public class MusicPanel extends JPanel {
 
       if (i == 0 || (curBeat % MusicPanel.BEATS_PER_MEASURE) == 0) {
         // draw the grid of all measures
-        for (int j = 0; j <= this.lastPitchShown() - firstPitchShown; j += 1) {
+        for (int j = 0; j <= lastPitchShown - firstPitchShown; j += 1) {
           int widthInBeats = MusicPanel.BEATS_PER_MEASURE -
                   (curBeat % MusicPanel.BEATS_PER_MEASURE);
 
@@ -131,10 +134,9 @@ public class MusicPanel extends JPanel {
 
     // draw the red line at the current beat
     g2d.setColor(Color.RED);
-    g2d.setStroke(new BasicStroke(3.0f));
-    g2d.drawLine(currentBeat, MusicPanel.NOTE_SIZE,
-            currentBeat, this.getHeight() - MusicPanel.NOTE_SIZE);
-
+    g2d.setStroke(new BasicStroke(2.0f));
+    int xPos = (currentBeat - this.getFirstBeatShown()) * MusicPanel.NOTE_SIZE;
+    g2d.drawLine(xPos, MusicPanel.NOTE_SIZE, xPos, this.getHeight());
   }
 
   @Override
@@ -182,12 +184,14 @@ public class MusicPanel extends JPanel {
   void scrollLeft() {
     if (this.firstBeatShown > 0) {
       this.firstBeatShown -= 1;
+      this.currentBeat -= 1;
     }
   }
 
   void scrollRight() {
     if (this.viewModel.length() >= this.firstBeatShown + this.getWidth() / MusicPanel.NOTE_SIZE) {
       this.firstBeatShown += 1;
+      this.currentBeat += 1;
     }
   }
 
@@ -237,4 +241,7 @@ public class MusicPanel extends JPanel {
   public void setCurrentBeat(int beat) {
     this.currentBeat = beat;
   }
+
+  public int getCurrentBeat() { return this.currentBeat; }
+
 }

@@ -20,45 +20,42 @@ public class CompositeViewImpl implements GuiView {
   private final MidiViewImpl midiView;
   private final IViewModel viewModel;
 
-  boolean paused;
-  int currentBeat;
-
   public CompositeViewImpl(GuiViewImpl guiView, MidiViewImpl midiView, IViewModel viewModel) {
     this.guiView = Objects.requireNonNull(guiView);
     this.midiView = Objects.requireNonNull(midiView);
     this.viewModel = viewModel;
 
-    this.paused = true;
-    this.currentBeat = 0;
   }
 
 
   @Override
   public void makeVisible() {
+    this.midiView.togglePause();
+    this.guiView.makeVisible();
+    this.midiView.makeVisible();
+
     while (this.getCurrentBeat() <= this.viewModel.length()) {
-      this.guiView.makeVisible();
-      this.midiView.makeVisible();
       this.updateCurrentBeat();
+      if (this.getCurrentBeat() == this.guiView.getLastBeatShown()) {
+        this.guiView.nextPage();
+      }
+      this.refresh();
     }
-    this.midiView.pause();
+    this.setCurrentBeat(-1);
   }
 
   @Override
   public void togglePause() {
-    this.guiView.togglePause();
-    this.midiView.togglePause();
-    this.refresh();
+    if (this.getCurrentBeat() == -1) {
+      this.setCurrentBeat(0);
+      this.makeVisible();
+    }
+    else {
+      this.guiView.togglePause();
+      this.midiView.togglePause();
+      this.refresh();
+    }
   }
-
-  /*@Override
-  public void pausePlayback() {
-
-  }
-
-  @Override
-  public void resumePlayback() {
-
-  }*/
 
   @Override
   public void addKeyListener(KeyListener listener) {
@@ -123,11 +120,13 @@ public class CompositeViewImpl implements GuiView {
   @Override
   public void jumpToStart() {
     this.guiView.jumpToStart();
+    this.midiView.jumpToStart();
   }
 
   @Override
   public void jumpToEnd() {
     this.guiView.jumpToEnd();
+    this.midiView.jumpToEnd();
   }
 
   @Override

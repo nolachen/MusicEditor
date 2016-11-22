@@ -112,6 +112,9 @@ public final class MusicEditorModel implements IMusicEditorModel {
   public List<ImmutableNote> getAllNotes() {
     List<ImmutableNote> allNotes = new ArrayList<>();
 
+    if (this.music.isEmpty()) {
+      return allNotes;
+    }
     for (int i = 0; i < this.music.lastKey(); i += 1) {
       if (this.music.containsKey(i)) {
         for (Note n : this.music.get(i)) {

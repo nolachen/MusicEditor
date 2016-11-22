@@ -56,7 +56,7 @@ public class MockMidiTest {
   public void testMidi() {
     StringBuffer out = new StringBuffer();
     this.midiView.makeVisible();
-    assertEquals(this.log.toString(), "");
+    assertEquals("", this.log.toString());
   }
 
   // Tests if the receiver receives all appropriate messages representing the models notes.
@@ -72,9 +72,9 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
+    assertEquals("Message 0 1 0 -1\n" +
             "Message 0 64 72 0\n" +
-            "Message 0 64 72 400000\n");
+            "Message 0 64 72 400000\n", this.receiver.log.toString());
   }
 
   // Tests if 2 notes sent to the receiver will be the correct messages.

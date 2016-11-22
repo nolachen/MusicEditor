@@ -24,9 +24,6 @@ public class GuiViewImpl extends JFrame implements GuiView {
   private JButton addButton;
   private JTextField input;
 
-  private boolean paused;
-  private int currentBeat;
-
   // TODO: make static fields in this class instead of musiceditorpanel
   // TODO: make the pitch labels centered in the measure bars
 
@@ -37,8 +34,6 @@ public class GuiViewImpl extends JFrame implements GuiView {
   public GuiViewImpl(IViewModel viewModel) {
     super();
     this.viewModel = Objects.requireNonNull(viewModel);
-    this.paused = true;
-    this.currentBeat = 0;
 
     // set the title, close operation, and background of the frame
     this.setTitle("Music Editor");
@@ -95,10 +90,15 @@ public class GuiViewImpl extends JFrame implements GuiView {
    */
   @Override
   public void togglePause() {
-    this.paused = !this.paused;
+    this.displayPanel.setCurrentBeat(this.getCurrentBeat());
+
+    if (this.getCurrentBeat() == 0) {
+      this.jumpToStart();
+    }
+
   }
 
-  public void updateRedLine() {
+  /*public void updateRedLine() {
     int curBeat = this.getCurrentBeat();
     if (this.paused) {
       this.displayPanel.setCurrentBeat(curBeat);
@@ -106,7 +106,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
     else {
       this.displayPanel.setCurrentBeat(curBeat + 1);
     }
-  }
+  }*/
 
   /**
    * Doesn't do anything in just the GUI view.
@@ -154,8 +154,8 @@ public class GuiViewImpl extends JFrame implements GuiView {
   public void nextPage() {
     int currentLastBeat = this.displayPanel.getLastBeatShown();
 
-    while (this.displayPanel.getFirstBeatShown() < currentLastBeat
-            && currentLastBeat != this.viewModel.length()) {
+    while (this.displayPanel.getFirstBeatShown() <= currentLastBeat
+            && this.displayPanel.getLastBeatShown() != this.viewModel.length()) {
       this.displayPanel.scrollRight();
     }
     this.refresh();
@@ -163,6 +163,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   @Override
   public void jumpToStart() {
+    this.displayPanel.setCurrentBeat(0);
     while (this.displayPanel.getFirstBeatShown() > 0) {
       this.displayPanel.scrollLeft();
     }
@@ -228,11 +229,19 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   @Override
   public void setCurrentBeat(int currentBeat) {
-    this.currentBeat = currentBeat;
+    this.displayPanel.setCurrentBeat(currentBeat);
   }
 
   @Override
   public int getCurrentBeat() {
-    return this.currentBeat;
+    return this.displayPanel.getCurrentBeat();
+  }
+
+  public int getLastBeatShown() {
+    return this.displayPanel.getLastBeatShown();
+  }
+
+  public int getFirstBeatShown() {
+    return this.displayPanel.getFirstBeatShown();
   }
 }
