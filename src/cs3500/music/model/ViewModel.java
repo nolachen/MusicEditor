@@ -9,7 +9,6 @@ import java.util.Objects;
 
 /**
  * This class represents an implementation of a music editor view model.
- *
  * Changed in HW07 to implement an interface {@link IViewModel} to provide looser coupling
  * between the view and the view model.
  */
@@ -38,7 +37,9 @@ public class ViewModel implements IViewModel {
   }
 
   @Override
-  public List<ImmutableNote> getAllNotes() { return this.model.getAllNotes(); }
+  public List<ImmutableNote> getAllNotes() {
+    return this.model.getAllNotes();
+  }
 
   @Override
   public int length() {

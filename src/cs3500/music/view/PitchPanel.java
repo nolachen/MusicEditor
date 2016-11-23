@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import cs3500.music.model.IViewModel;
-import cs3500.music.model.ViewModel;
 
 /**
  * This panel represents the range of pitches in a music editor.

@@ -1,7 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,26 +44,23 @@ public class ModelTest {
     model.add(g5b0);
 
     assertEquals(1 , model.getAllNotes().size());
-    assertEquals(7, model.length());
+    assertEquals(6, model.length());
     assertEquals("[G5]", model.getAllNotes().toString());
     assertEquals("[G5]", model.getNotesAtBeat(0).toString());
 
     model.add(c4b4);
 
     assertEquals(2, model.getAllNotes().size());
-    assertEquals(7, model.length());
+    assertEquals(6, model.length());
     assertEquals("[G5, C4]", model.getAllNotes().toString());
-    assertEquals("[C4]", model.getNotesAtBeat(4).toString());
+    assertEquals("[G5, C4]", model.getNotesAtBeat(4).toString());
 
     model.add(g3b16);
 
-    assertEquals(26, model.length());
+    assertEquals(25, model.length());
     assertEquals("[G5, C4, G3]", model.getAllNotes().toString());
     assertEquals("[G5]", model.getNotesAtBeat(0).toString());
     assertEquals("[G3]", model.getNotesAtBeat(16).toString());
-
-    // make sure only note heads are stored
-    assertEquals(new ArrayList<ImmutableNote>(), model.getNotesAtBeat(1));
   }
 
   @Test
@@ -74,7 +70,7 @@ public class ModelTest {
     model.add(g5b0);
     model.add(f3b0);
 
-    assertEquals(7, model.length());
+    assertEquals(6, model.length());
     assertEquals("[G5, F3]", model.getAllNotes().toString());
     assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
   }
@@ -91,14 +87,14 @@ public class ModelTest {
 
     assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
     assertEquals(5, model.getAllNotes().size());
-    assertEquals(26, model.length());
+    assertEquals(25, model.length());
     assertEquals("[G5, F3, C4, G3, G3]", model.getAllNotes().toString());
 
     model.remove(g5b0);
 
     assertEquals("[F3]", model.getNotesAtBeat(0).toString());
     assertEquals(4, model.getAllNotes().size());
-    assertEquals(26, model.length());
+    assertEquals(25, model.length());
     assertEquals("[F3, C4, G3, G3]", model.getAllNotes().toString());
 
     assertTrue(model.getAllNotes().toString().contains(ic4b4.toString()));
@@ -123,12 +119,6 @@ public class ModelTest {
   }
 
   @Test (expected = IllegalArgumentException.class)
-  public void testBadDuration1() {
-    // test trying to make a note with an illegal duration <= 0
-    Note bad = new Note(Pitch.B, 2, 2, 0);
-  }
-
-  @Test (expected = IllegalArgumentException.class)
   public void testBadDuration2() {
     // test trying to make an note with an illegal duration
 
@@ -144,7 +134,7 @@ public class ModelTest {
     model.add(f3b0);
 
     assertEquals(3, model.getAllNotes().size());
-    assertEquals(26, model.length());
+    assertEquals(25, model.length());
 
     IMusicEditorModel model2 = new MusicEditorModel();
     model2.add(g3b24);
@@ -153,10 +143,11 @@ public class ModelTest {
 
     model.playSimultaneously(model2);
 
-    assertEquals(6, model.getAllNotes().size());
-    assertEquals("[F3, G5, C4, C4, G3, G3]", model.getAllNotes().toString());
-    assertEquals(26, model.length());
-    assertEquals("[F3, G5]", model.getNotesAtBeat(0).toString());
+    assertEquals(13, model.getAllNotes().size());
+    assertEquals("[F3, G5, G5, G5, G5, G5, G5, G5, C4, C4, C4, G3, G3]", model.getAllNotes()
+            .toString());
+    assertEquals(25, model.length());
+    assertEquals("[F3, G5, G5, G5, G5, G5, G5, G5]", model.getNotesAtBeat(0).toString());
   }
 
   @Test
@@ -167,16 +158,16 @@ public class ModelTest {
     model.add(g3b16);
 
     assertEquals(2, model.getAllNotes().size());
-    assertEquals(26, model.length());
+    assertEquals(25, model.length());
 
     IMusicEditorModel model2 = new MusicEditorModel();
     model2.add(g5b0);
 
     model.playConsecutively(model2);
 
-    assertEquals(26 + model2.length(), model.length());
-    assertEquals(3, model.getAllNotes().size());
-    assertEquals("[C4, G3, G5]", model.getAllNotes().toString());
+    assertEquals(25 + model2.length(), model.length());
+    assertEquals(8, model.getAllNotes().size());
+    assertEquals("[C4, G3, G5, G5, G5, G5, G5, G5]", model.getAllNotes().toString());
   }
 
   @Test

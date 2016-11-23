@@ -7,8 +7,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
 
-import javax.swing.*;
-
 import cs3500.music.model.IMusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
@@ -20,10 +18,6 @@ import cs3500.music.view.GuiView;
 public class MusicEditorGuiController implements IMusicEditorController, ActionListener {
   private IMusicEditorModel model;
   private GuiView view;
-
-  //private Note selectedNote;
-  //private ViewModel viewModel; //TODO idk
-  //private KeyboardHandler keyboardHandler;
 
   /**
    * Constructs a controller given a model and a view.
@@ -39,74 +33,69 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
     //this.keyboardHandler = new KeyboardHandler();
   }
 
+  /**
+   * Configures the keyboard handler of the GUI view.
+   */
   private void configureKeyboardHandler() {
-    Runnable remove  =
-            new Runnable() {
-              @Override
-              public void run() {
-                if (view.getSelectedNote() != null) {
-                  model.remove(view.getSelectedNote());
-                  view.resetSelectedNote();
-                  view.refresh();
-                }
-              }
-            };
+    Runnable remove  = new Runnable() {
+      @Override
+      public void run() {
+        if (view.getSelectedNote() != null) {
+          model.remove(view.getSelectedNote());
+          view.resetSelectedNote();
+          view.refresh();
+        }
+      }
+    };
 
-    Runnable scrollLeft  =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.scrollLeft();
-              }
-            };
+    Runnable scrollLeft  = new Runnable() {
+      @Override
+      public void run() {
+        view.scrollLeft();
+      }
+    };
 
-    Runnable scrollRight  =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.scrollRight();
-              }
-            };
+    Runnable scrollRight  = new Runnable() {
+      @Override
+      public void run() {
+        view.scrollRight();
+      }
+    };
 
-    Runnable scrollUp  =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.scrollUp();
-              }
-            };
+    Runnable scrollUp  = new Runnable() {
+      @Override
+      public void run() {
+        view.scrollUp();
+      }
+    };
 
-    Runnable scrollDown  =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.scrollDown();
-              }
-            };
+    Runnable scrollDown  = new Runnable() {
+      @Override
+      public void run() {
+        view.scrollDown();
+      }
+    };
 
-    Runnable jumpToStart =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.jumpToStart();
-              }
-            };
+    Runnable jumpToStart = new Runnable() {
+      @Override
+      public void run() {
+        view.jumpToStart();
+      }
+    };
 
-    Runnable jumpToEnd =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.jumpToEnd();
-              }
-            };
+    Runnable jumpToEnd = new Runnable() {
+      @Override
+      public void run() {
+        view.jumpToEnd();
+      }
+    };
 
-    Runnable togglePause =
-            new Runnable() {
-              @Override
-              public void run() {
-                view.togglePause();
-              }
-            };
+    Runnable togglePause = new Runnable() {
+      @Override
+      public void run() {
+        view.togglePause();
+      }
+    };
 
     KeyboardHandler k = new KeyboardHandler();
     k.addKeyPressedAction(KeyEvent.VK_LEFT, scrollLeft);
@@ -122,20 +111,18 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
     view.addKeyListener(k);
   }
 
+  /**
+   * Configures the mouse handler of the GUI view.
+   */
   private void configureMouseHandler() {
-    BiConsumer<Integer, Integer> getNote =
-            new BiConsumer<Integer, Integer>() {
-              @Override
-              public void accept(Integer x, Integer y) {
-                view.saveNoteAtPosition(x, y);
-                view.resetFocus();
-
-                System.out.println("Selection: " + view.getSelectedNote());
-
-                // TODO: how and why
-                //gui.highlightClickedRegion(x, y);
-              }
-            };
+    BiConsumer<Integer, Integer> getNote = new BiConsumer<Integer, Integer>() {
+      @Override
+      public void accept(Integer x, Integer y) {
+        view.saveNoteAtPosition(x, y);
+        view.resetFocus();
+        //gui.highlightClickedRegion(x, y);
+      }
+    };
 
     MouseHandler m = new MouseHandler();
     m.addClickedAction(getNote);
@@ -150,23 +137,24 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    switch (e.getActionCommand()) {
-      case "Add note":
-        String inputNote = this.view.getInputNote();
-        Note parsedNote = this.parseNote(inputNote);
-        if (parsedNote != null) {
-          this.model.add(parsedNote);
-        }
-        this.view.clearInputString();
-        this.view.refresh();
-        this.view.resetFocus();
-
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid action event");
+    if (e.getActionCommand().equals("Add note")) {
+      String inputNote = this.view.getInputNote();
+      Note parsedNote = this.parseNote(inputNote);
+      if (parsedNote != null) {
+        this.model.add(parsedNote);
+      }
+      this.view.clearInputString();
+      this.view.refresh();
+      this.view.resetFocus();
     }
   }
 
+  /**
+   * Parses the given input string into a Note, based on the space-separated pitch, octave, start
+   * beat, and duration.
+   * @param inputNote the string to parse
+   * @return the parsed Note
+   */
   private Note parseNote(String inputNote) {
     String pitch;
     int octave;

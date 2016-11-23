@@ -2,11 +2,7 @@ IMusicEditorModel is the interface with public methods: add, remove, playSimulta
 playConsecutively, getAllNotes, getNotesAtBeat, length, and getTempo.
 
 MusicEditorModel is the model class that implements IMusicEditorModel.
-It contains a TreeMap from beat number to a list of notes beginning at that beat.
-Previously, we stored each note at each beat that it was playing at. We redesigned our model so
-that it would only store each note at its starting beat in the TreeMap. This is following the
-single point of truth principle, where every piece of information should only be stored once.
-Since each note has a duration and start beat, it would be redundant to store it at every beat.
+It contains a TreeMap from beat number to a list of notes playing at that beat.
 
 Note represents a musical note with pitch, octave, start beat, duration, instrument, and volume.
 The instrument and volume fields were added to support MIDI.
@@ -34,3 +30,25 @@ For the midi view, we used a synchronizer with a receiver and sent out messages 
 receiver without using a sequencer. For each note in the viewModel, we wrote it in a start and
 stop message format to give to the synchronizer to play. The view contains a hashmap of
 instrument to channel so we can easily assign and keep track of the instruments at each channel.
+
+DESIGN CHANGES:
+
+We used a sequencer in HW07 to implement pausing in the MidiView, because a sequencer could easily store the notes and start/stop playing them.
+
+We decided to change our model to store each note at every beat it is played instead of just the start note. This makes it easier to know what notes are playing at each beats.
+
+We changed our GUI to only draw the notes and measures that are currently on the screen, making it more efficient to load large songs.
+
+We also made our view model an interface instead of a concrete class so that there would be looser coupling between the view and viewmodel.
+
+
+INSTRUCTIONS:
+Click a note to select it (the selected note is stored in the view model). Press R to remove the selected note. Click on anything that isn’t a note to de-select.
+
+Use the text panel at the bottom of the window to add notes. Add notes in by typing in the specified format in the text bar.
+
+Use the HOME & END keys to navigate to the beginning and end of a song.
+
+Use the arrow keys to scroll in all directions.
+
+In the composite view, use SPACE BAR to pause/play. At the end of a song, you can use space bar to jump back to the beginning.

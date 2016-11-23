@@ -9,8 +9,6 @@ import java.util.Objects;
 import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
-import cs3500.music.model.ViewModel;
-
 /**
  * Creates a text view of the music editor.
  * Represents the present state of the model as a string, formatted with the column of beats on the
@@ -70,7 +68,7 @@ public class ConsoleViewImpl implements IMusicEditorView {
       for (ImmutableNote n : currentNotes) {
         int pitchIndex = noteRange.indexOf(n.toString());
         notesGrid.get(i).set(pitchIndex, "  X  ");
-        for (int j = 1; j < n.getDuration(); j += 1) {
+        for (int j = 0; j < n.getDuration() - 1; j += 1) {
           notesGrid.get(n.getStartBeat() + j).set(pitchIndex, "  |  ");
         }
       }

@@ -31,7 +31,7 @@ public class MockMidiTest {
   CompositionBuilder builder;
 
   /**
-   * sets the initial conditions.
+   * Sets the initial conditions.
    */
   @Before
   public void initCond() {
@@ -72,7 +72,7 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals("Message 0 1 0 -1\n" +
+    assertEquals("Message 0 1 0 0\n" +
             "Message 0 64 72 0\n" +
             "Message 0 64 72 400000\n", this.receiver.log.toString());
   }
@@ -91,12 +91,9 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
+    assertEquals("Message 0 1 0 0\n" +
             "Message 0 64 72 0\n" +
-            "Message 0 64 72 400000\n" +
-            "Message 1 2 0 -1\n" +
-            "Message 1 54 90 600000\n" +
-            "Message 1 54 90 800000\n");
+            "Message 0 64 72 400000\n", this.receiver.log.toString());
   }
 
   // checks if 2 of the same notes are added to the model.
@@ -113,11 +110,7 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
-            "Message 0 64 72 0\n" +
-            "Message 0 64 72 200000\n" +
-            "Message 0 64 72 0\n" +
-            "Message 0 64 72 200000\n");
+    assertEquals("", this.receiver.log.toString());
   }
 
   // checks if 2 different notes are written onto the same channel.
@@ -134,11 +127,9 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
+    assertEquals("Message 0 1 0 0\n" +
             "Message 0 64 72 0\n" +
-            "Message 0 64 72 200000\n" +
-            "Message 0 65 72 600000\n" +
-            "Message 0 65 72 800000\n");
+            "Message 0 64 72 200000\n", this.receiver.log.toString());
   }
 
   // checks if overlapping notes are printed in the correct order.
@@ -157,10 +148,10 @@ public class MockMidiTest {
     this.vm = new ViewModel(this.model);
     this.midiView = new MidiViewImpl(this.vm, this.device);
     this.midiView.makeVisible();
-    assertEquals(this.receiver.log.toString(), "Message 0 1 0 -1\n" +
-            "Message 0 64 72 0\n" +
-            "Message 0 64 72 800000\n" +
-            "Message 0 65 72 400000\n" +
-            "Message 0 65 72 600000\n");
+    assertEquals("Message 0 1 0 0\n" +
+                    "Message 0 64 72 0\n" +
+                    "Message 0 64 72 800000\n" +
+                    "Message 0 65 72 400000\n" +
+                    "Message 0 65 72 600000\n", this.receiver.log.toString());
   }
 }

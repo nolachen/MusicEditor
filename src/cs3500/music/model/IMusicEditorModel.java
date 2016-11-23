@@ -1,7 +1,6 @@
 package cs3500.music.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The model interface for the music editor.

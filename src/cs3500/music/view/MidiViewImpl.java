@@ -1,38 +1,45 @@
 package cs3500.music.view;
 
+import java.util.HashMap;
+
 import cs3500.music.model.IViewModel;
 
 import cs3500.music.model.ImmutableNote;
 
-import javax.sound.midi.*;
-
-import java.util.*;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MetaEventListener;
+import javax.sound.midi.MetaMessage;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Synthesizer;
+import javax.sound.midi.Track;
 
 /**
  * View for the MIDI playback.
- * Uses a Synthesizer to play the music from the ViewModel.
+ * Uses a Sequencer to play the music from the ViewModel.
  */
 public class MidiViewImpl implements IMusicEditorView {
   // viewModel that gives access to necessary information in the model.
   private final IViewModel viewModel;
   // Synthesizer for the view.
   private final Synthesizer synth;
-  // Receiver for the synthesizer
+  // Mock Receiver for the synthesizer for testing
   //private final Receiver receiver;
-  // Sequencer
+  // Sequencer to store the song
   private final Sequencer sequencer;
   // mapping of instruments to it's channel.
   private HashMap<Integer, Integer> channels;
   // number of channels. Increments for every instrument this view encounters.
   // INVARIANT: channelNum will always be incremented by 1 only.
   private int channelNum;
-  // hashmap of int beats to messages sent at that beat
-  //private List<MidiEvent> messages;
-  // int current beat
-  //private int currentBeat;
-  // TODO int beat paused at or should i use a boolean
-  //private int beatPausedAt;
+  // whether this piece is paused
   private boolean paused;
+  // the number of ticks per beat to pass to the sequencer
   private static final int TICKS_PER_BEAT = 1;
 
   /**
@@ -53,7 +60,7 @@ public class MidiViewImpl implements IMusicEditorView {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
     this.synth = tempSynth;
-    //this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
+    this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
     //this.receiver = tempReceiver;
     this.sequencer = tempSequencer;
     // tries to open up the synthesizer.
@@ -66,11 +73,7 @@ public class MidiViewImpl implements IMusicEditorView {
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
-    //this.messages = new ArrayList<>();
-    //this.currentBeat = 0;
-    //this.beatPausedAt = this.currentBeat;
     this.paused = false;
-
 
     this.sequencer.addMetaEventListener(new CloseProgram());
   }
@@ -83,7 +86,7 @@ public class MidiViewImpl implements IMusicEditorView {
    */
   public MidiViewImpl(IViewModel viewModel, Synthesizer sy) {
     this.synth = sy;
-    //this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
+    this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
     // tries to open the given synthesizer.
     try {
       this.synth.open();
@@ -108,11 +111,15 @@ public class MidiViewImpl implements IMusicEditorView {
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
-    //this.messages = new ArrayList<>();
-    //this.currentBeat = 0;
     this.paused = false;
+
+    this.sequencer.addMetaEventListener(new CloseProgram());
+
   }
 
+  /**
+   * A meta event listener that closes the sequencer when the song is over.
+   */
   public class CloseProgram implements MetaEventListener {
     @Override
     public void meta(MetaMessage meta) {
@@ -137,50 +144,41 @@ public class MidiViewImpl implements IMusicEditorView {
     int duration = note.getDuration();
     int instrument = note.getInstrument();
     int beat = note.getStartBeat();
+
     // creates a new channel for this instrument if it doesn't yet exist.
     if (!channels.containsKey(instrument)) {
       channels.put(instrument, this.channelNum + 1);
       MidiMessage instr = new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument),
               instrument, 0);
       track.add(new MidiEvent(instr, beat * MidiViewImpl.TICKS_PER_BEAT));
+      //this.receiver.send(instr, viewModel.getTempo() * note.getStartBeat());
+
       // increments the channel count
       channelNum++;
     }
 
     //synth.getChannels()[0].programChange(synth.getChannels()[0].getProgram());
 
-
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0,
+    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument),
             noteRepresentation, note.getVolume());
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
+    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
             noteRepresentation, note.getVolume());
 
     // will send the start message without a time stamp then the stop message is sent
-    // timing might not work when starting from a different beat but who knows lets find out
     track.add(new MidiEvent(start, beat * MidiViewImpl.TICKS_PER_BEAT));
     track.add(new MidiEvent(stop, (beat + duration) * MidiViewImpl.TICKS_PER_BEAT));
 
-    /*receiver.send(start, viewModel.getTempo() * note.getStartBeat());
-    receiver.send(stop,
-            (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));*/
+    //this.receiver.send(start, viewModel.getTempo() * note.getStartBeat());
+    //this.receiver.send(stop,
+    //        (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
   }
 
   // CHANGED from get notes at beat to get all notes because getNoteAtBeat now returns
   // sustained notes that overlap this beat that may have a different startbeat so we just
   // use the heads of each note to play them in midi
 
-  // creates the hashmap of beats and plays from the beginning
   @Override
   public void makeVisible() {
-    /*List<ImmutableNote> notes = viewModel.getAllNotes();
-    for (ImmutableNote n : notes) {
-      try {
-        this.writeNote(n);
-      } catch (Exception midiE) {
-        throw new IllegalStateException("Invalid midi data exception.");
-      }
-    }*/
-
     try {
       this.sequencer.open();
       Sequence sequence = new Sequence(Sequence.PPQ, MidiViewImpl.TICKS_PER_BEAT);
@@ -190,7 +188,7 @@ public class MidiViewImpl implements IMusicEditorView {
       }
       this.sequencer.setSequence(sequence);
     } catch (InvalidMidiDataException | MidiUnavailableException e) {
-      e.printStackTrace();
+      throw new IllegalStateException("Invalid midi");
     }
 
     if (!this.paused) {
@@ -198,7 +196,6 @@ public class MidiViewImpl implements IMusicEditorView {
       this.sequencer.setTempoInMPQ(viewModel.getTempo());
     }
   }
-
 
   @Override
   public void togglePause() {

@@ -8,7 +8,6 @@ import java.util.Collections;
 
 import java.util.List;
 
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -18,7 +17,6 @@ public final class MusicEditorModel implements IMusicEditorModel {
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    * Class invariant: Notes will only ever be added at beats in the range [startBeat, endBeat).
-   *
    * Changed in HW07 to store notes at every beat they are playing, not just the start beat.
    */
   private TreeMap<Integer, List<Note>> music;
@@ -65,14 +63,6 @@ public final class MusicEditorModel implements IMusicEditorModel {
       this.music.get(i).add(note);
       i += 1;
     } while (i < note.getEndBeat());
-
-/*
-    for (int i = note.getStartBeat(); i < note.getEndBeat(); i += 1) {
-      if (!this.music.containsKey(i)) {
-        this.music.put(i, new ArrayList<>());
-      }
-      this.music.get(i).add(note);
-    }*/
   }
 
   @Override
@@ -89,9 +79,11 @@ public final class MusicEditorModel implements IMusicEditorModel {
   public void playSimultaneously(IMusicEditorModel other) {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
-        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
-                n.getInstrument(), n.getVolume());
-        this.add(newNote);
+        if (n.getStartBeat() == i) {
+          Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
+                  n.getInstrument(), n.getVolume());
+          this.add(newNote);
+        }
       }
     }
   }
@@ -101,9 +93,11 @@ public final class MusicEditorModel implements IMusicEditorModel {
     int currentLastBeat = this.length();
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
-        Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
-                n.getDuration(), n.getInstrument(), n.getVolume());
-        this.add(newNote);
+        if (n.getStartBeat() == i) {
+          Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
+                  n.getDuration(), n.getInstrument(), n.getVolume());
+          this.add(newNote);
+        }
       }
     }
   }

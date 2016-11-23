@@ -1,7 +1,6 @@
 package cs3500.music.view;
 
 import cs3500.music.model.IViewModel;
-import cs3500.music.model.ViewModel;
 
 /**
  * This class represents a factory for the multiple views that implement the IMusicEditorView

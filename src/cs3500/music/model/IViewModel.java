@@ -6,7 +6,6 @@ import java.util.List;
  * The view model interface for the music editor.
  * A view model that is basically a read-only model. Gives the View access to the model's.
  * information without allowing the model to be directly accessed.
- *
  * This interface was added in HW07 to decouple the views from a concrete view model class.
  */
 public interface IViewModel {
@@ -42,7 +41,15 @@ public interface IViewModel {
    */
   List<String> getNoteRange();
 
+  /**
+   * Stores the given selected note in this viewmodel.
+   * @param note the note to store
+   */
   void setSelectedNote(Note note);
 
+  /**
+   * Retrieve the selected note.
+   * @return the stored note
+   */
   Note getSelectedNote();
 }

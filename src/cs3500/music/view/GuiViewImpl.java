@@ -1,15 +1,18 @@
 package cs3500.music.view;
 
-import java.awt.*;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 import cs3500.music.model.IViewModel;
 import cs3500.music.model.Note;
-import cs3500.music.model.ViewModel;
 
 /**
  * An implementation of the {@link IMusicEditorView} interface that uses Java Swing to draw the
@@ -62,14 +65,6 @@ public class GuiViewImpl extends JFrame implements GuiView {
     panel.add(displayPanel, BorderLayout.CENTER);
     panel.add(inputPanel, BorderLayout.SOUTH);
 
-    // create the scroll pane
-    /*JScrollPane scrollPane = new JScrollPane(panel,
-            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);*/
-
-    // add the scroll pane to the frame
-    //this.getContentPane().add(scrollPane);
-
     // add the whole panel to the frame
     this.getContentPane().add(panel);
 
@@ -95,34 +90,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
     if (this.getCurrentBeat() == 0) {
       this.jumpToStart();
     }
-
   }
-
-  /*public void updateRedLine() {
-    int curBeat = this.getCurrentBeat();
-    if (this.paused) {
-      this.displayPanel.setCurrentBeat(curBeat);
-    }
-    else {
-      this.displayPanel.setCurrentBeat(curBeat + 1);
-    }
-  }*/
-
-  /**
-   * Doesn't do anything in just the GUI view.
-   */
- /* @Override
-  public void pausePlayback() {
-    return;
-  }*/
-
-  /**
-   * Doesn't do anything in just the GUI view.
-   */
- /* @Override
-  public void resumePlayback() {
-    return;
-  }*/
 
   @Override
   public void scrollLeft() {
@@ -199,7 +167,9 @@ public class GuiViewImpl extends JFrame implements GuiView {
   }
 
   @Override
-  public void refresh() { this.repaint(); }
+  public void refresh() {
+    this.repaint();
+  }
 
   @Override
   public void addActionListener(ActionListener actionListener) {
@@ -237,11 +207,15 @@ public class GuiViewImpl extends JFrame implements GuiView {
     return this.displayPanel.getCurrentBeat();
   }
 
+  /**
+   * Return the last shown beat in this view.
+   * @return the last beat
+   */
   public int getLastBeatShown() {
     return this.displayPanel.getLastBeatShown();
   }
 
-  public int getFirstBeatShown() {
+  /*public int getFirstBeatShown() {
     return this.displayPanel.getFirstBeatShown();
-  }
+  }*/
 }

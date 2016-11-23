@@ -5,8 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.util.Objects;
 
-import javax.swing.*;
-
 import cs3500.music.model.IViewModel;
 import cs3500.music.model.Note;
 
@@ -20,13 +18,17 @@ public class CompositeViewImpl implements GuiView {
   private final MidiViewImpl midiView;
   private final IViewModel viewModel;
 
+  /**
+   * Constructs a composite view.
+   * @param guiView the gui
+   * @param midiView the midi
+   * @param viewModel the view model
+   */
   public CompositeViewImpl(GuiViewImpl guiView, MidiViewImpl midiView, IViewModel viewModel) {
     this.guiView = Objects.requireNonNull(guiView);
     this.midiView = Objects.requireNonNull(midiView);
     this.viewModel = viewModel;
-
   }
-
 
   @Override
   public void makeVisible() {
@@ -65,11 +67,6 @@ public class CompositeViewImpl implements GuiView {
   @Override
   public void addMouseListener(MouseListener listener) {
     this.guiView.addMouseListener(listener);
-  }
-
-  @Override
-  public void removeMouseListener(MouseListener listener) {
-    this.guiView.removeMouseListener(listener);
   }
 
   @Override
@@ -164,6 +161,9 @@ public class CompositeViewImpl implements GuiView {
     return this.midiView.getCurrentBeat();
   }
 
+  /**
+   * Updates the current beat of this view.
+   */
   public void updateCurrentBeat() {
     this.setCurrentBeat(this.getCurrentBeat());
   }

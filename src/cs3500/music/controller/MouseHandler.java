@@ -8,14 +8,16 @@ import java.util.function.BiConsumer;
 
 /**
  * A class to handle mouse events.
- * TODO: if I don't need to override all 5 methods, just extend MouseAdapter
  */
 public class MouseHandler implements MouseListener {
-  // map positions to runnables/bi-consumers?
+  // map positions to bi-consumers
   // ask the view what to do with the 2 coordinates
   // pass those actions into the mouse handler
   List<BiConsumer<Integer, Integer>> clickedActions;
 
+  /**
+   * Constructor for a mouse handler.
+   */
   public MouseHandler() {
     this.clickedActions = new ArrayList<>();
   }
@@ -29,24 +31,28 @@ public class MouseHandler implements MouseListener {
 
   @Override
   public void mousePressed(MouseEvent e) {
-
+    // no actions
   }
 
   @Override
   public void mouseReleased(MouseEvent e) {
-
+    // no actions
   }
 
   @Override
   public void mouseEntered(MouseEvent e) {
-
+    // no actions
   }
 
   @Override
   public void mouseExited(MouseEvent e) {
-
+    // no actions
   }
 
+  /**
+   * Adds the specified biconsumer to the clicked actions in this mouse handler's list.
+   * @param action the biconsumer to add
+   */
   public void addClickedAction(BiConsumer<Integer, Integer> action) {
     this.clickedActions.add(action);
   }

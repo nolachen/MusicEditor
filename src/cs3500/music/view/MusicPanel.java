@@ -1,6 +1,10 @@
 package cs3500.music.view;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.BasicStroke;
+import java.awt.Dimension;
 
 import java.util.Collections;
 
@@ -20,6 +24,8 @@ public class MusicPanel extends JPanel {
   static final int NOTE_SIZE = 20; //width of a note of duration 1, in pixels
   static final int BEATS_PER_MEASURE = 4; //number of beats in a measure
   private final IViewModel viewModel;
+  private List<String> allNotes;
+
   private int firstBeatShown; //the first beat shown in the view
   private int firstPitchShown; //the index of the first pitch shown
   private int currentBeat;
@@ -89,19 +95,6 @@ public class MusicPanel extends JPanel {
 
           // TODO: give precedence to noteheads if there are multiple notes at a spot
           // Maybe with the treemap. check if already contains, etc
-
-
-          /*if (i + firstBeatShown == n.getStartBeat()) {
-            // draw the note-sustains
-            g2d.setColor(new Color(0, 178, 237));
-            g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
-                    MusicPanel.NOTE_SIZE * n.getDuration(), MusicPanel.NOTE_SIZE);
-
-            // draw the note-heads
-            g2d.setColor(new Color(0, 61, 82));
-            g2d.fillRect(i * MusicPanel.NOTE_SIZE, (pitchIndex + 1) * MusicPanel.NOTE_SIZE,
-                    MusicPanel.NOTE_SIZE, MusicPanel.NOTE_SIZE);
-          }*/
 
 
         }
@@ -202,8 +195,8 @@ public class MusicPanel extends JPanel {
   }
 
   void scrollDown() {
-    if (this.viewModel.getNoteRange().size() >=
-            this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1) {
+    if (this.viewModel.getNoteRange().size()
+            >= this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1) {
       this.firstPitchShown += 1;
     }
   }
@@ -222,6 +215,7 @@ public class MusicPanel extends JPanel {
   }
 
   /**
+   * TODO : make an update method
    * The last beat that should be shown based on the current window width.
    * @return the last beat
    */
@@ -242,6 +236,13 @@ public class MusicPanel extends JPanel {
     this.currentBeat = beat;
   }
 
-  public int getCurrentBeat() { return this.currentBeat; }
+  public int getCurrentBeat() {
+    return this.currentBeat;
+  }
+
+  void updateData() {
+    this.allNotes = this.viewModel.getAllNotes();
+    
+  }
 
 }
