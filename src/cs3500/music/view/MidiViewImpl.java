@@ -26,10 +26,6 @@ import javax.sound.midi.Track;
 public class MidiViewImpl implements IMusicEditorView {
   // viewModel that gives access to necessary information in the model.
   private final IViewModel viewModel;
-  // Synthesizer for the view.
-  private final Synthesizer synth;
-  // Mock Receiver for the synthesizer for testing
-  //private final Receiver receiver;
   // Sequencer to store the song
   private final Sequencer sequencer;
   // mapping of instruments to it's channel.
@@ -49,24 +45,16 @@ public class MidiViewImpl implements IMusicEditorView {
    */
   public MidiViewImpl(IViewModel viewModel) {
     // tries to initialize everything.
-    Synthesizer tempSynth;
-    //Receiver tempReceiver;
     Sequencer tempSequencer;
     try {
-      tempSynth = MidiSystem.getSynthesizer();
-      //tempReceiver = tempSynth.getReceiver();
       tempSequencer = MidiSystem.getSequencer();
     } catch (Exception e) {
       throw new IllegalStateException("MidiSystem unavailable.");
     }
-    this.synth = tempSynth;
-    this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
-    //this.receiver = tempReceiver;
     this.sequencer = tempSequencer;
-    // tries to open up the synthesizer.
+    // tries to open up the sequencer.
     try {
       this.sequencer.open();
-      this.synth.open();
     } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
@@ -79,35 +67,19 @@ public class MidiViewImpl implements IMusicEditorView {
   }
 
   /**
-   * Convenience constructor that takes in a synthesizer.
+   * Convenience constructor that takes in a sequencer.
    *
    * @param viewModel viewModel that gives access to necessary model information.
-   * @param sy        given synthesizer for testing purposes.
+   * @param seq        given sequencer for testing purposes.
    */
-  public MidiViewImpl(IViewModel viewModel, Synthesizer sy) {
-    this.synth = sy;
-    this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());
-    // tries to open the given synthesizer.
+  public MidiViewImpl(IViewModel viewModel, Sequencer seq) {
+    this.sequencer = seq;
+    // tries to open the given sequencer.
     try {
-      this.synth.open();
+      this.sequencer.open();
     } catch (Exception me) {
       throw new IllegalStateException("Midi Unavailable.");
     }
-    Sequencer tempSequencer;
-    //Receiver tempReceiver;
-    try {
-      //tempReceiver = synth.getReceiver();
-      tempSequencer = MidiSystem.getSequencer();
-    } catch (Exception e) {
-      throw new IllegalStateException("MidiSystem unavailable.");
-    }
-    this.sequencer = tempSequencer;
-    try {
-      this.sequencer.open();
-    } catch (MidiUnavailableException e) {
-      e.printStackTrace();
-    }
-    //this.receiver = tempReceiver;
     this.viewModel = viewModel;
     channels = new HashMap<>();
     channelNum = -1;
@@ -125,7 +97,6 @@ public class MidiViewImpl implements IMusicEditorView {
     public void meta(MetaMessage meta) {
       if (meta.getType() == 0x2f) {
         sequencer.close();
-        paused = true;
       }
     }
   }
@@ -151,26 +122,18 @@ public class MidiViewImpl implements IMusicEditorView {
       MidiMessage instr = new ShortMessage(ShortMessage.PROGRAM_CHANGE, channels.get(instrument),
               instrument, 0);
       track.add(new MidiEvent(instr, beat * MidiViewImpl.TICKS_PER_BEAT));
-      //this.receiver.send(instr, viewModel.getTempo() * note.getStartBeat());
 
       // increments the channel count
       channelNum++;
     }
-
-    //synth.getChannels()[0].programChange(synth.getChannels()[0].getProgram());
 
     MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, channels.get(instrument),
             noteRepresentation, note.getVolume());
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, channels.get(instrument),
             noteRepresentation, note.getVolume());
 
-    // will send the start message without a time stamp then the stop message is sent
     track.add(new MidiEvent(start, beat * MidiViewImpl.TICKS_PER_BEAT));
     track.add(new MidiEvent(stop, (beat + duration) * MidiViewImpl.TICKS_PER_BEAT));
-
-    //this.receiver.send(start, viewModel.getTempo() * note.getStartBeat());
-    //this.receiver.send(stop,
-    //        (viewModel.getTempo() * duration) + (viewModel.getTempo() * note.getStartBeat()));
   }
 
   // CHANGED from get notes at beat to get all notes because getNoteAtBeat now returns
@@ -191,6 +154,7 @@ public class MidiViewImpl implements IMusicEditorView {
       throw new IllegalStateException("Invalid midi");
     }
 
+    this.sequencer.setTickPosition(0);
     if (!this.paused) {
       this.sequencer.start();
       this.sequencer.setTempoInMPQ(viewModel.getTempo());
@@ -199,24 +163,41 @@ public class MidiViewImpl implements IMusicEditorView {
 
   @Override
   public void togglePause() {
-    if (this.paused) {
-      if (this.getCurrentBeat() == 0) {
-        this.makeVisible();
-      }
+    if (!this.sequencer.isOpen()) {
       try {
         this.sequencer.open();
       } catch (MidiUnavailableException e) {
         throw new IllegalStateException("Midi unavailable");
       }
-      this.sequencer.start();
-      this.sequencer.setTempoInMPQ(viewModel.getTempo());
-    }
-    else {
-      this.sequencer.stop();
     }
 
-    // toggle whether the view is paused
+    if (!this.paused) {
+      this.sequencer.stop();
+    }
+    else {
+      if (this.getCurrentBeat() == 0) {
+        this.makeVisible();
+      }
+
+      try {
+        this.sequencer.start();
+        this.sequencer.setTempoInMPQ(viewModel.getTempo());
+      } catch (IllegalStateException e) {
+        return;
+      }
+    }
+
+    // toggle the pause value
     this.paused = !this.paused;
+
+  }
+
+  /**
+   * Return whether this view is paused.
+   * @return true if paused, else false
+   */
+  public boolean getPaused() {
+    return this.paused;
   }
 
   @Override
@@ -227,6 +208,14 @@ public class MidiViewImpl implements IMusicEditorView {
   @Override
   public void jumpToEnd() {
     this.sequencer.setTickPosition(this.viewModel.length() * MidiViewImpl.TICKS_PER_BEAT);
+  }
+
+  /**
+   * Set the current tick position to match the given beat.
+   * @param beat the new current beats
+   */
+  public void setCurrentBeat(int beat) {
+    this.sequencer.setTickPosition(beat * MidiViewImpl.TICKS_PER_BEAT);
   }
 
   /**

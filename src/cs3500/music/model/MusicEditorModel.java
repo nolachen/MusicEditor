@@ -16,7 +16,8 @@ import java.util.TreeMap;
 public final class MusicEditorModel implements IMusicEditorModel {
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
-   * Class invariant: Notes will only ever be added at beats in the range [startBeat, endBeat).
+   * INVARIANT: Notes will only ever be added at beats in the range [startBeat, endBeat).
+   * INVARIANT: The list of notes at a beat will always be sorted by ascending start beat.
    * Changed in HW07 to store notes at every beat they are playing, not just the start beat.
    */
   private TreeMap<Integer, List<Note>> music;
@@ -55,12 +56,29 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public void add(Note note) {
+    // add the note at all the beats at which it is playing
+    // a do-while loop is necessary to ensure that notes of duration 0 are added
+
     int i = note.getStartBeat();
     do {
+
+      // if there are no notes at the beat, create a new empty list of notes
       if (!this.music.containsKey(i)) {
         this.music.put(i, new ArrayList<>());
       }
-      this.music.get(i).add(note);
+
+      // add the note at the correct index to maintain sorted order by ascending start beat
+      int indexToAdd = 0;
+      List<Note> currentNotes = this.music.get(i);
+      for (int j = 0; j < currentNotes.size(); j += 1) {
+        if (i >= currentNotes.get(j).getStartBeat()) {
+          indexToAdd = j;
+          break;
+        }
+      }
+
+      // actually add the note at the correct index, and increase the counter
+      this.music.get(i).add(indexToAdd, note);
       i += 1;
     } while (i < note.getEndBeat());
   }

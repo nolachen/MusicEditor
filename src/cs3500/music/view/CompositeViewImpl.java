@@ -17,6 +17,7 @@ public class CompositeViewImpl implements GuiView {
   private final GuiViewImpl guiView;
   private final MidiViewImpl midiView;
   private final IViewModel viewModel;
+  private boolean donePlaying;
 
   /**
    * Constructs a composite view.
@@ -27,12 +28,17 @@ public class CompositeViewImpl implements GuiView {
   public CompositeViewImpl(GuiViewImpl guiView, MidiViewImpl midiView, IViewModel viewModel) {
     this.guiView = Objects.requireNonNull(guiView);
     this.midiView = Objects.requireNonNull(midiView);
-    this.viewModel = viewModel;
+    this.viewModel = Objects.requireNonNull(viewModel);
+    this.donePlaying = false;
   }
 
   @Override
   public void makeVisible() {
-    this.midiView.togglePause();
+    this.donePlaying = false;
+
+    if (!midiView.getPaused()) {
+      this.togglePause();
+    }
     this.guiView.makeVisible();
     this.midiView.makeVisible();
 
@@ -43,13 +49,16 @@ public class CompositeViewImpl implements GuiView {
       }
       this.refresh();
     }
-    this.setCurrentBeat(-1);
+
+    this.donePlaying = true;
+
+    this.jumpToStart();
   }
+
 
   @Override
   public void togglePause() {
-    if (this.getCurrentBeat() == -1) {
-      this.setCurrentBeat(0);
+    if (this.donePlaying) {
       this.makeVisible();
     }
     else {
@@ -152,8 +161,9 @@ public class CompositeViewImpl implements GuiView {
   }
 
   @Override
-  public void setCurrentBeat(int currentBeat) {
-    this.guiView.setCurrentBeat(currentBeat);
+  public void setCurrentBeat(int beat) {
+    this.guiView.setCurrentBeat(beat);
+    this.midiView.setCurrentBeat(beat);
   }
 
   @Override
@@ -162,9 +172,9 @@ public class CompositeViewImpl implements GuiView {
   }
 
   /**
-   * Updates the current beat of this view.
+   * Updates the current beat of this view, matching the GUI beat to the MIDI beat.
    */
   public void updateCurrentBeat() {
-    this.setCurrentBeat(this.getCurrentBeat());
+    this.guiView.setCurrentBeat(this.getCurrentBeat());
   }
 }

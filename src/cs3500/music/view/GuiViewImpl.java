@@ -85,11 +85,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
    */
   @Override
   public void togglePause() {
-    this.displayPanel.setCurrentBeat(this.getCurrentBeat());
-
-    if (this.getCurrentBeat() == 0) {
-      this.jumpToStart();
-    }
+    return;
   }
 
   @Override
@@ -122,8 +118,8 @@ public class GuiViewImpl extends JFrame implements GuiView {
   public void nextPage() {
     int currentLastBeat = this.displayPanel.getLastBeatShown();
 
-    while (this.displayPanel.getFirstBeatShown() <= currentLastBeat
-            && this.displayPanel.getLastBeatShown() != this.viewModel.length()) {
+    while (displayPanel.getFirstBeatShown() <= currentLastBeat
+            && displayPanel.canScrollRight()) {
       this.displayPanel.scrollRight();
     }
     this.refresh();
@@ -140,10 +136,10 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   @Override
   public void jumpToEnd() {
-    while (this.viewModel.length() > this.displayPanel.getLastBeatShown()) {
+    this.displayPanel.setCurrentBeat(this.viewModel.length());
+    while (this.displayPanel.canScrollRight()) {
       this.displayPanel.scrollRight();
     }
-    this.displayPanel.scrollRight();
 
     this.refresh();
   }
@@ -215,7 +211,4 @@ public class GuiViewImpl extends JFrame implements GuiView {
     return this.displayPanel.getLastBeatShown();
   }
 
-  /*public int getFirstBeatShown() {
-    return this.displayPanel.getFirstBeatShown();
-  }*/
 }

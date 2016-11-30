@@ -42,7 +42,7 @@ public final class MusicEditor {
     try {
       reader = new FileReader(file);
     } catch (FileNotFoundException e) {
-      System.err.print("File not found, try again.");
+      throw new IllegalArgumentException("File not found, try again.");
     }
 
     // create the builder, the model from the builder and the file, and the view model
@@ -57,10 +57,9 @@ public final class MusicEditor {
     try {
       view = MusicEditorViewFactory.create(viewType, viewModel);
     } catch (IllegalArgumentException e) {
-      System.err.print("Incorrect view type, try again.");
+      throw new IllegalArgumentException("Incorrect view type, try again.");
     }
 
-    //TODO: is this right
     // create the controller and start the program
     IMusicEditorController controller;
     if (viewType.equals("visual") || viewType.equals("composite")) {

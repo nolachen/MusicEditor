@@ -37,7 +37,6 @@ public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
     return this;
   }
 
-  //TODO
   @Override
   public CompositionBuilder<IMusicEditorModel> addNote(int s, int e, int i, int p, int v) {
     Note note = new Note(s, e, i, p, v);

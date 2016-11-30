@@ -66,10 +66,12 @@ public class ConsoleViewImpl implements IMusicEditorView {
       List<ImmutableNote> currentNotes = this.viewModel.getNotesAtBeat(i);
 
       for (ImmutableNote n : currentNotes) {
-        int pitchIndex = noteRange.indexOf(n.toString());
-        notesGrid.get(i).set(pitchIndex, "  X  ");
-        for (int j = 0; j < n.getDuration() - 1; j += 1) {
-          notesGrid.get(n.getStartBeat() + j).set(pitchIndex, "  |  ");
+        if (n.getStartBeat() == i) {
+          int pitchIndex = noteRange.indexOf(n.toString());
+          notesGrid.get(i).set(pitchIndex, "  X  ");
+          for (int j = 0; j < n.getDuration() - 1; j += 1) {
+            notesGrid.get(n.getStartBeat() + j).set(pitchIndex, "  |  ");
+          }
         }
       }
     }
@@ -102,7 +104,6 @@ public class ConsoleViewImpl implements IMusicEditorView {
   public void jumpToEnd() {
     return;
   }
-
 
   /**
    * Pads the given String with spaces so that it is centered in the given width.

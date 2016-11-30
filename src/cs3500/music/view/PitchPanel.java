@@ -16,7 +16,6 @@ import cs3500.music.model.IViewModel;
 
 /**
  * This panel represents the range of pitches in a music editor.
- * TODO: ABstract MusicPanel & PitchPanel
  */
 public class PitchPanel extends JPanel {
   private final IViewModel viewModel;
@@ -63,7 +62,7 @@ public class PitchPanel extends JPanel {
   }
 
   void scrollDown() {
-    if (this.viewModel.getNoteRange().size() >=
+    if (this.viewModel.getNoteRange().size() - 1 >=
             this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1) {
       this.firstPitchShown += 1;
     }

@@ -18,6 +18,11 @@ public class ViewModel implements IViewModel {
    */
   private final IMusicEditorModel model;
 
+  // TODO: store these notes, have an update viewModel to update data, called whenever model is
+  // changed
+  private List<ImmutableNote> allNotes;
+  private List<String> noteRange;
+
   /**
    * The current selected note in the view.
    */

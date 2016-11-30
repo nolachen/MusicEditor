@@ -193,7 +193,20 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
         }
     }
 
-    Note parsedNote = new Note(newPitch, octave, startBeat, duration);
-    return parsedNote;
+    try {
+      Note parsedNote = new Note(newPitch, octave, startBeat, duration);
+      return parsedNote;
+    } catch (IllegalArgumentException e) {
+      if (startBeat < 0) {
+        this.view.showErrorMessage("Invalid start beat");
+      }
+      if (duration < 0) {
+        this.view.showErrorMessage("Invalid duration");
+      }
+      else {
+        this.view.showErrorMessage("Invalid");
+      }
+      return null;
+    }
   }
 }

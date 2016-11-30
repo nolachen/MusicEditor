@@ -1,3 +1,4 @@
+/*
 import cs3500.music.model.IMusicEditorModel;
 
 import cs3500.music.model.IViewModel;
@@ -18,9 +19,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
+*/
 /**
  * Uses a mock midi device and a mock receiver to test midiview.
- */
+ *//*
+
 public class MockMidiTest {
   IMusicEditorModel model;
   IViewModel vm;
@@ -30,9 +33,11 @@ public class MockMidiTest {
   MidiViewImpl midiView;
   CompositionBuilder builder;
 
-  /**
+  */
+/**
    * Sets the initial conditions.
-   */
+   *//*
+
   @Before
   public void initCond() {
     this.model = new MusicEditorModel();
@@ -155,3 +160,4 @@ public class MockMidiTest {
                     "Message 0 65 72 600000\n", this.receiver.log.toString());
   }
 }
+*/
