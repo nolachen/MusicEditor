@@ -43,16 +43,23 @@ public class CompositeViewImpl implements GuiView {
     this.midiView.makeVisible();
 
     while (this.getCurrentBeat() <= this.viewModel.length()) {
-      this.updateCurrentBeat();
-      if (this.getCurrentBeat() == this.guiView.getLastBeatShown()) {
-        this.guiView.nextPage();
+      //System.out.println(getCurrentBeat());
+      if (!this.midiView.getPaused()) {
+        this.updateCurrentBeat();
+        if (this.getCurrentBeat() == this.guiView.getLastBeatShown()) {
+          this.guiView.nextPage();
+        }
+        this.refresh();
       }
-      this.refresh();
     }
 
     this.donePlaying = true;
 
     this.jumpToStart();
+
+    if (!this.midiView.getPaused()) {
+      this.togglePause();
+    }
   }
 
 

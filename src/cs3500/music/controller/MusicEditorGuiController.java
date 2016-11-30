@@ -103,7 +103,7 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
     k.addKeyPressedAction(KeyEvent.VK_UP, scrollUp);
     k.addKeyPressedAction(KeyEvent.VK_DOWN, scrollDown);
 
-    k.addKeyReleasedAction(KeyEvent.VK_HOME, jumpToStart);
+    k.addKeyReleasedAction(KeyEvent.VK_S, jumpToStart);
     k.addKeyReleasedAction(KeyEvent.VK_END, jumpToEnd);
     k.addKeyReleasedAction(KeyEvent.VK_R, remove);
     k.addKeyReleasedAction(KeyEvent.VK_SPACE, togglePause);

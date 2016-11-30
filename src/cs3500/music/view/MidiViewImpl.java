@@ -1,5 +1,6 @@
 package cs3500.music.view;
 
+import java.security.Provider;
 import java.util.HashMap;
 
 import cs3500.music.model.IViewModel;
@@ -27,7 +28,8 @@ public class MidiViewImpl implements IMusicEditorView {
   // viewModel that gives access to necessary information in the model.
   private final IViewModel viewModel;
   // Sequencer to store the song
-  private final Sequencer sequencer;
+  //TODO check final
+  private Sequencer sequencer;
   // mapping of instruments to it's channel.
   private HashMap<Integer, Integer> channels;
   // number of channels. Increments for every instrument this view encounters.
@@ -37,6 +39,8 @@ public class MidiViewImpl implements IMusicEditorView {
   private boolean paused;
   // the number of ticks per beat to pass to the sequencer
   private static final int TICKS_PER_BEAT = 1;
+  // provider for a newly opened sequencer
+  Provider provider;
 
   /**
    * Constructor for the MidiView implementation.
@@ -70,7 +74,7 @@ public class MidiViewImpl implements IMusicEditorView {
    * Convenience constructor that takes in a sequencer.
    *
    * @param viewModel viewModel that gives access to necessary model information.
-   * @param seq        given sequencer for testing purposes.
+   * @param seq       given sequencer for testing purposes.
    */
   public MidiViewImpl(IViewModel viewModel, Sequencer seq) {
     this.sequencer = seq;
@@ -104,7 +108,7 @@ public class MidiViewImpl implements IMusicEditorView {
   /**
    * Writes the message to play the given tone.
    *
-   * @param note note being sent to the synthesizers receiver.
+   * @param note  note being sent to the synthesizers receiver.
    * @param track the track to write the note to
    * @throws InvalidMidiDataException when the midi is invalid.
    */
@@ -171,19 +175,14 @@ public class MidiViewImpl implements IMusicEditorView {
       }
     }
 
-    if (!this.paused) {
-      this.sequencer.stop();
-    }
-    else {
-      if (this.getCurrentBeat() == 0) {
-        this.makeVisible();
+    if (this.sequencer.isOpen()) {
+      if (!this.paused) {
+        if (this.sequencer.isOpen())
+          this.sequencer.stop();
       }
-
-      try {
+      else {
         this.sequencer.start();
         this.sequencer.setTempoInMPQ(viewModel.getTempo());
-      } catch (IllegalStateException e) {
-        return;
       }
     }
 
@@ -194,6 +193,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   /**
    * Return whether this view is paused.
+   *
    * @return true if paused, else false
    */
   public boolean getPaused() {
@@ -205,6 +205,7 @@ public class MidiViewImpl implements IMusicEditorView {
     this.sequencer.setTickPosition(0);
   }
 
+
   @Override
   public void jumpToEnd() {
     this.sequencer.setTickPosition(this.viewModel.length() * MidiViewImpl.TICKS_PER_BEAT);
@@ -212,6 +213,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   /**
    * Set the current tick position to match the given beat.
+   *
    * @param beat the new current beats
    */
   public void setCurrentBeat(int beat) {
@@ -220,6 +222,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   /**
    * Gets the current beat of this view.
+   *
    * @return the current beat
    */
   int getCurrentBeat() {
