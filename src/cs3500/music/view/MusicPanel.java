@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
 import cs3500.music.model.Note;

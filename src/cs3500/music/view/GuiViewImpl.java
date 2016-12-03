@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-import cs3500.music.model.IViewModel;
 import cs3500.music.model.Note;
 
 /**

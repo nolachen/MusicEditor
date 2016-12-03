@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 
 import cs3500.music.model.Note;
 
+
 /**
  * This interface represents a GUI view.
  * Remove existing notes from a composition via some combination of keyboard and mouse.

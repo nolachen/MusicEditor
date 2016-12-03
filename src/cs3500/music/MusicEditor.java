@@ -7,8 +7,8 @@ import cs3500.music.controller.MusicEditorController;
 import cs3500.music.controller.MusicEditorGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
-import cs3500.music.model.IViewModel;
-import cs3500.music.model.ViewModel;
+import cs3500.music.view.IViewModel;
+import cs3500.music.view.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
 

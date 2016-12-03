@@ -1,6 +1,9 @@
-package cs3500.music.model;
+package cs3500.music.view;
 
 import java.util.List;
+
+import cs3500.music.model.ImmutableNote;
+import cs3500.music.model.Note;
 
 /**
  * The view model interface for the music editor.

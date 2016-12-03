@@ -1,4 +1,4 @@
-package cs3500.music.model;
+package cs3500.music.view;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,11 @@ import java.util.Collections;
 
 import java.util.List;
 import java.util.Objects;
+
+import cs3500.music.model.IMusicEditorModel;
+import cs3500.music.model.ImmutableNote;
+import cs3500.music.model.Note;
+import cs3500.music.model.Pitch;
 
 /**
  * This class represents an implementation of a music editor view model.
@@ -20,8 +25,8 @@ public class ViewModel implements IViewModel {
 
   // TODO: store these notes, have an update viewModel to update data, called whenever model is
   // changed
-  private List<ImmutableNote> allNotes;
-  private List<String> noteRange;
+  //private List<ImmutableNote> allNotes;
+  //private List<String> noteRange;
 
   /**
    * The current selected note in the view.

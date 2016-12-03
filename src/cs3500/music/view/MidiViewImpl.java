@@ -3,8 +3,6 @@ package cs3500.music.view;
 import java.security.Provider;
 import java.util.HashMap;
 
-import cs3500.music.model.IViewModel;
-
 import cs3500.music.model.ImmutableNote;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -17,7 +15,6 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
 
 /**

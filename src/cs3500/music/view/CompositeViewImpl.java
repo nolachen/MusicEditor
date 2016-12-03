@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.util.Objects;
 
-import cs3500.music.model.IViewModel;
 import cs3500.music.model.Note;
 
 /**
@@ -43,7 +42,6 @@ public class CompositeViewImpl implements GuiView {
     this.midiView.makeVisible();
 
     while (this.getCurrentBeat() <= this.viewModel.length()) {
-      //System.out.println(getCurrentBeat());
       if (!this.midiView.getPaused()) {
         this.updateCurrentBeat();
         if (this.getCurrentBeat() == this.guiView.getLastBeatShown()) {

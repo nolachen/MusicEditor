@@ -37,76 +37,38 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
    * Configures the keyboard handler of the GUI view.
    */
   private void configureKeyboardHandler() {
-    Runnable remove  = new Runnable() {
-      @Override
-      public void run() {
-        if (view.getSelectedNote() != null) {
-          model.remove(view.getSelectedNote());
-          view.resetSelectedNote();
-          view.refresh();
-        }
+    Runnable remove  = () -> {
+      if (view.getSelectedNote() != null) {
+        model.remove(view.getSelectedNote());
+        view.resetSelectedNote();
+        view.refresh();
       }
     };
 
-    Runnable scrollLeft  = new Runnable() {
-      @Override
-      public void run() {
-        view.scrollLeft();
-      }
-    };
+    Runnable scrollLeft  = () -> view.scrollLeft();
 
-    Runnable scrollRight  = new Runnable() {
-      @Override
-      public void run() {
-        view.scrollRight();
-      }
-    };
+    Runnable scrollRight  = () -> view.scrollRight();
 
-    Runnable scrollUp  = new Runnable() {
-      @Override
-      public void run() {
-        view.scrollUp();
-      }
-    };
+    Runnable scrollUp  = () -> view.scrollUp();
 
-    Runnable scrollDown  = new Runnable() {
-      @Override
-      public void run() {
-        view.scrollDown();
-      }
-    };
+    Runnable scrollDown  = () -> view.scrollDown();
 
-    Runnable jumpToStart = new Runnable() {
-      @Override
-      public void run() {
-        view.jumpToStart();
-      }
-    };
+    Runnable jumpToStart = () -> view.jumpToStart();
 
-    Runnable jumpToEnd = new Runnable() {
-      @Override
-      public void run() {
-        view.jumpToEnd();
-      }
-    };
+    Runnable jumpToEnd = () -> view.jumpToEnd();
 
-    Runnable togglePause = new Runnable() {
-      @Override
-      public void run() {
-        view.togglePause();
-      }
-    };
+    Runnable togglePause = () -> view.togglePause();
 
     KeyboardHandler k = new KeyboardHandler();
     k.addKeyPressedAction(KeyEvent.VK_LEFT, scrollLeft);
     k.addKeyPressedAction(KeyEvent.VK_RIGHT, scrollRight);
     k.addKeyPressedAction(KeyEvent.VK_UP, scrollUp);
     k.addKeyPressedAction(KeyEvent.VK_DOWN, scrollDown);
+    k.addKeyPressedAction(KeyEvent.VK_SPACE, togglePause);
 
-    k.addKeyReleasedAction(KeyEvent.VK_S, jumpToStart);
+    k.addKeyReleasedAction(KeyEvent.VK_HOME, jumpToStart);
     k.addKeyReleasedAction(KeyEvent.VK_END, jumpToEnd);
     k.addKeyReleasedAction(KeyEvent.VK_R, remove);
-    k.addKeyReleasedAction(KeyEvent.VK_SPACE, togglePause);
 
     view.addKeyListener(k);
   }
@@ -115,13 +77,10 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
    * Configures the mouse handler of the GUI view.
    */
   private void configureMouseHandler() {
-    BiConsumer<Integer, Integer> getNote = new BiConsumer<Integer, Integer>() {
-      @Override
-      public void accept(Integer x, Integer y) {
-        view.saveNoteAtPosition(x, y);
-        view.resetFocus();
-        //gui.highlightClickedRegion(x, y);
-      }
+    BiConsumer<Integer, Integer> getNote = (x, y) -> {
+      view.saveNoteAtPosition(x, y);
+      view.resetFocus();
+      //gui.highlightClickedRegion(x, y);
     };
 
     MouseHandler m = new MouseHandler();
@@ -194,8 +153,7 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
     }
 
     try {
-      Note parsedNote = new Note(newPitch, octave, startBeat, duration);
-      return parsedNote;
+      return new Note(newPitch, octave, startBeat, duration);
     } catch (IllegalArgumentException e) {
       if (startBeat < 0) {
         this.view.showErrorMessage("Invalid start beat");

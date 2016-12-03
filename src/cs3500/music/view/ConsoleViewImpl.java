@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import cs3500.music.model.IViewModel;
 import cs3500.music.model.ImmutableNote;
 
 /**

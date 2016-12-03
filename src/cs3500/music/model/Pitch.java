@@ -23,7 +23,7 @@ public enum Pitch {
    * The next pitch in the chromatic scale. The next pitch of B is C.
    * @return the next pitch.
    */
-  Pitch nextPitch() {
+  public Pitch nextPitch() {
     return values()[(this.ordinal() + 1) % values().length];
   }
 }
