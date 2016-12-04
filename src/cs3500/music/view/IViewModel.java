@@ -2,8 +2,8 @@ package cs3500.music.view;
 
 import java.util.List;
 
+import cs3500.music.model.INote;
 import cs3500.music.model.ImmutableNote;
-import cs3500.music.model.Note;
 
 /**
  * The view model interface for the music editor.
@@ -48,11 +48,11 @@ public interface IViewModel {
    * Stores the given selected note in this viewmodel.
    * @param note the note to store
    */
-  void setSelectedNote(Note note);
+  void setSelectedNote(INote note);
 
   /**
    * Retrieve the selected note.
    * @return the stored note
    */
-  Note getSelectedNote();
+  INote getSelectedNote();
 }

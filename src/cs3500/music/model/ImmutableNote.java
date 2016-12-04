@@ -1,17 +1,17 @@
 package cs3500.music.model;
 
 /**
- * Creates a version of a {@link Note} that can't be altered by a user.
+ * Creates a version of a {@link INote} that can't be altered by a user.
  */
-public final class ImmutableNote implements Comparable<ImmutableNote> {
+public final class ImmutableNote implements INote {
   // Note where this gets its data from.
-  private final Note note;
+  private final INote note;
 
   /**
    * Constructor
    * @param note where this gets its data from.
    */
-  public ImmutableNote(Note note) {
+  public ImmutableNote(INote note) {
     this.note = note;
   }
 
@@ -43,8 +43,18 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
    * gets the duration value.
    * @return the duration value of this class's note.
    */
+  @Override
   public int getDuration() {
     return note.getDuration();
+  }
+
+  /**
+   * gets the end beat.
+   * @return end beat of this class's note.
+   */
+  @Override
+  public int getEndBeat() {
+    return note.getEndBeat();
   }
 
   /**
@@ -63,19 +73,20 @@ public final class ImmutableNote implements Comparable<ImmutableNote> {
     return note.getVolume();
   }
 
-  @Override
-  public int compareTo(ImmutableNote other) {
-    return - other.compareToNote(this.note);
-  }
-
   /**
-   * @param other note we're comparing to.
-   * @return the int comparison to the given note.
+   * Compares this class's note to the given note.
+   * @param other the INote to compare
+   * @return the int comparison value
    */
-  private int compareToNote(Note other) {
+  @Override
+  public int compareTo(INote other) {
     return this.note.compareTo(other);
   }
 
+  /**
+   * String representation of this class's note.
+   * @return the string
+   */
   @Override
   public String toString() {
     return this.note.toString();

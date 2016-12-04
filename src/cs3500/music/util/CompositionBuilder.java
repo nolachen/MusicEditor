@@ -1,6 +1,6 @@
 package cs3500.music.util;
 
-import cs3500.music.model.Note;
+import cs3500.music.model.INote;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public interface CompositionBuilder<T> {
    */
   CompositionBuilder<T> addNote(int start, int end, int instrument, int pitch, int volume);
 
-  ArrayList<Note> getMusic();
+  ArrayList<INote> getMusic();
 
   int getTempo();
 }

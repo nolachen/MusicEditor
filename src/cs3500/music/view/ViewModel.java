@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 import cs3500.music.model.IMusicEditorModel;
+import cs3500.music.model.INote;
 import cs3500.music.model.ImmutableNote;
-import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
 
 /**
@@ -31,7 +31,7 @@ public class ViewModel implements IViewModel {
   /**
    * The current selected note in the view.
    */
-  private Note selectedNote;
+  private INote selectedNote;
 
   /**
    * Constructor for ViewModel.
@@ -93,12 +93,12 @@ public class ViewModel implements IViewModel {
   }
 
   @Override
-  public void setSelectedNote(Note note) {
+  public void setSelectedNote(INote note) {
     this.selectedNote = note;
   }
 
   @Override
-  public Note getSelectedNote() {
+  public INote getSelectedNote() {
     return this.selectedNote;
   }
 }

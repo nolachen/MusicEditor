@@ -1,5 +1,7 @@
 package cs3500.music;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
 import cs3500.music.controller.IMusicEditorController;
 
 import cs3500.music.controller.MusicEditorController;
@@ -7,7 +9,13 @@ import cs3500.music.controller.MusicEditorController;
 import cs3500.music.controller.MusicEditorGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.ViewModelAdapter;
+import cs3500.music.provider.IBasicMusicEditor;
+import cs3500.music.provider.INote;
+import cs3500.music.provider.IView;
+import cs3500.music.provider.ViewFactory;
 import cs3500.music.view.IViewModel;
+import cs3500.music.view.ViewAdapter;
 import cs3500.music.view.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
@@ -53,10 +61,17 @@ public final class MusicEditor {
 
     // try to get the view type and create the view
     IMusicEditorView view = null;
-    String viewType = args[1];
+    String viewType = args[1].toLowerCase();
     try {
-      view = MusicEditorViewFactory.create(viewType, viewModel);
-    } catch (IllegalArgumentException e) {
+      if (viewType.equals("provider")) {
+        IBasicMusicEditor<INote> vmAdapter = new ViewModelAdapter(viewModel);
+        IView providerView = ViewFactory.viewFactory("composite", vmAdapter);
+        view = new ViewAdapter(providerView);
+      }
+      else {
+        view = MusicEditorViewFactory.create(viewType, viewModel);
+      }
+    } catch (IllegalArgumentException | InvalidArgumentException e) {
       throw new IllegalArgumentException("Incorrect view type, try again.");
     }
 

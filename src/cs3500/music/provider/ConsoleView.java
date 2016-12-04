@@ -1,10 +1,10 @@
 package cs3500.music.provider;
 
-import cs3500.music.model.INote;
-import cs3500.music.model.IBasicMusicEditor;
-import cs3500.music.model.NoteName;
-import cs3500.music.model.NotePlay;
-import cs3500.music.util.Utils;
+import cs3500.music.provider.INote;
+import cs3500.music.provider.IBasicMusicEditor;
+import cs3500.music.provider.NoteName;
+import cs3500.music.provider.NotePlay;
+import cs3500.music.provider.Utils;
 
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;

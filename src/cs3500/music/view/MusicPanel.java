@@ -12,9 +12,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import cs3500.music.model.INote;
 import cs3500.music.model.ImmutableNote;
-
-import cs3500.music.model.Note;
 
 /**
  * This panel represents the region where the notes and measures of a music editor are drawn.
@@ -133,7 +132,7 @@ public class MusicPanel extends JPanel {
    * @param y the y pos
    */
   void saveNoteAtPosition(int x, int y) {
-    Note toReturn = null;
+    INote toSave = null;
 
     int beat = x / MusicPanel.NOTE_SIZE + this.firstBeatShown;
 
@@ -156,13 +155,14 @@ public class MusicPanel extends JPanel {
 
     for (ImmutableNote n : notesAtBeat) {
       if (n.toString().equals(pitch) &&
-              ((toReturn == null) || (n.getStartBeat() < toReturn.getStartBeat()))) {
-        toReturn = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
-                n.getInstrument(), n.getVolume());
+              ((toSave == null) || (n.getStartBeat() < toSave.getStartBeat()))) {
+        toSave = n;
+        /*toSave = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
+                n.getInstrument(), n.getVolume());*/
       }
     }
 
-    this.viewModel.setSelectedNote(toReturn);
+    this.viewModel.setSelectedNote(toSave);
   }
 
   /**

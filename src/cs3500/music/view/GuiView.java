@@ -4,8 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
-import cs3500.music.model.Note;
-
+import cs3500.music.model.INote;
 
 /**
  * This interface represents a GUI view.
@@ -40,7 +39,7 @@ public interface GuiView extends IMusicEditorView {
    * Gets the saved note.
    * @return the saved note
    */
-  Note getSelectedNote();
+  INote getSelectedNote();
 
   /**
    * Get the note typed by the user.

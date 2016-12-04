@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * This class represents a musical note.
  */
-public class Note implements Comparable<Note> {
+public class Note implements INote {
   /**
    * The pitch of this Note.
    */
@@ -100,22 +100,6 @@ public class Note implements Comparable<Note> {
   }
 
   /**
-   * gets the instrument value of this note.
-   * @return the instrument value of this Note.
-   */
-  public int getInstrument() {
-    return this.instrument;
-  }
-
-  /**
-   * gets the volume value of this note.
-   * @return the volume value of this Note.
-   */
-  public int getVolume() {
-    return this.volume;
-  }
-
-  /**
    * Determines whether this {@link Note} is equal to the given object.
    * Two Notes are equal if they have the same fields.
    * @param obj the object to check equality with
@@ -147,7 +131,7 @@ public class Note implements Comparable<Note> {
   }
 
   /**
-   * Compares this {@link Note} with the given {@link Note}, on the chromatic scale
+   * Compares this {@link Note} with the given {@link INote}, on the chromatic scale
    * (ignoring {@code startBeat} and {@code duration})
    * Returns a negative number if this Note comes before the given Note in the chromatic scale.
    * Returns 0 if this Note and the given Note are the same octave and pitch.
@@ -156,51 +140,46 @@ public class Note implements Comparable<Note> {
    * @return the int comparison result as specified
    */
   @Override
-  public int compareTo(Note other) {
-    if (this.octave == other.octave) {
-      return this.pitch.compareTo(other.pitch);
+  public int compareTo(INote other) {
+    if (this.octave == other.getOctave()) {
+      return this.pitch.compareTo(other.getPitch());
     }
     else {
-      return this.octave - other.octave;
+      return this.octave - other.getOctave();
     }
   }
 
-  /**
-   * returns the pitch value.
-   * @return returns the pitch value of this note.
-   */
+  @Override
+  public int getInstrument() {
+    return this.instrument;
+  }
+
+  @Override
+  public int getVolume() {
+    return this.volume;
+  }
+
+  @Override
   public Pitch getPitch() {
     return this.pitch;
   }
 
-  /**
-   * returns the octave value.
-   * @return returns the octave value of this note.
-   */
+  @Override
   public int getOctave() {
     return this.octave;
   }
 
-  /**
-   * Getter for {@code startBeat}.
-   * @return the start beat.
-   */
+  @Override
   public int getStartBeat() {
     return this.startBeat;
   }
 
-  /**
-   * gets the duration of this note.
-   * @return returns the duration of this note.
-   */
+  @Override
   public int getDuration() {
     return this.duration;
   }
 
-  /**
-   * gets the end beat of this note.
-   * @return returns the end beat.
-   */
+  @Override
   public int getEndBeat() {
     return this.startBeat + this.duration;
   }

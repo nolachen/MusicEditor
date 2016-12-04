@@ -1,9 +1,9 @@
 package cs3500.music.provider;
 
-import cs3500.music.model.IBasicMusicEditor;
-import cs3500.music.model.INote;
-import cs3500.music.util.MusicUtils;
-import cs3500.music.util.Utils;
+import cs3500.music.provider.IBasicMusicEditor;
+import cs3500.music.provider.INote;
+import cs3500.music.provider.MusicUtils;
+import cs3500.music.provider.Utils;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiChannel;

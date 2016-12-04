@@ -7,9 +7,9 @@ import java.util.Set;
 import java.util.SortedMap;
 import javax.swing.*;
 
-import cs3500.music.model.IBasicMusicEditor;
-import cs3500.music.model.INote;
-import cs3500.music.util.MusicUtils;
+import cs3500.music.provider.IBasicMusicEditor;
+import cs3500.music.provider.INote;
+import cs3500.music.provider.MusicUtils;
 
 /**
  * A dummy view that simply draws a string.

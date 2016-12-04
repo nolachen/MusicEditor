@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-import cs3500.music.model.Note;
+import cs3500.music.model.INote;
 
 /**
  * An implementation of the {@link IMusicEditorView} interface that uses Java Swing to draw the
@@ -151,7 +151,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
   }
 
   @Override
-  public Note getSelectedNote() {
+  public INote getSelectedNote() {
     return this.viewModel.getSelectedNote();
   }
 

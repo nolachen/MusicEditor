@@ -2,8 +2,8 @@ package cs3500.music.provider;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
 
-import cs3500.music.model.IBasicMusicEditor;
-import cs3500.music.model.INote;
+import cs3500.music.provider.IBasicMusicEditor;
+import cs3500.music.provider.INote;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

@@ -2,6 +2,7 @@ package cs3500.music.util;
 
 import cs3500.music.model.IMusicEditorModel;
 
+import cs3500.music.model.INote;
 import cs3500.music.model.MusicEditorModel;
 
 import cs3500.music.model.Note;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
   // list of notes that have to be added to the model.
-  private ArrayList<Note> music;
+  private ArrayList<INote> music;
   // tempo of the model.
   private int tempo;
 
@@ -39,13 +40,13 @@ public class ModelBuilder implements CompositionBuilder<IMusicEditorModel> {
 
   @Override
   public CompositionBuilder<IMusicEditorModel> addNote(int s, int e, int i, int p, int v) {
-    Note note = new Note(s, e, i, p, v);
+    INote note = new Note(s, e, i, p, v);
     music.add(note);
     return this;
   }
 
   @Override
-  public ArrayList<Note> getMusic() {
+  public ArrayList<INote> getMusic() {
     return this.music;
   }
 

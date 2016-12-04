@@ -10,13 +10,13 @@ public interface IMusicEditorModel {
    * Adds the given note to this model.
    * @param note the note to add
    */
-  void add(Note note);
+  void add(INote note);
 
   /**
    * Removes the given note from this model.
    * @param note the note to remove
    */
-  void remove(Note note);
+  void remove(INote note);
 
   /**
    * Combines this music model with the given music model such that

@@ -20,7 +20,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    * INVARIANT: The list of notes at a beat will always be sorted by ascending start beat.
    * Changed in HW07 to store notes at every beat they are playing, not just the start beat.
    */
-  private TreeMap<Integer, List<Note>> music;
+  private TreeMap<Integer, List<INote>> music;
   /**
    * The tempo of this model represented in Beats per Millisecond.
    */
@@ -30,7 +30,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    * Constructor for MusicEditorModel.
    * @param music the mapping of music
    */
-  private MusicEditorModel(TreeMap<Integer, List<Note>> music, int tempo) {
+  private MusicEditorModel(TreeMap<Integer, List<INote>> music, int tempo) {
     this.music = music;
     this.tempo = tempo;
   }
@@ -41,7 +41,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    */
   public MusicEditorModel(CompositionBuilder<IMusicEditorModel> builder) {
     this.music = new TreeMap<>();
-    for (Note n : builder.getMusic()) {
+    for (INote n : builder.getMusic()) {
       this.add(n);
     }
     this.tempo = builder.getTempo();
@@ -55,7 +55,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   @Override
-  public void add(Note note) {
+  public void add(INote note) {
     // add the note at all the beats at which it is playing
     // a do-while loop is necessary to ensure that notes of duration 0 are added
 
@@ -69,7 +69,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
       // add the note at the correct index to maintain sorted order by ascending start beat
       int indexToAdd = 0;
-      List<Note> currentNotes = this.music.get(i);
+      List<INote> currentNotes = this.music.get(i);
       for (int j = 0; j < currentNotes.size(); j += 1) {
         if (i >= currentNotes.get(j).getStartBeat()) {
           indexToAdd = j;
@@ -84,7 +84,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   @Override
-  public void remove(Note note) {
+  public void remove(INote note) {
     for (int i = note.getStartBeat(); i < note.getEndBeat(); i += 1) {
       if (!this.music.containsKey(i) || !this.music.get(i).contains(note)) {
         throw new IllegalArgumentException("The note to remove doesn't exist.");
@@ -98,7 +98,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
         if (n.getStartBeat() == i) {
-          Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
+          INote newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat(), n.getDuration(),
                   n.getInstrument(), n.getVolume());
           this.add(newNote);
         }
@@ -112,7 +112,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     for (int i = 0; i < other.length(); i += 1) {
       for (ImmutableNote n : other.getNotesAtBeat(i)) {
         if (n.getStartBeat() == i) {
-          Note newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
+          INote newNote = new Note(n.getPitch(), n.getOctave(), n.getStartBeat() + currentLastBeat,
                   n.getDuration(), n.getInstrument(), n.getVolume());
           this.add(newNote);
         }
@@ -129,7 +129,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     }
     for (int i = 0; i < this.music.lastKey(); i += 1) {
       if (this.music.containsKey(i)) {
-        for (Note n : this.music.get(i)) {
+        for (INote n : this.music.get(i)) {
           if (n.getStartBeat() == i) {
             allNotes.add(new ImmutableNote(n));
           }
@@ -142,14 +142,14 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public List<ImmutableNote> getNotesAtBeat(int beat) {
-    List<Note> notes = this.music.get(beat);
+    List<INote> notes = this.music.get(beat);
     List<ImmutableNote> notesCopy = new ArrayList<>();
 
     if (notes == null) {
       return new ArrayList<>();
     }
 
-    for (Note n : notes) {
+    for (INote n : notes) {
       notesCopy.add(new ImmutableNote(n));
     }
     return Collections.unmodifiableList(notesCopy);

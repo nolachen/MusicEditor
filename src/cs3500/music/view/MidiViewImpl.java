@@ -36,8 +36,6 @@ public class MidiViewImpl implements IMusicEditorView {
   private boolean paused;
   // the number of ticks per beat to pass to the sequencer
   private static final int TICKS_PER_BEAT = 1;
-  // provider for a newly opened sequencer
-  Provider provider;
 
   /**
    * Constructor for the MidiView implementation.

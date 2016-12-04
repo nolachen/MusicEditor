@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.function.BiConsumer;
 
 import cs3500.music.model.IMusicEditorModel;
+import cs3500.music.model.INote;
 import cs3500.music.model.Note;
 import cs3500.music.model.Pitch;
 import cs3500.music.view.GuiView;
@@ -98,7 +99,7 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Add note")) {
       String inputNote = this.view.getInputNote();
-      Note parsedNote = this.parseNote(inputNote);
+      INote parsedNote = this.parseNote(inputNote);
       if (parsedNote != null) {
         this.model.add(parsedNote);
       }
@@ -114,7 +115,7 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
    * @param inputNote the string to parse
    * @return the parsed Note
    */
-  private Note parseNote(String inputNote) {
+  private INote parseNote(String inputNote) {
     String pitch;
     int octave;
     int startBeat;
