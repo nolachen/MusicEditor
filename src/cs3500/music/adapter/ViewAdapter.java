@@ -1,6 +1,7 @@
 package cs3500.music.adapter;
 
 import cs3500.music.provider.IView;
+import cs3500.music.view.GuiView;
 import cs3500.music.view.IMusicEditorView;
 
 /**
@@ -9,7 +10,7 @@ import cs3500.music.view.IMusicEditorView;
  * Adapts the provided view interface to conform to our view interface.
  */
 public class ViewAdapter implements IMusicEditorView {
-  private final IView adaptee;
+  protected final IView adaptee;
   private boolean paused;
 
   public ViewAdapter(IView adaptee) {
@@ -29,9 +30,11 @@ public class ViewAdapter implements IMusicEditorView {
   @Override
   public void togglePause() {
     if (this.paused) {
+      System.out.println("resumed");
       adaptee.resume();
     }
     else {
+      System.out.println("paused");
       adaptee.pause();
     }
     this.paused = !this.paused;

@@ -6,10 +6,12 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import cs3500.music.model.IPitch;
 import cs3500.music.model.ImmutableNote;
 import cs3500.music.provider.IBasicMusicEditor;
 import cs3500.music.provider.INote;
 import cs3500.music.provider.MusicUtils;
+import cs3500.music.provider.NoteName;
 import cs3500.music.view.IViewModel;
 
 /**
@@ -72,7 +74,7 @@ public class ViewModelAdapter implements IBasicMusicEditor<INote> {
     for (int i = 0; i < adaptee.length(); i += 1) {
       SortedMap<Integer, List<INote>> notesAtBeat = this.getAllNotesAt(i);
       if (!notesAtBeat.isEmpty()) {
-        map.put(i, this.getAllNotesAt(i))
+        map.put(i, this.getAllNotesAt(i));
       }
     }
     return map;
@@ -80,34 +82,38 @@ public class ViewModelAdapter implements IBasicMusicEditor<INote> {
 
   @Override
   public int getMinPitch() {
-    List<String> noteRange = adaptee.getNoteRange();
-    if (noteRange.isEmpty()) {
-      return 0;
-    }
+    IPitch minPitch = adaptee.getMinPitch();
+    int minOctave = adaptee.getMinOctave();
 
-    String minPitch = noteRange.get(0);
+    NoteName noteName = NoteName.toNoteName(minPitch.getOrdinal());
 
-    return MusicUtils.toPitch();
+    return MusicUtils.toPitch(noteName, minOctave);
   }
 
   @Override
   public int getMaxPitch() {
-    return 0;
+    IPitch maxPitch = adaptee.getMaxPitch();
+    int maxOctave = adaptee.getMaxOctave();
+
+    NoteName noteName = NoteName.toNoteName(maxPitch.getOrdinal());
+
+    return MusicUtils.toPitch(noteName, maxOctave);
   }
 
   @Override
   public int getTempo() {
-    return 0;
+    return adaptee.getTempo();
   }
 
   @Override
   public int getLastStartBeat() {
+    //TODO can i just return 0 bc they never use this method in their views
     return 0;
   }
 
   @Override
   public int getLastBeat() {
-    return 0;
+    return adaptee.length();
   }
 
   @Override

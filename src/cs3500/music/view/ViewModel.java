@@ -1,7 +1,6 @@
 package cs3500.music.view;
 
 import java.util.ArrayList;
-
 import java.util.Collections;
 
 import java.util.List;
@@ -9,8 +8,8 @@ import java.util.Objects;
 
 import cs3500.music.model.IMusicEditorModel;
 import cs3500.music.model.INote;
+import cs3500.music.model.IPitch;
 import cs3500.music.model.ImmutableNote;
-import cs3500.music.model.Pitch;
 
 /**
  * This class represents an implementation of a music editor view model.
@@ -25,7 +24,11 @@ public class ViewModel implements IViewModel {
 
   // TODO: store these notes, have an update viewModel to update data, called whenever model is
   // changed
-  //private List<ImmutableNote> allNotes;
+  /**
+   * The cached list of all notes in the model, maintained in sorted order by ascending
+   * pitch/octave.
+   */
+  private List<ImmutableNote> allNotes;
   //private List<String> noteRange;
 
   /**
@@ -39,6 +42,7 @@ public class ViewModel implements IViewModel {
    */
   public ViewModel(IMusicEditorModel model) {
     this.model = Objects.requireNonNull(model);
+    this.updateData();
   }
 
   @Override
@@ -48,7 +52,7 @@ public class ViewModel implements IViewModel {
 
   @Override
   public List<ImmutableNote> getAllNotes() {
-    return this.model.getAllNotes();
+    return this.allNotes;
   }
 
   @Override
@@ -63,22 +67,41 @@ public class ViewModel implements IViewModel {
 
   @Override
   public List<String> getNoteRange() {
-    List<ImmutableNote> allNotes = new ArrayList<>(this.model.getAllNotes());
-    Collections.sort(allNotes);
-
     List<String> noteRange = new ArrayList<>();
 
     if (allNotes.isEmpty()) {
       return noteRange;
     }
 
+    IPitch curPitch = this.getMinPitch();
+    IPitch maxPitch = this.getMaxPitch();
+    int curOctave = this.getMinOctave();
+    int maxOctave = this.getMaxOctave();
+
+    while ((curOctave < maxOctave) ||
+            ((curOctave == maxOctave) && (curPitch.getOrdinal() <= maxPitch.getOrdinal()))) {
+      // add the current pitch and octave to the list
+      noteRange.add(curPitch.toString() + curOctave);
+
+      // increment the pitch
+      curPitch = curPitch.nextPitch();
+
+      // increment the octave if the current pitch has looped back to the first pitch in the enum
+      if (curPitch.getOrdinal() == 0) {
+        curOctave += 1;
+      }
+    }
+
+    return noteRange;
+
+    /*
     ImmutableNote min = allNotes.get(0);
     ImmutableNote max = allNotes.get(allNotes.size() - 1);
 
-    Pitch currentPitch = min.getPitch();
+    IPitch currentPitch = min.getPitch();
     int currentOctave = min.getOctave();
 
-    Pitch maxPitch = max.getPitch();
+    IPitch maxPitch = max.getPitch();
     int maxOctave = max.getOctave();
 
     while ((currentOctave < maxOctave) ||
@@ -89,7 +112,39 @@ public class ViewModel implements IViewModel {
       }
       currentPitch = currentPitch.nextPitch();
     }
-    return noteRange;
+    return noteRange;*/
+  }
+
+  @Override
+  public IPitch getMinPitch() {
+    if (allNotes.isEmpty()) {
+      return null;
+    }
+    return allNotes.get(0).getPitch();
+  }
+
+  @Override
+  public IPitch getMaxPitch() {
+    if (allNotes.isEmpty()) {
+      return null;
+    }
+    return allNotes.get(allNotes.size() - 1).getPitch();
+  }
+
+  @Override
+  public int getMinOctave() {
+    if (allNotes.isEmpty()) {
+      return 0;
+    }
+    return allNotes.get(0).getOctave();
+  }
+
+  @Override
+  public int getMaxOctave() {
+    if (allNotes.isEmpty()) {
+      return 0;
+    }
+    return allNotes.get(allNotes.size() - 1).getOctave();
   }
 
   @Override
@@ -100,5 +155,10 @@ public class ViewModel implements IViewModel {
   @Override
   public INote getSelectedNote() {
     return this.selectedNote;
+  }
+
+  @Override
+  public void updateData() {
+    this.allNotes = new ArrayList<>(this.model.getAllNotes());
   }
 }

@@ -134,6 +134,9 @@ public class MidiViewImpl implements IMusicEditorView {
     track.add(new MidiEvent(stop, (beat + duration) * MidiViewImpl.TICKS_PER_BEAT));
   }
 
+  /**
+   * Updates the sequencer to contain the most updated notes from the view model.
+   */
   private void updateSequence() {
     try {
       Sequence sequence = new Sequence(Sequence.PPQ, MidiViewImpl.TICKS_PER_BEAT);
@@ -216,6 +219,8 @@ public class MidiViewImpl implements IMusicEditorView {
 
   @Override
   public void refresh() {
+    //this.viewModel.updateData();
+
     int curTick = this.getCurrentBeat();
     this.updateSequence();
     this.setCurrentBeat(curTick);

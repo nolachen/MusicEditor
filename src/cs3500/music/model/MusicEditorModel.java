@@ -137,6 +137,8 @@ public final class MusicEditorModel implements IMusicEditorModel {
       }
     }
 
+    Collections.sort(allNotes);
+
     return Collections.unmodifiableList(allNotes);
   }
 

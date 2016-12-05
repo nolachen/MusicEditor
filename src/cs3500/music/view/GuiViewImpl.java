@@ -163,6 +163,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   @Override
   public void refresh() {
+    this.viewModel.updateData();
     this.repaint();
   }
 

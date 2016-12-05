@@ -9,4 +9,10 @@ public interface IPitch {
    * @return the next pitch.
    */
   Pitch nextPitch();
+
+  /**
+   * The ordinal of this pitch, which is the "index" of the pitch in the ordering of the enum.
+   * @return the int ordinal
+   */
+  int getOrdinal();
 }

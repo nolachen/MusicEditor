@@ -35,6 +35,7 @@ public class ConsoleViewImpl implements IMusicEditorView {
     int length = this.viewModel.length();
 
     List<String> noteRange = this.viewModel.getNoteRange();
+
     int width = noteRange.size();
 
     int padding = ((int) Math.log10(length)) + 1;

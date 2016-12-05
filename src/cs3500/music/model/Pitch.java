@@ -27,4 +27,9 @@ public enum Pitch implements IPitch {
   public Pitch nextPitch() {
     return values()[(this.ordinal() + 1) % values().length];
   }
+
+  @Override
+  public int getOrdinal() {
+    return this.ordinal();
+  }
 }

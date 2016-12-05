@@ -3,6 +3,7 @@ package cs3500.music.view;
 import java.util.List;
 
 import cs3500.music.model.INote;
+import cs3500.music.model.IPitch;
 import cs3500.music.model.ImmutableNote;
 
 /**
@@ -45,6 +46,30 @@ public interface IViewModel {
   List<String> getNoteRange();
 
   /**
+   * Returns the pitch of the lowest note in this model.
+   * @return the lowest pitch
+   */
+  IPitch getMinPitch();
+
+  /**
+   * Returns the pitch of the highest note in this model.
+   * @return the highest pitch
+   */
+  IPitch getMaxPitch();
+
+  /**
+   * Returns the octave of the lowest note in this model.
+   * @return the lowest octave
+   */
+  int getMinOctave();
+
+  /**
+   * Returns the octave of the highest note in this model.
+   * @return the highest octave
+   */
+  int getMaxOctave();
+
+  /**
    * Stores the given selected note in this viewmodel.
    * @param note the note to store
    */
@@ -55,4 +80,9 @@ public interface IViewModel {
    * @return the stored note
    */
   INote getSelectedNote();
+
+  /**
+   * Updates the cached data stored in the model.
+   */
+  void updateData();
 }
