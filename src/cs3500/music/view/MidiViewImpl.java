@@ -1,6 +1,5 @@
 package cs3500.music.view;
 
-import java.security.Provider;
 import java.util.HashMap;
 
 import cs3500.music.model.ImmutableNote;
@@ -135,6 +134,19 @@ public class MidiViewImpl implements IMusicEditorView {
     track.add(new MidiEvent(stop, (beat + duration) * MidiViewImpl.TICKS_PER_BEAT));
   }
 
+  private void updateSequence() {
+    try {
+      Sequence sequence = new Sequence(Sequence.PPQ, MidiViewImpl.TICKS_PER_BEAT);
+      Track track = sequence.createTrack();
+      for (ImmutableNote n : viewModel.getAllNotes()) {
+        this.writeNote(n, track);
+      }
+      this.sequencer.setSequence(sequence);
+    } catch (InvalidMidiDataException e) {
+      throw new IllegalStateException("Invalid midi");
+    }
+  }
+
   // CHANGED from get notes at beat to get all notes because getNoteAtBeat now returns
   // sustained notes that overlap this beat that may have a different startbeat so we just
   // use the heads of each note to play them in midi
@@ -143,15 +155,11 @@ public class MidiViewImpl implements IMusicEditorView {
   public void makeVisible() {
     try {
       this.sequencer.open();
-      Sequence sequence = new Sequence(Sequence.PPQ, MidiViewImpl.TICKS_PER_BEAT);
-      Track track = sequence.createTrack();
-      for (ImmutableNote n : viewModel.getAllNotes()) {
-        this.writeNote(n, track);
-      }
-      this.sequencer.setSequence(sequence);
-    } catch (InvalidMidiDataException | MidiUnavailableException e) {
+    } catch (MidiUnavailableException e) {
       throw new IllegalStateException("Invalid midi");
     }
+
+    this.updateSequence();
 
     this.sequencer.setTickPosition(0);
     if (!this.paused) {
@@ -204,6 +212,14 @@ public class MidiViewImpl implements IMusicEditorView {
   @Override
   public void jumpToEnd() {
     this.sequencer.setTickPosition(this.viewModel.length() * MidiViewImpl.TICKS_PER_BEAT);
+  }
+
+  @Override
+  public void refresh() {
+    int curTick = this.getCurrentBeat();
+    this.updateSequence();
+    this.setCurrentBeat(curTick);
+    this.sequencer.setTempoInMPQ(viewModel.getTempo());
   }
 
   /**

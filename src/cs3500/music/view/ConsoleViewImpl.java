@@ -104,6 +104,11 @@ public class ConsoleViewImpl implements IMusicEditorView {
     return;
   }
 
+  @Override
+  public void refresh() {
+    return;
+  }
+
   /**
    * Pads the given String with spaces so that it is centered in the given width.
    * @param s the string to center

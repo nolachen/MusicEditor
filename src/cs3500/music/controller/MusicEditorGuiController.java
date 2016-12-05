@@ -39,8 +39,11 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
    */
   private void configureKeyboardHandler() {
     Runnable remove  = () -> {
-      if (view.getSelectedNote() != null) {
-        model.remove(view.getSelectedNote());
+      INote toRemove = view.getSelectedNote();
+      if (toRemove != null) {
+        toRemove = new Note(toRemove.getPitch(), toRemove.getOctave(), toRemove.getStartBeat(),
+                toRemove.getDuration(), toRemove.getInstrument(), toRemove.getVolume());
+        model.remove(toRemove);
         view.resetSelectedNote();
         view.refresh();
       }

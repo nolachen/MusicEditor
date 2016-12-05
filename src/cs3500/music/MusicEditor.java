@@ -9,13 +9,13 @@ import cs3500.music.controller.MusicEditorController;
 import cs3500.music.controller.MusicEditorGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
-import cs3500.music.model.ViewModelAdapter;
+import cs3500.music.adapter.ViewModelAdapter;
 import cs3500.music.provider.IBasicMusicEditor;
 import cs3500.music.provider.INote;
 import cs3500.music.provider.IView;
 import cs3500.music.provider.ViewFactory;
 import cs3500.music.view.IViewModel;
-import cs3500.music.view.ViewAdapter;
+import cs3500.music.adapter.ViewAdapter;
 import cs3500.music.view.ViewModel;
 
 import cs3500.music.util.ModelBuilder;

@@ -48,11 +48,6 @@ public interface GuiView extends IMusicEditorView {
   String getInputNote();
 
   /**
-   * Signal the view to draw itself.
-   */
-  void refresh();
-
-  /**
    * Scroll left in this view, beat by beat.
    */
   void scrollLeft();

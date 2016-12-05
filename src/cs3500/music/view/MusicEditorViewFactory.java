@@ -1,15 +1,5 @@
 package cs3500.music.view;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequencer;
-
-import cs3500.music.model.ViewModelAdapter;
-import cs3500.music.provider.IBasicMusicEditor;
-import cs3500.music.provider.INote;
-
 /**
  * This class represents a factory for the multiple views that implement the IMusicEditorView
  * interface.

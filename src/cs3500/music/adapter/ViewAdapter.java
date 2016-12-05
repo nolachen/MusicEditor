@@ -1,6 +1,7 @@
-package cs3500.music.view;
+package cs3500.music.adapter;
 
 import cs3500.music.provider.IView;
+import cs3500.music.view.IMusicEditorView;
 
 /**
  * TODO
@@ -44,5 +45,10 @@ public class ViewAdapter implements IMusicEditorView {
   @Override
   public void jumpToEnd() {
     adaptee.jumpToEnd();
+  }
+
+  @Override
+  public void refresh() {
+    adaptee.update();
   }
 }

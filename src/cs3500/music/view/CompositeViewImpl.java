@@ -47,7 +47,7 @@ public class CompositeViewImpl implements GuiView {
         if (this.getCurrentBeat() == this.guiView.getLastBeatShown()) {
           this.guiView.nextPage();
         }
-        this.refresh();
+        this.guiView.refresh();
       }
     }
 
@@ -101,6 +101,7 @@ public class CompositeViewImpl implements GuiView {
   @Override
   public void refresh() {
     this.guiView.refresh();
+    this.midiView.refresh();
   }
 
   @Override

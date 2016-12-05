@@ -24,4 +24,9 @@ public interface IMusicEditorView {
    * Jump to the last beat of the music.
    */
   void jumpToEnd();
+
+  /**
+   * Signals this view to refresh itself.
+   */
+  void refresh();
 }
