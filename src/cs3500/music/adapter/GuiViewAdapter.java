@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import cs3500.music.controller.KeyboardHandler;
 import cs3500.music.model.INote;
 import cs3500.music.model.ImmutableNote;
 import cs3500.music.provider.IGuiView;
@@ -12,27 +13,33 @@ import cs3500.music.view.GuiView;
 import cs3500.music.view.IViewModel;
 
 /**
- * TODO
  * Implements our {@link GuiView} interface, and has the adaptee, the provided {@link IGuiView}
  * interface.
  * Extends the ViewAdapter to provide adapt the functionality of the basic
- * {@link cs3500.music.view.IMusicEditorView} as well.
+ * IMusicEditorView as well.
  * Adapts the provided GUI view interface to conform to our GUI view interface.
  */
 public class GuiViewAdapter extends ViewAdapter implements GuiView {
   IGuiView adaptee;
   IViewModel viewModel;
+  KeyboardHandler keyboardHandler;
 
+  /**
+   * Constructor for GuiViewAdapter.
+   * @param adaptee the adaptee
+   * @param viewModel the view model
+   */
   public GuiViewAdapter(IGuiView adaptee, IViewModel viewModel) {
     super(adaptee);
     this.viewModel = viewModel;
     this.adaptee = adaptee;
+    this.keyboardHandler = new KeyboardHandler();
+    this.addKeyListener(this.keyboardHandler);
   }
 
   @Override
   public void addKeyListener(KeyListener listener) {
     this.adaptee.addKeyListener(listener);
-
   }
 
   @Override
@@ -76,7 +83,7 @@ public class GuiViewAdapter extends ViewAdapter implements GuiView {
 
   @Override
   public String getInputNote() {
-    return ;
+    return this.keyboardHandler.getInput().toString();
   }
 
   @Override
@@ -111,7 +118,7 @@ public class GuiViewAdapter extends ViewAdapter implements GuiView {
 
   @Override
   public void clearInputString() {
-    return;
+    this.keyboardHandler.clearInput();
   }
 
   @Override

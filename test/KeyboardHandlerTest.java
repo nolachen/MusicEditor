@@ -1,4 +1,3 @@
-/*
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,11 +17,10 @@ import cs3500.music.view.GuiViewImpl;
 
 import static org.junit.Assert.assertEquals;
 
-*/
+
 /**
  * Tests for the keyboard handler.
- *//*
-
+ */
 public class KeyboardHandlerTest {
   private IMusicEditorModel model;
   private IViewModel vm;
@@ -30,13 +28,12 @@ public class KeyboardHandlerTest {
   private GuiView view;
 
   private KeyboardHandler kbd;
-  private String tester;
+  private StringBuilder tester;
 
-  */
-/**
+
+  /**
    * Init cond.
-   *//*
-
+   */
   @Before
   public void initCond() {
     this.model = new MusicEditorModel();
@@ -45,58 +42,57 @@ public class KeyboardHandlerTest {
     this.controller = new MusicEditorGuiController(model, view);
 
     this.kbd = new KeyboardHandler();
-    this.tester = "";
+    this.tester = new StringBuilder();
   }
 
   @Test
   public void testKeyPressedMap() {
     // test that the key pressed map works
 
-    assertEquals("", this.tester);
+    assertEquals("", this.tester.toString());
     Runnable r = new Runnable() {
       @Override
       public void run() {
-        tester += "hello";
+        tester.append("hello");
       }
     };
     this.kbd.addKeyPressedAction(KeyEvent.VK_SPACE, r);
     JButton b = new JButton();
     this.kbd.keyPressed(new KeyEvent(b, 1, 10, KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SPACE, 'a'));
-    assertEquals("hello", this.tester);
+    assertEquals("hello", this.tester.toString());
   }
 
   @Test
   public void testKeyReleasedMap() {
     // test that the key released map works
 
-    assertEquals("", this.tester);
+    assertEquals("", this.tester.toString());
     Runnable r = new Runnable() {
       @Override
       public void run() {
-        tester += "abc";
+        tester.append("abc");
       }
     };
     this.kbd.addKeyReleasedAction(KeyEvent.VK_R, r);
     JButton b = new JButton();
     this.kbd.keyReleased(new KeyEvent(b, 1, 10, KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_R, 'r'));
-    assertEquals("abc", this.tester);
+    assertEquals("abc", this.tester.toString());
   }
 
   @Test
   public void testKeyTypedMap() {
     // test that the key typed map works
 
-    assertEquals("", this.tester);
+    assertEquals("", this.tester.toString());
     Runnable r = new Runnable() {
       @Override
       public void run() {
-        tester += "Hi";
+        tester.append("Hi");
       }
     };
     this.kbd.addKeyTypedAction('r', r);
     JButton b = new JButton();
     this.kbd.keyTyped(new KeyEvent(b, 1, 10, KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_A, 'r'));
-    assertEquals("Hi", this.tester);
+    assertEquals("Hi", this.tester.toString());
   }
-
-}*/
+}

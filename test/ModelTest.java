@@ -52,13 +52,13 @@ public class ModelTest {
 
     assertEquals(2, model.getAllNotes().size());
     assertEquals(6, model.length());
-    assertEquals("[G5, C4]", model.getAllNotes().toString());
-    assertEquals("[G5, C4]", model.getNotesAtBeat(4).toString());
+    assertEquals("[C4, G5]", model.getAllNotes().toString());
+    assertEquals("[C4, G5]", model.getNotesAtBeat(4).toString());
 
     model.add(g3b16);
 
     assertEquals(25, model.length());
-    assertEquals("[G5, C4, G3]", model.getAllNotes().toString());
+    assertEquals("[G3, C4, G5]", model.getAllNotes().toString());
     assertEquals("[G5]", model.getNotesAtBeat(0).toString());
     assertEquals("[G3]", model.getNotesAtBeat(16).toString());
   }
@@ -71,8 +71,8 @@ public class ModelTest {
     model.add(f3b0);
 
     assertEquals(6, model.length());
-    assertEquals("[G5, F3]", model.getAllNotes().toString());
-    assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
+    assertEquals("[F3, G5]", model.getAllNotes().toString());
+    assertEquals("[F3, G5]", model.getNotesAtBeat(0).toString());
   }
 
   @Test
@@ -85,17 +85,17 @@ public class ModelTest {
     model.add(g3b24);
     model.add(f3b0);
 
-    assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
+    assertEquals("[F3, G5]", model.getNotesAtBeat(0).toString());
     assertEquals(5, model.getAllNotes().size());
     assertEquals(25, model.length());
-    assertEquals("[G5, F3, C4, G3, G3]", model.getAllNotes().toString());
+    assertEquals("[F3, G3, G3, C4, G5]", model.getAllNotes().toString());
 
     model.remove(g5b0);
 
     assertEquals("[F3]", model.getNotesAtBeat(0).toString());
     assertEquals(4, model.getAllNotes().size());
     assertEquals(25, model.length());
-    assertEquals("[F3, C4, G3, G3]", model.getAllNotes().toString());
+    assertEquals("[F3, G3, G3, C4]", model.getAllNotes().toString());
 
     assertTrue(model.getAllNotes().toString().contains(ic4b4.toString()));
     model.remove(c4b4);
@@ -143,11 +143,11 @@ public class ModelTest {
 
     model.playSimultaneously(model2);
 
-    assertEquals(13, model.getAllNotes().size());
-    assertEquals("[F3, G5, G5, G5, G5, G5, G5, G5, C4, C4, C4, G3, G3]", model.getAllNotes()
+    assertEquals(6, model.getAllNotes().size());
+    assertEquals("[F3, G3, G3, C4, C4, G5]", model.getAllNotes()
             .toString());
     assertEquals(25, model.length());
-    assertEquals("[F3, G5, G5, G5, G5, G5, G5, G5]", model.getNotesAtBeat(0).toString());
+    assertEquals("[G5, F3]", model.getNotesAtBeat(0).toString());
   }
 
   @Test
@@ -166,8 +166,8 @@ public class ModelTest {
     model.playConsecutively(model2);
 
     assertEquals(25 + model2.length(), model.length());
-    assertEquals(8, model.getAllNotes().size());
-    assertEquals("[C4, G3, G5, G5, G5, G5, G5, G5]", model.getAllNotes().toString());
+    assertEquals(3, model.getAllNotes().size());
+    assertEquals("[G3, C4, G5]", model.getAllNotes().toString());
   }
 
   @Test
@@ -187,7 +187,7 @@ public class ModelTest {
     model.add(c4b4);
     model.add(g3b16);
 
-    assertEquals("[G5, C4, G3, G3]", model.getAllNotes().toString());
+    assertEquals("[G3, G3, C4, G5]", model.getAllNotes().toString());
   }
 
 

@@ -2,7 +2,9 @@ package cs3500.music.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,6 +15,8 @@ public class KeyboardHandler implements KeyListener {
   private final Map<Integer, Runnable> keyPressedActions;
   private final Map<Integer, Runnable> keyReleasedActions;
 
+  private List<Character> input;
+
   /**
    * Constructor for the keyboard handler.
    */
@@ -20,6 +24,8 @@ public class KeyboardHandler implements KeyListener {
     this.keyTypedActions = new HashMap<>();
     this.keyPressedActions = new HashMap<>();
     this.keyReleasedActions = new HashMap<>();
+
+    this.input = new ArrayList<>();
   }
 
   /**
@@ -32,6 +38,10 @@ public class KeyboardHandler implements KeyListener {
     Runnable r = this.keyTypedActions.get(e.getKeyChar());
     if (r != null) {
       r.run();
+    }
+
+    else {
+      this.input.add(e.getKeyChar());
     }
   }
 
@@ -89,5 +99,20 @@ public class KeyboardHandler implements KeyListener {
    */
   public void addKeyReleasedAction(int keyCode, Runnable r) {
     this.keyReleasedActions.put(keyCode, r);
+  }
+
+  /**
+   * Gets the characters inputted to this handler.
+   * @return the list of chars
+   */
+  public List<Character> getInput() {
+    return this.input;
+  }
+
+  /**
+   * Clears the list of characters inputted to this handler.
+   */
+  public void clearInput() {
+    this.input.clear();
   }
 }
