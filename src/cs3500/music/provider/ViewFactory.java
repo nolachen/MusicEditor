@@ -2,13 +2,10 @@ package cs3500.music.provider;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
 
-import cs3500.music.provider.IBasicMusicEditor;
-import cs3500.music.provider.INote;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;

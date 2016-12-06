@@ -1,11 +1,10 @@
 package cs3500.music.adapter;
 
 import cs3500.music.provider.IView;
-import cs3500.music.view.GuiView;
+
 import cs3500.music.view.IMusicEditorView;
 
 /**
- * TODO
  * Implements our view interface, and has the adaptee, the provided view interface.
  * Adapts the provided view interface to conform to our view interface.
  */

@@ -37,7 +37,7 @@ public class NoteAdapterTest {
 
   // tests the getBeat method.
   @Test
-  public void testDuration(){
+  public void testDuration() {
     assertEquals(this.adapter.getBeat(), this.note.getDuration());
   }
 

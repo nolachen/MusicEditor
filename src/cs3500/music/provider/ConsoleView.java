@@ -1,19 +1,10 @@
 package cs3500.music.provider;
 
-import cs3500.music.provider.INote;
-import cs3500.music.provider.IBasicMusicEditor;
-import cs3500.music.provider.NoteName;
-import cs3500.music.provider.NotePlay;
-import cs3500.music.provider.Utils;
-
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.util.List;
 import java.util.ArrayList;
 

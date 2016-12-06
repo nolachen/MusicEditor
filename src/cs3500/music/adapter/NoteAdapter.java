@@ -3,8 +3,7 @@ package cs3500.music.adapter;
 import cs3500.music.provider.NoteName;
 
 /**
- * Implements the provided target {@link cs3500.music.provider.INote} interface,
- * and has the adaptee: our {@link cs3500.music.model.INote} interface.
+ * Implements the provided target, their note interface, with our adaptee, INote.
  */
 public class NoteAdapter implements cs3500.music.provider.INote {
   cs3500.music.model.INote adaptee;

@@ -1,7 +1,6 @@
 package cs3500.music.view;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import java.util.List;
 import java.util.Objects;

@@ -17,7 +17,7 @@ import cs3500.music.provider.INote;
 import cs3500.music.provider.IView;
 import cs3500.music.provider.ViewFactory;
 import cs3500.music.view.IViewModel;
-import cs3500.music.adapter.ViewAdapter;
+
 import cs3500.music.view.ViewModel;
 
 import cs3500.music.util.ModelBuilder;

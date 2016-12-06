@@ -1,5 +1,3 @@
-import sun.java2d.loops.TransformBlit;
-
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
@@ -56,7 +54,7 @@ public class MockMidiDevice implements MidiDevice {
 
   @Override
   public void close() {
-
+    //empty body.
   }
 
   @Override
@@ -100,8 +98,8 @@ public class MockMidiDevice implements MidiDevice {
   }
 
   /**
-   * returns the sequencer of this device
-   * @return the sequencer of this mock device
+   * returns the sequencer of this device.
+   * @return the sequencer of this mock device.
    */
   public Sequencer getSequencer() {
     return this.sequencer;

@@ -1,15 +1,16 @@
 package cs3500.music.provider;
 
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import javax.swing.*;
-
-import cs3500.music.provider.IBasicMusicEditor;
-import cs3500.music.provider.INote;
-import cs3500.music.provider.MusicUtils;
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
 /**
  * A dummy view that simply draws a string.
