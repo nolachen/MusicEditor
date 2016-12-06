@@ -9,7 +9,7 @@ import cs3500.music.provider.NoteName;
 public class NoteAdapter implements cs3500.music.provider.INote {
   cs3500.music.model.INote adaptee;
 
-  NoteAdapter(cs3500.music.model.INote adaptee) {
+  public NoteAdapter(cs3500.music.model.INote adaptee) {
     this.adaptee = adaptee;
   }
 
