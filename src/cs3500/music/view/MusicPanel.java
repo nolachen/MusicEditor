@@ -87,7 +87,6 @@ public class MusicPanel extends JPanel {
       }
     }
 
-
     // draw the beat numbers and the measures grid
     g2d.setColor(Color.BLACK);
     g2d.setStroke(new BasicStroke(2.0f));

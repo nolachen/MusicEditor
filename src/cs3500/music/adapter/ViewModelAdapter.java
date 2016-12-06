@@ -52,6 +52,12 @@ public class ViewModelAdapter implements IBasicMusicEditor<INote> {
     List<ImmutableNote> notes = this.adaptee.getNotesAtBeat(beatNum);
     SortedMap<Integer, List<INote>> map = new TreeMap<>();
     for (ImmutableNote n : notes) {
+
+      // only add the notes that start at the beatNum
+      if (n.getStartBeat() != beatNum) {
+        continue;
+      }
+
       int pitch = n.getPitch().ordinal() + 12 + (n.getOctave() * 12);
       INote note = new NoteAdapter(n);
 

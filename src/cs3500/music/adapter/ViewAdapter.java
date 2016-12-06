@@ -30,11 +30,9 @@ public class ViewAdapter implements IMusicEditorView {
   @Override
   public void togglePause() {
     if (this.paused) {
-      System.out.println("resumed");
       adaptee.resume();
     }
     else {
-      System.out.println("paused");
       adaptee.pause();
     }
     this.paused = !this.paused;

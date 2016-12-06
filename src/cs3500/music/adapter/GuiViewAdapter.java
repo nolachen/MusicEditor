@@ -3,12 +3,13 @@ package cs3500.music.adapter;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
-
-import javax.swing.*;
+import java.util.List;
 
 import cs3500.music.model.INote;
+import cs3500.music.model.ImmutableNote;
 import cs3500.music.provider.IGuiView;
 import cs3500.music.view.GuiView;
+import cs3500.music.view.IViewModel;
 
 /**
  * TODO
@@ -20,9 +21,11 @@ import cs3500.music.view.GuiView;
  */
 public class GuiViewAdapter extends ViewAdapter implements GuiView {
   IGuiView adaptee;
+  IViewModel viewModel;
 
-  public GuiViewAdapter(IGuiView adaptee) {
+  public GuiViewAdapter(IGuiView adaptee, IViewModel viewModel) {
     super(adaptee);
+    this.viewModel = viewModel;
     this.adaptee = adaptee;
   }
 
@@ -39,17 +42,41 @@ public class GuiViewAdapter extends ViewAdapter implements GuiView {
 
   @Override
   public void saveNoteAtPosition(int x, int y) {
-    return;
+    INote toSave = null;
+
+    int beat = (x - 50) / 25;
+
+    List<String> noteRange = this.viewModel.getNoteRange();
+
+    int pitchIndex = noteRange.size() - 1 - ((y - 40) / 25);
+
+    if (beat < 0 || beat > this.viewModel.length()
+            || pitchIndex < 0 || pitchIndex > noteRange.size() - 1) {
+      return;
+    }
+
+    String pitch = noteRange.get(pitchIndex);
+
+    List<ImmutableNote> notesAtBeat = this.viewModel.getNotesAtBeat(beat);
+
+    for (ImmutableNote n : notesAtBeat) {
+      if (n.toString().equals(pitch) &&
+              ((toSave == null) || (n.getStartBeat() < toSave.getStartBeat()))) {
+        toSave = n;
+      }
+    }
+
+    this.viewModel.setSelectedNote(toSave);
   }
 
   @Override
   public INote getSelectedNote() {
-    return null;
+    return this.viewModel.getSelectedNote();
   }
 
   @Override
   public String getInputNote() {
-    return null;
+    return ;
   }
 
   @Override
@@ -99,7 +126,7 @@ public class GuiViewAdapter extends ViewAdapter implements GuiView {
 
   @Override
   public void resetSelectedNote() {
-    return;
+    this.viewModel.setSelectedNote(null);
   }
 
   @Override

@@ -68,7 +68,7 @@ public final class MusicEditor {
       if (viewType.equals("provider")) {
         IBasicMusicEditor<INote> vmAdapter = new ViewModelAdapter(viewModel);
         IView providerView = ViewFactory.viewFactory("composite", vmAdapter);
-        view = new GuiViewAdapter((IGuiView) providerView);
+        view = new GuiViewAdapter((IGuiView) providerView, viewModel);
       }
       else {
         view = MusicEditorViewFactory.create(viewType, viewModel);

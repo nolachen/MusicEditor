@@ -183,8 +183,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
     if (this.sequencer.isOpen()) {
       if (!this.paused) {
-        if (this.sequencer.isOpen())
-          this.sequencer.stop();
+        this.sequencer.stop();
       }
       else {
         this.sequencer.start();
@@ -219,7 +218,7 @@ public class MidiViewImpl implements IMusicEditorView {
 
   @Override
   public void refresh() {
-    //this.viewModel.updateData();
+    this.viewModel.updateData();
 
     int curTick = this.getCurrentBeat();
     this.updateSequence();
