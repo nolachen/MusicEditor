@@ -3,7 +3,8 @@ import org.junit.Test;
 
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+
+import javax.swing.JButton;
 
 import cs3500.music.controller.IMusicEditorController;
 import cs3500.music.controller.KeyboardHandler;

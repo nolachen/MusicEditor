@@ -1,7 +1,5 @@
 package cs3500.music;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 import cs3500.music.adapter.GuiViewAdapter;
 import cs3500.music.controller.IMusicEditorController;
 
@@ -46,7 +44,7 @@ public final class MusicEditor {
   public static void main(String[] args) {
 
     // try to get the file
-    FileReader reader = null;
+    FileReader reader;
 
     String file = args[0];
     try {
@@ -57,8 +55,7 @@ public final class MusicEditor {
 
     // create the builder, the model from the builder and the file, and the view model
     ModelBuilder build = new ModelBuilder();
-    MusicReader rm = new MusicReader();
-    IMusicEditorModel model = rm.parseFile(reader, build);
+    IMusicEditorModel model = MusicReader.parseFile(reader, build);
     IViewModel viewModel = new ViewModel(model);
 
     // try to get the view type and create the view
@@ -73,7 +70,7 @@ public final class MusicEditor {
       else {
         view = MusicEditorViewFactory.create(viewType, viewModel);
       }
-    } catch (IllegalArgumentException | InvalidArgumentException e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException("Incorrect view type, try again.");
     }
 

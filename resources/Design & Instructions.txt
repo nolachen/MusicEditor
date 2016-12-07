@@ -52,3 +52,9 @@ Use the HOME & END keys to navigate to the beginning and end of a song.
 Use the arrow keys to scroll in all directions.
 
 In the composite view, use SPACE BAR to pause/play. At the end of a song, you can use space bar to jump back to the beginning.
+
+JAR INSTRUCTIONS:
+Navigate to the resources folder with the MusicEditor.jar and any music text files you want to use. Type: java -jar MusicEditor.jar “filename.txt” “view type”
+
+The view types are: visual, midi, console, composite, provider
+“provider” uses the composite view given to us for HW8.
