@@ -12,25 +12,26 @@ import java.util.TreeMap;
 
 /**
  * This class represents a music editor model.
+ * TODO does this have to be final
  */
-public final class MusicEditorModel implements IMusicEditorModel {
+public class MusicEditorModel implements IMusicEditorModel {
   /**
    * A TreeMap represents the mapping between integer beats and the notes playing at that beat.
    * INVARIANT: Notes will only ever be added at beats in the range [startBeat, endBeat).
    * INVARIANT: The list of notes at a beat will always be sorted by ascending start beat.
    * Changed in HW07 to store notes at every beat they are playing, not just the start beat.
    */
-  private TreeMap<Integer, List<INote>> music;
+  protected TreeMap<Integer, List<INote>> music;
   /**
    * The tempo of this model represented in Beats per Millisecond.
    */
-  private int tempo;
+  protected int tempo;
 
   /**
    * Constructor for MusicEditorModel.
    * @param music the mapping of music
    */
-  private MusicEditorModel(TreeMap<Integer, List<INote>> music, int tempo) {
+  protected MusicEditorModel(TreeMap<Integer, List<INote>> music, int tempo) {
     this.music = music;
     this.tempo = tempo;
   }
