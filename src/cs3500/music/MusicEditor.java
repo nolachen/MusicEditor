@@ -6,6 +6,7 @@ import cs3500.music.controller.IMusicEditorController;
 import cs3500.music.controller.MusicEditorController;
 
 import cs3500.music.controller.MusicEditorGuiController;
+import cs3500.music.controller.RepeatsGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
 import cs3500.music.adapter.ViewModelAdapter;
@@ -20,6 +21,7 @@ import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.RepeatsModelBuilder;
 import cs3500.music.view.IViewModel;
 
+import cs3500.music.view.RepeatsGuiView;
 import cs3500.music.view.RepeatsViewModel;
 import cs3500.music.view.ViewModel;
 
@@ -69,8 +71,10 @@ public final class MusicEditor {
     if (viewType.equals("repeats")) {
       build = new RepeatsModelBuilder();
       model = MusicReader.parseFile(reader, build);
-      Repeat r = new Repeat(10, false);
-      ((RepeatsModel) model).addRepeat(r);
+      Repeat r1 = new Repeat(16);
+      Repeat r2 = new Repeat(20, 16);
+      ((RepeatsModel) model).addRepeat(r1);
+      ((RepeatsModel) model).addRepeat(r2);
       viewModel = new RepeatsViewModel((RepeatsModel) model);
     }
     else {
@@ -92,14 +96,17 @@ public final class MusicEditor {
         view = MusicEditorViewFactory.create(viewType, viewModel);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new IllegalArgumentException("Incorrect view type, try again.");
     }
 
     // create the controller and start the program
     IMusicEditorController controller;
-    if (viewType.equals("visual") || viewType.equals("composite") || viewType.equals("provider")
-            || viewType.equals("repeats")) {
+    if (viewType.equals("visual") || viewType.equals("composite") || viewType.equals("provider")) {
       controller = new MusicEditorGuiController(model, (GuiView) view);
+    }
+    else if (viewType.equals("repeats")) {
+      controller = new RepeatsGuiController((RepeatsModel) model, (GuiView) view);
     }
     else {
       controller = new MusicEditorController(model, view);

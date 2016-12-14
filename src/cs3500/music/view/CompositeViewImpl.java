@@ -38,6 +38,7 @@ public class CompositeViewImpl implements GuiView {
     if (!midiView.getPaused()) {
       this.togglePause();
     }
+
     this.guiView.makeVisible();
     this.midiView.makeVisible();
 
@@ -59,7 +60,6 @@ public class CompositeViewImpl implements GuiView {
       this.togglePause();
     }
   }
-
 
   @Override
   public void togglePause() {
@@ -94,8 +94,8 @@ public class CompositeViewImpl implements GuiView {
   }
 
   @Override
-  public String getInputNote() {
-    return this.guiView.getInputNote();
+  public String getInput() {
+    return this.guiView.getInput();
   }
 
   @Override
@@ -180,7 +180,7 @@ public class CompositeViewImpl implements GuiView {
   /**
    * Updates the current beat of this view, matching the GUI beat to the MIDI beat.
    */
-  public void updateCurrentBeat() {
+  protected void updateCurrentBeat() {
     this.guiView.setCurrentBeat(this.getCurrentBeat());
   }
 }

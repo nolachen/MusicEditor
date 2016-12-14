@@ -42,10 +42,10 @@ public interface GuiView extends IMusicEditorView {
   INote getSelectedNote();
 
   /**
-   * Get the note typed by the user.
-   * @return the note as a string
+   * Get the input typed by the user.
+   * @return the input as a string
    */
-  String getInputNote();
+  String getInput();
 
   /**
    * Scroll left in this view, beat by beat.

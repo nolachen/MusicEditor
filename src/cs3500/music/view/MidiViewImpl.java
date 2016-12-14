@@ -208,6 +208,7 @@ public class MidiViewImpl implements IMusicEditorView {
   @Override
   public void jumpToStart() {
     this.sequencer.setTickPosition(0);
+    this.refresh();
   }
 
 

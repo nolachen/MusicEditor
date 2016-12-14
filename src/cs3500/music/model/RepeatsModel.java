@@ -2,6 +2,7 @@ package cs3500.music.model;
 
 import cs3500.music.util.CompositionBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.TreeMap;
@@ -13,11 +14,15 @@ public class RepeatsModel extends MusicEditorModel{
   // INVARIANT: repeats will always be stored by their end in repeatsByEnd and by their begin in
   // repeatsByBegin. Adding & removing repeats will always remove from both tree maps.
 
+  // INVARIANT: repeats must begin at beat 0 or greater, and end at the length of the model or less
+
+  // INVARIANT: repeats must not overlap or nest.
+
   // list of repeats in this piece mapped to their end beat.
-  TreeMap<Integer, Repeat> repeatsByEnd;
+  private TreeMap<Integer, Repeat> repeatsByEnd;
 
   // list of repeats in this piece mapped to their begin beat.
-  TreeMap<Integer, Repeat> repeatsByBegin;
+  private TreeMap<Integer, Repeat> repeatsByBegin;
 
   /**
    * private constructor that initializes all the fields.
@@ -84,6 +89,13 @@ public class RepeatsModel extends MusicEditorModel{
    * @param repeat the repeat to add
    */
   public void addRepeat(Repeat repeat) {
+    if (repeat.getBegin() < 0 || repeat.getEnd() > this.length()) {
+      throw new IllegalArgumentException("Invalid repeat bounds");
+    }
+    if (this.containsOverlap(repeat)) {
+      throw new IllegalArgumentException("Repeat cannot nest or overlap");
+    }
+
     if (this.repeatsByEnd.containsKey(repeat.getEnd()) ||
             this.repeatsByBegin.containsKey(repeat.getBegin())) {
       throw new IllegalArgumentException("A repeat already exists here!");
@@ -92,6 +104,21 @@ public class RepeatsModel extends MusicEditorModel{
       this.repeatsByEnd.put(repeat.getEnd(), repeat);
       this.repeatsByBegin.put(repeat.getBegin(), repeat);
     }
+  }
+
+  /**
+   * Determines if the given repeat overlaps with any of the existing repeats in this model.
+   * @param repeat the given repeat
+   * @return true if overlap/nest, else false
+   */
+  private boolean containsOverlap(Repeat repeat) {
+    for (Repeat r : this.getAllRepeats()) {
+      if (r.getBegin() < repeat.getEnd() && repeat.getBegin() < r.getEnd()) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -124,4 +151,14 @@ public class RepeatsModel extends MusicEditorModel{
     }
   }
 
+  /**
+   * Gets the list of all repeats in this model.
+   * @return the list of all repeats
+   */
+  public List<Repeat> getAllRepeats() {
+    List<Repeat> repeats = new ArrayList<>();
+    repeats.addAll(this.repeatsByBegin.values());
+
+    return repeats;
+  }
 }

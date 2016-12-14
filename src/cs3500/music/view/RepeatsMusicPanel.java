@@ -45,16 +45,18 @@ public class RepeatsMusicPanel extends MusicPanel {
         int yPosBottom = (lastPitchShown - firstPitchShown + 2) * MusicPanel.NOTE_SIZE;
 
         // draw the purple repeat line at the begin beat of the repeat
-        int xPosBegin = (repeat.getBegin() - firstBeatShown) * MusicPanel.NOTE_SIZE;
-        g2d.fillRect(xPosBegin, MusicPanel.NOTE_SIZE, 5, yPosBottom - MusicPanel.NOTE_SIZE);
-        g2d.drawLine(xPosBegin + 12, MusicPanel.NOTE_SIZE, xPosBegin + 12, yPosBottom);
-
+        // only draw the repeat begin if it is greater than 0
+        if (repeat.getBegin() > 0) {
+          int xPosBegin = (repeat.getBegin() - firstBeatShown) * MusicPanel.NOTE_SIZE;
+          g2d.fillRect(xPosBegin, MusicPanel.NOTE_SIZE, 5, yPosBottom - MusicPanel.NOTE_SIZE);
+          g2d.drawLine(xPosBegin + 12, MusicPanel.NOTE_SIZE, xPosBegin + 12, yPosBottom);
+        }
 
         // draw the purple repeat line at the end beat of the repeat, if it is on the screen
         if (repeat.getEnd() >= firstBeatShown && repeat.getEnd() <= lastBeatShown) {
           int xPosEnd = (repeat.getEnd() - firstBeatShown) * MusicPanel.NOTE_SIZE;
           g2d.fillRect(xPosEnd - 5, MusicPanel.NOTE_SIZE, 5, yPosBottom - MusicPanel.NOTE_SIZE);
-          g2d.drawLine(xPosEnd - 7, MusicPanel.NOTE_SIZE, xPosEnd - 7, yPosBottom);
+          g2d.drawLine(xPosEnd - 12, MusicPanel.NOTE_SIZE, xPosEnd - 12, yPosBottom);
         }
       }
     }

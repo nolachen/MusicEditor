@@ -1,5 +1,6 @@
 package cs3500.music.view;
 
+import java.util.List;
 import java.util.TreeMap;
 
 import cs3500.music.model.Repeat;
@@ -38,6 +39,14 @@ public class RepeatsViewModel extends ViewModel {
    */
   public Repeat getRepeatAtBegin(int beat) {
     return this.repeatsModel.getRepeatAtBegin(beat);
+  }
+
+  /**
+   * Returns the list of all repeats in the model.
+   * @return all repeats
+   */
+  public List<Repeat> getAllRepeats() {
+    return this.repeatsModel.getAllRepeats();
   }
 
 }

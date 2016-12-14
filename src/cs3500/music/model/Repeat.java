@@ -22,6 +22,9 @@ public class Repeat implements Comparable<Repeat> {
    * @param used if this repeat has already been used.
    */
   public Repeat(int end, int begin, boolean used) {
+    if (end <= begin) {
+      throw new IllegalArgumentException("The end of the repeat must be after the begin");
+    }
     this.end = end;
     this.begin = begin;
     this.used = used;
@@ -30,12 +33,18 @@ public class Repeat implements Comparable<Repeat> {
   /**
    * Default constructor that sets the begin beat to 0, the start of the piece.
    * @param end the end beat, where the repeat ends.
-   * @param used if this repeat has already been used.
    */
-  public Repeat(int end, boolean used) {
-    this.begin = 0;
-    this.end = end;
-    this.used = used;
+  public Repeat(int end) {
+    this(end, 0, false);
+  }
+
+  /**
+   * Creates a repeat with the given end and begin, initializing used to false.
+   * @param end the end beat
+   * @param begin the begin beat
+   */
+  public Repeat(int end, int begin) {
+    this(end, begin, false);
   }
 
   //TODO idk if any of these are needed.
@@ -64,20 +73,12 @@ public class Repeat implements Comparable<Repeat> {
   }
 
   /**
-   *
-   * @param used
+   * Set whether this repeat is used or not.
+   * @param used true for used, else false
    */
   public void setUsed(boolean used) {
     this.used = used;
   }
-
-  /**
-   * sets this repeat to be used again.
-   */
-  public void useAgain() {
-    this.used = !this.used;
-  }
-
 
   //todo check with nola i forget how this works
   @Override

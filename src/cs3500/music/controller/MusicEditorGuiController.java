@@ -101,7 +101,7 @@ public class MusicEditorGuiController implements IMusicEditorController, ActionL
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Add note")) {
-      String inputNote = this.view.getInputNote();
+      String inputNote = this.view.getInput();
       INote parsedNote = this.parseNote(inputNote);
       if (parsedNote != null) {
         this.model.add(parsedNote);

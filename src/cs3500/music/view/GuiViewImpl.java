@@ -23,7 +23,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
   private PitchPanel pitchPanel;
   private JPanel inputPanel;
 
-  private JButton addButton;
+  private JButton addNoteButton;
   private JTextField input;
 
   // TODO: make static fields in this class instead of musiceditorpanel
@@ -42,20 +42,10 @@ public class GuiViewImpl extends JFrame implements GuiView {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.getContentPane().setBackground(new Color(235, 239, 240));
 
-    // create the display panel
-    this.displayPanel = new MusicPanel(viewModel);
-    displayPanel.setOpaque(false);
-
-    // create the pitches panel
-    this.pitchPanel = new PitchPanel(viewModel);
-    pitchPanel.setOpaque(false);
-
-    // create the input panel
-    this.inputPanel = new JPanel();
-    input = new JTextField("Input note as (pitch) (octave) (start beat) (duration). Ex: C# 4 2 4");
-    addButton = new JButton("Add note");
-    inputPanel.add(input);
-    inputPanel.add(addButton);
+    // initialize the display, pitch, and input panel
+    this.displayPanel = this.createDisplayPanel(viewModel);
+    this.pitchPanel = this.createPitchPanel(viewModel);
+    this.inputPanel = this.createInputPanel();
 
     // create new BorderLayout container for the panels, to add to the scroll pane
     // add the pitches in the west and the display in the center
@@ -74,8 +64,39 @@ public class GuiViewImpl extends JFrame implements GuiView {
     this.pack();
   }
 
-  protected void createDisplayPanel() {
+  /**
+   * Creates the main display panel for this GUI view.
+   * @param viewModel the view model
+   * @return the created display panel
+   */
+  protected MusicPanel createDisplayPanel(IViewModel viewModel) {
+    MusicPanel displayPanel = new MusicPanel(viewModel);
+    displayPanel.setOpaque(false);
+    return displayPanel;
+  }
 
+  /**
+   * Creates the pitch panel, which renders the note names.
+   * @param viewModel the view model
+   * @return the created pitch panel
+   */
+  protected PitchPanel createPitchPanel(IViewModel viewModel) {
+    PitchPanel pitchPanel = new PitchPanel(viewModel);
+    pitchPanel.setOpaque(false);
+    return pitchPanel;
+  }
+
+  /**
+   * Creates the user input panel.
+   * @return the created panel
+   */
+  protected JPanel createInputPanel() {
+    JPanel inputPanel = new JPanel();
+    input = new JTextField("Input note as (pitch) (octave) (start beat) (duration). Ex: C# 4 2 4.");
+    addNoteButton = new JButton("Add note");
+    inputPanel.add(input);
+    inputPanel.add(addNoteButton);
+    return inputPanel;
   }
 
   @Override
@@ -161,7 +182,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   // TODO
   @Override
-  public String getInputNote() {
+  public String getInput() {
     return this.input.getText();
   }
 
@@ -173,7 +194,7 @@ public class GuiViewImpl extends JFrame implements GuiView {
 
   @Override
   public void addActionListener(ActionListener actionListener) {
-    this.addButton.addActionListener(actionListener);
+    this.addNoteButton.addActionListener(actionListener);
   }
 
   @Override

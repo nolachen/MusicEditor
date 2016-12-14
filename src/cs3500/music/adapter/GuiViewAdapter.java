@@ -82,7 +82,7 @@ public class GuiViewAdapter extends ViewAdapter implements GuiView {
   }
 
   @Override
-  public String getInputNote() {
+  public String getInput() {
     return this.keyboardHandler.getInput().toString();
   }
 
