@@ -205,7 +205,7 @@ public class MusicPanel extends JPanel {
    * The index of the last pitch that should be drawn based on the current window height.
    * @return the index of the last pitch
    */
-  private int getLastPitchShown() {
+  int getLastPitchShown() {
     return Math.min(this.viewModel.getNoteRange().size() - 1,
             this.firstPitchShown + this.getHeight() / MusicPanel.NOTE_SIZE - 1);
   }
@@ -215,7 +215,7 @@ public class MusicPanel extends JPanel {
    * The last beat that should be shown based on the current window width.
    * @return the last beat
    */
-  public int getLastBeatShown() {
+  int getLastBeatShown() {
     return Math.min(this.viewModel.length(),
             this.firstBeatShown + this.getWidth() / MusicPanel.NOTE_SIZE);
   }
@@ -226,6 +226,14 @@ public class MusicPanel extends JPanel {
    */
   int getFirstBeatShown() {
     return this.firstBeatShown;
+  }
+
+  /**
+   * Gets the first pitch shown of this panel.
+   * @return the first pitch
+   */
+  int getFirstPitchShown() {
+    return this.firstPitchShown;
   }
 
   /**

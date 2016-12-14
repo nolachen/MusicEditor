@@ -74,6 +74,10 @@ public class GuiViewImpl extends JFrame implements GuiView {
     this.pack();
   }
 
+  protected void createDisplayPanel() {
+
+  }
+
   @Override
   public void makeVisible() {
     this.setVisible(true);

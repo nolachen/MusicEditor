@@ -21,11 +21,11 @@ public class MusicEditorModel implements IMusicEditorModel {
    * INVARIANT: The list of notes at a beat will always be sorted by ascending start beat.
    * Changed in HW07 to store notes at every beat they are playing, not just the start beat.
    */
-  protected TreeMap<Integer, List<INote>> music;
+  private TreeMap<Integer, List<INote>> music;
   /**
    * The tempo of this model represented in Beats per Millisecond.
    */
-  protected int tempo;
+  private int tempo;
 
   /**
    * Constructor for MusicEditorModel.

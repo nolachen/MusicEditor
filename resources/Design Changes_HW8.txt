@@ -1,5 +1,5 @@
 	First off, before we even sent our clients our code we created interfaces for our Note class and Pitch Enumeration so that they could easily adapt those without needing our concrete classes. We also did that in order to make our code more flexible.
 	Next, we fixed some minor bugs in our view code so that our clients would have fully capable views (at least to our knowledge fully capable).
-	We also sorted our notes stored at each beat according to when their start beat was, where the head of the note was. This made it easier to ensure that overlapping notes were shown in the gui view.
+	We also sorted our notes stored at each beat according to when their start beat was, where the end of the note was. This made it easier to ensure that overlapping notes were shown in the gui view.
 	Finally, we created methods to get the min and max octaves and pitches in the viewModel so it would be easier adapted to their model. The method we had previously used was inefficient and confusing. 
 	Our clients never asked us to change anything so we just tried to plan ahead for the problems they might have come across as they worked. 

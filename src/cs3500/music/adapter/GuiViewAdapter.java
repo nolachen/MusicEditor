@@ -20,9 +20,9 @@ import cs3500.music.view.IViewModel;
  * Adapts the provided GUI view interface to conform to our GUI view interface.
  */
 public class GuiViewAdapter extends ViewAdapter implements GuiView {
-  IGuiView adaptee;
-  IViewModel viewModel;
-  KeyboardHandler keyboardHandler;
+  private final IGuiView adaptee;
+  private final IViewModel viewModel;
+  private final KeyboardHandler keyboardHandler;
 
   /**
    * Constructor for GuiViewAdapter.

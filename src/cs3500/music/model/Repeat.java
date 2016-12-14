@@ -1,62 +1,74 @@
 package cs3500.music.model;
 
-import cs3500.music.util.CompositionBuilder;
 
 /**
  * Represents a repeat in a piece of music.
  */
-public class Repeat implements Comparable{
-  // represents the beat that the repeat is repeated from.
-  private int head;
-  // represents the beat that the repeat is at.
-  private int tail;
+public class Repeat implements Comparable<Repeat> {
+  // Invariant: end > begin
+
+  // represents the beat that the repeat ends at
+  private int end;
+  // represents the beat that the repeat begins at
+  private int begin;
   // represents if this repeat has been used or not.
   private boolean used;
 
 
   /**
    * Constructor.
-   * @param head the head beat, where it's repeating from.
-   * @param tail the tail beat, where the repeat is at.
+   * @param end the end beat, where it's repeating from.
+   * @param begin the begin beat, where the repeat is at.
    * @param used if this repeat has already been used.
    */
-  public Repeat(int head, int tail, boolean used) {
-    this.head = head;
-    this.tail = tail;
+  public Repeat(int end, int begin, boolean used) {
+    this.end = end;
+    this.begin = begin;
     this.used = used;
   }
 
   /**
-   * Default constructor that sets the head beat to 0, the start of the piece.
-   * @param tail the tail beat, where the repeat is at.
+   * Default constructor that sets the begin beat to 0, the start of the piece.
+   * @param end the end beat, where the repeat ends.
    * @param used if this repeat has already been used.
    */
-  public Repeat(int tail, boolean used) {
-    this.head = 0;
-    this.tail = tail;
+  public Repeat(int end, boolean used) {
+    this.begin = 0;
+    this.end = end;
     this.used = used;
   }
 
   //TODO idk if any of these are needed.
   /**
-   * @return the head of this repeat.
+   * Return the end beat of this repeat.
+   * @return the end of this repeat.
    */
-  public int getHead() {
-    return this.head;
+  public int getEnd() {
+    return this.end;
   }
 
   /**
+   * Return the begin beat of this repeat.
    * @return the beat index of this repeat.
    */
-  public int getTail() {
-    return this.tail;
+  public int getBegin() {
+    return this.begin;
   }
 
   /**
+   * Return whether this repeat has been used or not.
    * @return if this has been used or not.
    */
-  public boolean hasBeenUsed() {
+  public boolean getUsed() {
     return this.used;
+  }
+
+  /**
+   *
+   * @param used
+   */
+  public void setUsed(boolean used) {
+    this.used = used;
   }
 
   /**
@@ -69,7 +81,7 @@ public class Repeat implements Comparable{
 
   //todo check with nola i forget how this works
   @Override
-  public int compareTo(Object other) {
-    return this.tail - ((Repeat) other).tail;
+  public int compareTo(Repeat other) {
+    return this.begin - other.begin;
   }
 }

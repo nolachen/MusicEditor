@@ -6,7 +6,7 @@ import cs3500.music.provider.NoteName;
  * Implements the provided target, their note interface, with our adaptee, INote.
  */
 public class NoteAdapter implements cs3500.music.provider.INote {
-  cs3500.music.model.INote adaptee;
+  private final cs3500.music.model.INote adaptee;
 
   public NoteAdapter(cs3500.music.model.INote adaptee) {
     this.adaptee = adaptee;

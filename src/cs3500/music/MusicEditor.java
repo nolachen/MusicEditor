@@ -9,13 +9,18 @@ import cs3500.music.controller.MusicEditorGuiController;
 import cs3500.music.model.IMusicEditorModel;
 
 import cs3500.music.adapter.ViewModelAdapter;
+import cs3500.music.model.Repeat;
+import cs3500.music.model.RepeatsModel;
 import cs3500.music.provider.IBasicMusicEditor;
 import cs3500.music.provider.IGuiView;
 import cs3500.music.provider.INote;
 import cs3500.music.provider.IView;
 import cs3500.music.provider.ViewFactory;
+import cs3500.music.util.CompositionBuilder;
+import cs3500.music.util.RepeatsModelBuilder;
 import cs3500.music.view.IViewModel;
 
+import cs3500.music.view.RepeatsViewModel;
 import cs3500.music.view.ViewModel;
 
 import cs3500.music.util.ModelBuilder;
@@ -46,7 +51,10 @@ public final class MusicEditor {
     // try to get the file
     FileReader reader;
 
+    // store the arguments (file name and view type)
     String file = args[0];
+    String viewType = args[1].toLowerCase();
+
     try {
       reader = new FileReader(file);
     } catch (FileNotFoundException e) {
@@ -54,13 +62,26 @@ public final class MusicEditor {
     }
 
     // create the builder, the model from the builder and the file, and the view model
-    ModelBuilder build = new ModelBuilder();
-    IMusicEditorModel model = MusicReader.parseFile(reader, build);
-    IViewModel viewModel = new ViewModel(model);
+    CompositionBuilder<IMusicEditorModel> build;
+    IMusicEditorModel model;
+    IViewModel viewModel;
 
-    // try to get the view type and create the view
+    if (viewType.equals("repeats")) {
+      build = new RepeatsModelBuilder();
+      model = MusicReader.parseFile(reader, build);
+      Repeat r = new Repeat(10, false);
+      ((RepeatsModel) model).addRepeat(r);
+      viewModel = new RepeatsViewModel((RepeatsModel) model);
+    }
+    else {
+      build = new ModelBuilder();
+      model = MusicReader.parseFile(reader, build);
+      viewModel = new ViewModel(model);
+    }
+
+    // try to create the view
     IMusicEditorView view;
-    String viewType = args[1].toLowerCase();
+
     try {
       if (viewType.equals("provider")) {
         IBasicMusicEditor<INote> vmAdapter = new ViewModelAdapter(viewModel);
@@ -76,7 +97,8 @@ public final class MusicEditor {
 
     // create the controller and start the program
     IMusicEditorController controller;
-    if (viewType.equals("visual") || viewType.equals("composite") || viewType.equals("provider")) {
+    if (viewType.equals("visual") || viewType.equals("composite") || viewType.equals("provider")
+            || viewType.equals("repeats")) {
       controller = new MusicEditorGuiController(model, (GuiView) view);
     }
     else {

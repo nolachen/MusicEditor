@@ -90,7 +90,7 @@ public class MidiViewImpl implements IMusicEditorView {
   /**
    * A meta event listener that closes the sequencer when the song is over.
    */
-  public class CloseProgram implements MetaEventListener {
+  private class CloseProgram implements MetaEventListener {
     @Override
     public void meta(MetaMessage meta) {
       if (meta.getType() == 0x2f) {

@@ -26,6 +26,10 @@ public class MusicEditorViewFactory {
       case "composite":
         return new CompositeViewImpl(new GuiViewImpl(viewModel), new MidiViewImpl(viewModel),
                 viewModel);
+      case "repeats":
+        RepeatsViewModel repeatsViewModel = (RepeatsViewModel) viewModel;
+        return new RepeatsCompositeView(new RepeatsGuiView(repeatsViewModel),
+                new RepeatsMidiView(repeatsViewModel), repeatsViewModel);
       default:
         throw new IllegalArgumentException("Not a correct view type.");
     }
